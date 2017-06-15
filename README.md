@@ -9,7 +9,7 @@ How to write a simple Node app written in Dart:
 
 1. Create a new Dart project. Stagehand is a great way to scaffold all the
   boilerplate.
-  ```dart
+  ```bash
   pub global activate stagehand
   mkdir my_node_app
   cd my_node_app
