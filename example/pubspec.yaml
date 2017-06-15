@@ -1,0 +1,16 @@
+name: node_interop_example
+description: Simple interop example
+version: 0.0.1
+author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
+
+dependencies:
+  barback: any
+  node_interop:
+    path: ../
+
+transformers:
+  - $dart2js
+  - node_interop
