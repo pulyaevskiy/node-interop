@@ -8,6 +8,7 @@
 @JS()
 library node_interop;
 
+import 'dart:js' as js;
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
 import 'src/bindings/globals.dart' as globals;
@@ -33,6 +34,10 @@ class Exports {
   Exports._(this._exports);
 
   void setProperty(String name, dynamic value) {
-    js_util.setProperty(_exports, name, value);
+    if (value is Function) {
+      js_util.setProperty(_exports, name, js.allowInterop(value));
+    } else {
+      js_util.setProperty(_exports, name, value);
+    }
   }
 }

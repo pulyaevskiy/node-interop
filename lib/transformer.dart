@@ -1,12 +1,27 @@
 import 'dart:async';
 import 'package:barback/barback.dart';
+import 'package:glob/glob.dart';
 
 class NodePreambleTransformer extends Transformer {
   final BarbackSettings settings;
   NodePreambleTransformer.asPlugin(this.settings);
 
-  Future<bool> isPrimary(AssetId id) {
-    return new Future.value(id.path.startsWith('bin/main.dart'));
+  String get allowedExtensions => ".dart.js";
+
+  FutureOr<bool> isPrimary(AssetId id) {
+    var includes = settings.configuration['include'];
+    if (includes is String) {
+      var glob = new Glob(includes);
+      return new Future.value(glob.matches(id.path));
+    }
+    var excludes = settings.configuration['exclude'];
+    if (excludes is String) {
+      var glob = new Glob(excludes);
+      return new Future.value(!glob.matches(id.path));
+    }
+    // By default take all Dart files from `bin/`.
+    return new Future.value(
+        id.path.startsWith('bin/') && id.path.endsWith(allowedExtensions));
   }
 
   @override
@@ -15,6 +30,7 @@ class NodePreambleTransformer extends Transformer {
     var id = transform.primaryInput.id;
     var newContent = _preamble + content;
     transform.addOutput(new Asset.fromString(id, newContent));
+    print('Added preamble to $id');
   }
 }
 

@@ -1,7 +1,9 @@
 import 'package:platform/platform.dart';
+
 import 'bindings/globals.dart';
-import 'bindings/process.dart';
 import 'bindings/os.dart';
+import 'bindings/process.dart';
+import 'util.dart';
 
 export 'package:platform/platform.dart' show Platform;
 
@@ -9,7 +11,7 @@ class NodePlatform implements Platform {
   const NodePlatform();
 
   @override
-  Map<String, String> get environment => envAsMap;
+  Map<String, String> get environment => jsObjectToMap(process.env);
 
   @override
   String get executable => process.argv0;

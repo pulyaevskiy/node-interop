@@ -10,6 +10,9 @@ dependencies:
   barback: any
   node_interop:
     path: ../
+    
+dev_dependencies:
+  glob: ^1.1.3
 
 transformers:
   - $dart2js
