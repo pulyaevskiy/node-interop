@@ -8,7 +8,6 @@ exports.createPromise = function (value) {
 };
 exports.receivePromise = function (promise) {
     return promise.then((value) => {
-        console.log(value);
         return value.repeat(3);
     });
 }

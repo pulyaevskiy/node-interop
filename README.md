@@ -1,5 +1,7 @@
 # NodeJS interop library
 
+[![Build Status](https://travis-ci.org/pulyaevskiy/node-interop.svg?branch=master)](https://travis-ci.org/pulyaevskiy/node-interop)
+
 Provides interface bindings for NodeJS APIs and allows writing Dart
 applications and libraries which can be compiled and used in NodeJS.
 
