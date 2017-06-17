@@ -20,8 +20,8 @@ void main() {
   });
 
   test('tranformer includes config', () {
-    var settings =
-        new BarbackSettings({'include': 'bin/index.dart'}, BarbackMode.RELEASE);
+    var settings = new BarbackSettings(
+        {'include': 'bin/index.dart.js'}, BarbackMode.RELEASE);
     var transformer = new NodePreambleTransformer.asPlugin(settings);
     expect(
         transformer.isPrimary(new AssetId('node_interop', 'bin/main.dart.js')),
@@ -32,12 +32,14 @@ void main() {
   });
 
   test('tranformer excludes config', () {
-    var settings =
-        new BarbackSettings({'exclude': 'bin/index.dart'}, BarbackMode.RELEASE);
+    var settings = new BarbackSettings(
+        {'exclude': 'bin/index.dart.js'}, BarbackMode.RELEASE);
     var transformer = new NodePreambleTransformer.asPlugin(settings);
-    expect(transformer.isPrimary(new AssetId('node_interop', 'bin/main.dart')),
+    expect(
+        transformer.isPrimary(new AssetId('node_interop', 'bin/main.dart.js')),
         completion(isTrue));
-    expect(transformer.isPrimary(new AssetId('node_interop', 'bin/index.dart')),
+    expect(
+        transformer.isPrimary(new AssetId('node_interop', 'bin/index.dart.js')),
         completion(isFalse));
   });
 }

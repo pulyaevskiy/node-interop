@@ -1,0 +1,10 @@
+sudo: false
+
+language: dart
+
+before_install:
+  - nvm install node
+script:
+  - pub run test
+  - pub build node_test
+  - node build/node_test/promises_test.dart.js
