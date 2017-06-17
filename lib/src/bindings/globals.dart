@@ -3,6 +3,15 @@ library node_interop.bindings.globals;
 
 import 'package:js/js.dart';
 
+@JS('Object.keys')
+external List<String> jsObjectKeys(jsObject);
+
+@JS('Promise')
+abstract class JsPromise {
+  external factory JsPromise(executor(Function resolve, Function reject));
+  external JsPromise then(Function onFulfilled, [Function onRejected]);
+}
+
 @JS()
 external dynamic require(String id);
 

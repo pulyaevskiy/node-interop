@@ -9,12 +9,15 @@
 library node_interop;
 
 import 'dart:js' as js;
+
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as js_util;
+
 import 'src/bindings/globals.dart' as globals;
 
+export 'src/bindings/globals.dart' show require, JsPromise;
 export 'src/platform.dart' show NodePlatform;
-export 'src/bindings/globals.dart' show require;
+export 'src/util.dart';
 
 /// Keeps reference to the global native `exports` object provided by Node.
 /// Use [exports.setProperty] to expose functionality of your module:

@@ -19,9 +19,10 @@ class NodePreambleTransformer extends Transformer {
       var glob = new Glob(excludes);
       return new Future.value(!glob.matches(id.path));
     }
-    // By default take all Dart files from `bin/`.
+    // By default take all Dart files from `bin/` and `node_test/`.
     return new Future.value(
-        id.path.startsWith('bin/') && id.path.endsWith(allowedExtensions));
+        (id.path.startsWith('bin/') || id.path.startsWith('node_test/')) &&
+            id.path.endsWith(allowedExtensions));
   }
 
   @override
