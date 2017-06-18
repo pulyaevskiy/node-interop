@@ -1,5 +1,5 @@
 @JS()
-library node_interop.js_util;
+library node_interop.util;
 
 import 'dart:async';
 import 'dart:js';

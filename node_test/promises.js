@@ -9,5 +9,7 @@ exports.createPromise = function (value) {
 exports.receivePromise = function (promise) {
     return promise.then((value) => {
         return value.repeat(3);
+    }, (error) => {
+        throw error.repeat(3);
     });
 }
