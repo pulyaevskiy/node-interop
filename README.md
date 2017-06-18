@@ -47,10 +47,11 @@ How to create a simple Node app written in Dart:
   import 'package:node_interop/node_interop.dart';
   import 'package:node_interop/fs.dart';
 
-  void main() {
+  void main() async {
     var fs = new NodeFileSystem(); // access Node `fs` module
     print(fs.currentDirectory); // prints the path from `process.cwd()`
-    print(fs.currentDirectory.listSync()); // lists current directory contents
+    var files = await fs.currentDirectory.list().toList();
+    print(files); // lists current directory contents
   }
   ```
 4. **Compile.**

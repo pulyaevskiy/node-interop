@@ -8,6 +8,8 @@ main() async {
   var fs = const NodeFileSystem();
   var dir = fs.currentDirectory;
   print(dir);
+  var files = dir.list().toList();
+  print(files);
   var stat = await fs.stat(dir.path);
   print(stat);
 

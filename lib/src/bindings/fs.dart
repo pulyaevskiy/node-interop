@@ -17,6 +17,7 @@ FS get fs {
 @anonymous
 abstract class FS {
   external void readdir(String path, void callback(err, List<String> files));
+  external List<String> readdirSync(String path);
   external void rmdir(String path, void callback(err));
   external void rmdirSync(String path);
   external void realpath(path, void callback(err, String path));
