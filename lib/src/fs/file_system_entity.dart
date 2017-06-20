@@ -23,13 +23,13 @@ abstract class _FileSystemEntity implements FileSystemEntity {
     return fileSystem.path.absolute(path);
   }
 
-  static final RegExp _parentRegExp = platform.isWindows
+  static final RegExp _parentRegExp = _platform.isWindows
       ? new RegExp(r'[^/\\][/\\]+[^/\\]')
       : new RegExp(r'[^/]/+[^/]');
 
   static String parentOf(String path) {
     int rootEnd = -1;
-    if (platform.isWindows) {
+    if (_platform.isWindows) {
       if (path.startsWith(_absoluteWindowsPathPattern)) {
         // Root ends at first / or \ after the first two characters.
         rootEnd = path.indexOf(new RegExp(r'[/\\]'), 2);
@@ -84,7 +84,7 @@ abstract class _FileSystemEntity implements FileSystemEntity {
   FileStat statSync() => _FileStat.statSync(path);
 
   @override
-  Uri get uri => new Uri.file(path, windows: platform.isWindows);
+  Uri get uri => new Uri.file(path, windows: _platform.isWindows);
 
   @override
   Stream<FileSystemEvent> watch(

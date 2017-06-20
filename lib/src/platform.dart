@@ -85,4 +85,7 @@ class NodePlatform implements Platform {
     throw new UnsupportedError(
         'Dart version is not supported in Node environment');
   }
+
+  @override
+  String get localeName => throw new UnimplementedError();
 }

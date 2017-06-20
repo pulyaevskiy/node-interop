@@ -152,6 +152,6 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   List<FileSystemEntity> listSync(
       {bool recursive: false, bool followLinks: true}) {
-    return fs.readdirSync(path).toList();
+    return null; // fs.readdirSync(path).toList();
   }
 }

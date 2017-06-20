@@ -15,10 +15,10 @@ import 'src/bindings/fs.dart';
 import 'src/bindings/os.dart';
 import 'src/bindings/process.dart';
 
+export 'package:file/file.dart' show Directory, File, FileStat, FileSystem;
+
 part 'src/fs/file_system.dart';
 part 'src/fs/file_system_entity.dart';
 part 'src/fs/directory.dart';
 
-/// Platform information from Node.
-// TODO: make this configurable for tests
-const Platform platform = const NodePlatform();
+const Platform _platform = const NodePlatform();
