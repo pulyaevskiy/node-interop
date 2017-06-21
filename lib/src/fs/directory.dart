@@ -38,7 +38,7 @@ class _Directory extends _FileSystemEntity implements Directory {
     }
 
     var jsCallback = js.allowInterop(callback);
-    fs.rmdir(path, jsCallback);
+    nodeFS.rmdir(path, jsCallback);
     return completer.future;
   }
 
@@ -47,7 +47,7 @@ class _Directory extends _FileSystemEntity implements Directory {
     if (recursive)
       throw new UnsupportedError(
           'Recursive delete is not supported by Node API');
-    fs.rmdirSync(path);
+    nodeFS.rmdirSync(path);
   }
 
   @override
@@ -68,7 +68,7 @@ class _Directory extends _FileSystemEntity implements Directory {
       }
     }
 
-    fs.readdir(path, js.allowInterop(callback));
+    nodeFS.readdir(path, js.allowInterop(callback));
 
     return controller.stream;
   }
@@ -86,13 +86,13 @@ class _Directory extends _FileSystemEntity implements Directory {
 
     var jsCallback = js.allowInterop(callback);
 
-    fs.rename(path, newPath, jsCallback);
+    nodeFS.rename(path, newPath, jsCallback);
     return completer.future;
   }
 
   @override
   Directory renameSync(String newPath) {
-    fs.renameSync(path, newPath);
+    nodeFS.renameSync(path, newPath);
     return new _Directory(newPath);
   }
 
@@ -127,7 +127,7 @@ class _Directory extends _FileSystemEntity implements Directory {
 
     var jsCallback = js.allowInterop(callback);
 
-    fs.mkdir(path, jsCallback);
+    nodeFS.mkdir(path, jsCallback);
     return completer.future;
   }
 
@@ -136,7 +136,7 @@ class _Directory extends _FileSystemEntity implements Directory {
     if (recursive)
       throw new UnsupportedError(
           'Recursive create is not supported by Node API');
-    fs.mkdirSync(path);
+    nodeFS.mkdirSync(path);
   }
 
   @override

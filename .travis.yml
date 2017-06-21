@@ -4,6 +4,7 @@ language: dart
 
 before_install:
   - nvm install node
+  - node --version
 script:
   - pub run test
   - pub build --mode=debug node_test

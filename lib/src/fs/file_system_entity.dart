@@ -68,13 +68,13 @@ abstract class _FileSystemEntity implements FileSystemEntity {
 
     var jsCallback = js.allowInterop(callback);
 
-    fs.realpath(path, jsCallback);
+    nodeFS.realpath(path, jsCallback);
     return completer.future;
   }
 
   @override
   String resolveSymbolicLinksSync() {
-    return fs.realpathSync(path);
+    return nodeFS.realpathSync(path);
   }
 
   @override
@@ -145,12 +145,12 @@ class _FileStat implements FileStat {
     }
 
     var jsCallback = js.allowInterop(callback);
-    fs.stat(path, jsCallback);
+    nodeFS.stat(path, jsCallback);
     return completer.future;
   }
 
   static _FileStat statSync(String path) =>
-      new _FileStat.fromNodeStats(fs.statSync(path));
+      new _FileStat.fromNodeStats(nodeFS.statSync(path));
 
   @override
   String modeString() {

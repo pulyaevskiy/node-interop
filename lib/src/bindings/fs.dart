@@ -7,7 +7,7 @@ import 'package:js/js.dart';
 import 'globals.dart';
 
 FS _fs;
-FS get fs {
+FS get nodeFS {
   if (_fs != null) return _fs;
   _fs = require('fs');
   return _fs;
