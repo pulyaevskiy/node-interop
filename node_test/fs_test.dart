@@ -5,16 +5,26 @@ import 'package:node_interop/src/bindings/process.dart';
 void main() {
   group('NodeFileSystem', () {
     var fs = new NodeFileSystem();
+
+    test('stat', () {
+      var stat = fs.statSync(fs.currentDirectory.path);
+      expect(stat.accessed, new isInstanceOf<DateTime>());
+      expect(stat.changed, new isInstanceOf<DateTime>());
+      expect(stat.modified, new isInstanceOf<DateTime>());
+      expect(stat.type, FileSystemEntityType.DIRECTORY);
+      expect(stat.size, isNotNull);
+      expect(stat.mode, isNotNull);
+
+      expect(fs.stat(fs.currentDirectory.path),
+          completion(new isInstanceOf<FileStat>()));
+    });
+
     test('current directory', () {
       expect(fs.currentDirectory, new isInstanceOf<Directory>());
       expect(fs.currentDirectory.path, process.cwd());
-      expect(fs.currentDirectory.existsSync(), isTrue);
-      expect(fs.currentDirectory.exists(), completion(isTrue));
-      expect(fs.currentDirectory.isAbsolute, isTrue);
     });
 
     test('Directory', () {
-      expect(fs.currentDirectory, new isInstanceOf<Directory>());
       expect(fs.currentDirectory.existsSync(), isTrue);
       expect(fs.currentDirectory.exists(), completion(isTrue));
       expect(fs.currentDirectory.isAbsolute, isTrue);

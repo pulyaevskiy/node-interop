@@ -15,7 +15,14 @@ import 'src/bindings/fs.dart';
 import 'src/bindings/os.dart';
 import 'src/bindings/process.dart';
 
-export 'package:file/file.dart' show Directory, File, FileStat, FileSystem;
+export 'package:file/file.dart'
+    show
+        Directory,
+        File,
+        FileStat,
+        FileSystem,
+        FileSystemEntity,
+        FileSystemEntityType;
 
 part 'src/fs/file_system.dart';
 part 'src/fs/file_system_entity.dart';
