@@ -43,7 +43,10 @@ abstract class Stats {
 
   external int get mode;
   external int get size;
-  external num get atimeMs;
-  external num get ctimeMs;
-  external num get mtimeMs;
+  external JsDate get atime;
+  external JsDate get ctime;
+  external JsDate get mtime;
+  external num get atimeMs; // since 8.1.0
+  external num get ctimeMs; // since 8.1.0
+  external num get mtimeMs; // since 8.1.0
 }

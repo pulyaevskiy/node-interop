@@ -125,9 +125,9 @@ class _FileStat implements FileStat {
       type = FileSystemEntityType.LINK;
     }
     return new _FileStat(
-      new DateTime.fromMillisecondsSinceEpoch(stats.ctimeMs.toInt()),
-      new DateTime.fromMillisecondsSinceEpoch(stats.mtimeMs.toInt()),
-      new DateTime.fromMillisecondsSinceEpoch(stats.atimeMs.toInt()),
+      DateTime.parse(stats.ctime.toISOString()),
+      DateTime.parse(stats.mtime.toISOString()),
+      DateTime.parse(stats.atime.toISOString()),
       type,
       stats.mode,
       stats.size,

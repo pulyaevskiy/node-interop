@@ -28,3 +28,8 @@ external String get __dirname;
 
 @JS()
 external String get __filename;
+
+@JS('Date')
+abstract class JsDate {
+  external String toISOString();
+}
