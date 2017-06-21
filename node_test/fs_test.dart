@@ -7,7 +7,8 @@ void main() {
     test('current directory', () {
       expect(fs.currentDirectory, new isInstanceOf<Directory>());
       expect(fs.currentDirectory.path, isNotEmpty);
-      expect(fs.currentDirectory.existsSync(), isTrue);
+      expect(fs.currentDirectory.existsSync(), isTrue,
+          reason: 'Path: ${fs.currentDirectory.path} existsSync failed.');
       expect(fs.currentDirectory.exists(), completion(isTrue));
       expect(fs.currentDirectory.isAbsolute, isTrue);
     });
