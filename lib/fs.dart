@@ -3,6 +3,8 @@
 @JS()
 library node_interop.fs;
 
+import 'dart:convert';
+
 import 'dart:async';
 import 'dart:js' as js;
 
@@ -26,6 +28,7 @@ export 'package:file/file.dart'
 
 part 'src/fs/file_system.dart';
 part 'src/fs/file_system_entity.dart';
+part 'src/fs/file.dart';
 part 'src/fs/directory.dart';
 
 const Platform _platform = const NodePlatform();

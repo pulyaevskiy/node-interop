@@ -14,11 +14,13 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   Directory get absolute => new _Directory(_absolutePath);
 
+  @override
   Future<bool> exists() async {
     var stat = await _FileStat.stat(path);
     return stat.type == FileSystemEntityType.DIRECTORY;
   }
 
+  @override
   bool existsSync() {
     var stat = _FileStat.statSync(path);
     return stat.type == FileSystemEntityType.DIRECTORY;

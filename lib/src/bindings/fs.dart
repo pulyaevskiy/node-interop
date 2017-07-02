@@ -28,6 +28,10 @@ abstract class FS {
   external void renameSync(String oldPath, String newPath);
   external void mkdir(String path, void callback(err));
   external void mkdirSync(String path);
+  external void close(int fd, void callback(err));
+  external void closeSync(int fd);
+  external void open(String path, String flags, void callback(err, fd));
+  external int openSync(String path, String flags);
 }
 
 @JS()

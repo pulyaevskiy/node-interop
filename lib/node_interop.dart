@@ -15,7 +15,7 @@ import 'package:js/js_util.dart' as js_util;
 
 import 'src/bindings/globals.dart' as globals;
 
-export 'src/bindings/globals.dart' show require, JsPromise;
+export 'src/bindings/globals.dart' show require, JsPromise, Console, console;
 export 'src/platform.dart' show NodePlatform, Platform;
 export 'src/util.dart';
 

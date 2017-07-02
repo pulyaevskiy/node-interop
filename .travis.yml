@@ -11,3 +11,4 @@ script:
   - node build/node_test/platform_test.dart.js
   - node build/node_test/fs_test.dart.js
   - node build/node_test/promises_test.dart.js
+  - node build/node_test/console_test.dart.js
