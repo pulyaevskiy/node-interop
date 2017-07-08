@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.4
+
+- Upgraded to `test` package with support for running tests in Node
+- Implemented `NodeFileSystem.file()` and `File.writeAsStringSync()`.
+
 ## 0.0.3
 
 - Added bindings for `Console`.
