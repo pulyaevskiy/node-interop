@@ -32,6 +32,7 @@ abstract class FS {
   external void closeSync(int fd);
   external void open(String path, String flags, void callback(err, fd));
   external int openSync(String path, String flags);
+  external void writeFileSync(String file, String data, [options]);
 }
 
 @JS()

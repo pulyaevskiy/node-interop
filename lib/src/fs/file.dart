@@ -9,7 +9,7 @@ class _File extends _FileSystemEntity implements File {
   _File(this.path);
 
   @override
-  File get absolute => new _File(path);
+  File get absolute => new _File(_absolutePath);
 
   @override
   Future<File> copy(String newPath) {
@@ -182,7 +182,7 @@ class _File extends _FileSystemEntity implements File {
       {FileMode mode: FileMode.WRITE,
       Encoding encoding: UTF8,
       bool flush: false}) {
-    // TODO: implement writeAsStringSync
+    nodeFS.writeFileSync(_absolutePath, contents);
   }
 }
 

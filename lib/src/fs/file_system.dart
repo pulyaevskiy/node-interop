@@ -17,9 +17,7 @@ class NodeFileSystem implements FileSystem {
   Directory directory(path) => new _Directory(path);
 
   @override
-  File file(path) {
-    throw new UnimplementedError();
-  }
+  File file(path) => new _File(path);
 
   @override
   String getPath(path) {

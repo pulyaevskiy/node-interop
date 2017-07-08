@@ -134,7 +134,7 @@ class _FileStat implements FileStat {
     );
   }
 
-  static Future<_FileStat> stat(String path) {
+  static Future<FileStat> stat(String path) {
     var completer = new Completer<FileStat>();
     void callback(err, stats) {
       if (err == null) {
@@ -149,7 +149,7 @@ class _FileStat implements FileStat {
     return completer.future;
   }
 
-  static _FileStat statSync(String path) =>
+  static FileStat statSync(String path) =>
       new _FileStat.fromNodeStats(nodeFS.statSync(path));
 
   @override

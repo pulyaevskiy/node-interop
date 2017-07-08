@@ -1,3 +1,4 @@
+@TestOn('node')
 import 'package:node_interop/node_interop.dart';
 import 'package:test/test.dart';
 import 'package:node_interop/src/bindings/os.dart';
@@ -18,7 +19,8 @@ void main() {
       expect(platform.script, new isInstanceOf<Uri>());
       expect(platform.script.isAbsolute, isTrue);
       expect(platform.script.path, filename);
-      expect(platform.script.pathSegments.last, 'platform_test.dart.js');
+      expect(platform.script.pathSegments.last,
+          'platform_test.dart.node_test.dart.js');
     });
 
     test('executable', () {
