@@ -107,6 +107,26 @@ console.log(bang.bang('Hi'));
 > be considered an edge use case when you would want to mix in some 
 > functionality from Dart into an existing Node app.
 
+## Bindings
+
+In case you only need bindings to Node APIs:
+
+```dart
+@JS()
+library myapp;
+
+import 'package:node_interop/bindings.dart';
+import 'package:js/js.dart';
+
+void main() {
+  // Require specific modules:
+  FS nodeFS = require('fs');
+  OS nodeOS = require('os');
+  // Use globals:
+  console.log('message');
+}
+```
+
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new)

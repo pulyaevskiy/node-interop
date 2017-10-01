@@ -1,9 +1,7 @@
 @TestOn('node')
 import 'package:node_interop/node_interop.dart';
+import 'package:node_interop/bindings.dart';
 import 'package:test/test.dart';
-import 'package:node_interop/src/bindings/os.dart';
-import 'package:node_interop/src/bindings/globals.dart';
-import 'package:node_interop/src/bindings/process.dart';
 
 void main() {
   group('Platform', () {
@@ -58,12 +56,10 @@ void main() {
     }, testOn: 'windows');
 
     test('localHostname', () {
-      expect(platform.localHostname, os.hostname());
       expect(platform.localHostname, isNotEmpty);
     });
 
     test('numberOfProcessors', () {
-      expect(platform.numberOfProcessors, os.cpus().length);
       expect(platform.numberOfProcessors, greaterThanOrEqualTo(1));
     });
 

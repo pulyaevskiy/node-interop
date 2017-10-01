@@ -6,15 +6,7 @@ library node_interop.bindings.fs;
 import 'package:js/js.dart';
 import 'globals.dart';
 
-FS _fs;
-FS get nodeFS {
-  if (_fs != null) return _fs;
-  _fs = require('fs');
-  return _fs;
-}
-
 @JS()
-@anonymous
 abstract class FS {
   external void readdir(String path, void callback(err, List<String> files));
   external List<String> readdirSync(String path);
@@ -36,7 +28,6 @@ abstract class FS {
 }
 
 @JS()
-@anonymous
 abstract class Stats {
   external bool isFile();
   external bool isDirectory();
@@ -48,9 +39,9 @@ abstract class Stats {
 
   external int get mode;
   external int get size;
-  external JsDate get atime;
-  external JsDate get ctime;
-  external JsDate get mtime;
+  external Date get atime;
+  external Date get ctime;
+  external Date get mtime;
   external num get atimeMs; // since 8.1.0
   external num get ctimeMs; // since 8.1.0
   external num get mtimeMs; // since 8.1.0

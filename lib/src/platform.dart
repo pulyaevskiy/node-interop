@@ -9,6 +9,8 @@ import 'util.dart';
 
 export 'package:platform/platform.dart' show Platform;
 
+final OS _nodeOS = require('os');
+
 class NodePlatform implements Platform {
   const NodePlatform();
 
@@ -40,10 +42,10 @@ class NodePlatform implements Platform {
   bool get isWindows => process.platform.startsWith('win');
 
   @override
-  String get localHostname => os.hostname();
+  String get localHostname => _nodeOS.hostname();
 
   @override
-  int get numberOfProcessors => os.cpus().length;
+  int get numberOfProcessors => _nodeOS.cpus().length;
 
   @override
   String get operatingSystem => process.platform;

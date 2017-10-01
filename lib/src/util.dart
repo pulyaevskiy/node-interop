@@ -26,7 +26,7 @@ Map<String, dynamic> jsObjectToMap(object) {
 ///
 /// See also:
 ///   - [futureToJsPromise]
-Future jsPromiseToFuture(JsPromise promise) {
+Future jsPromiseToFuture(Promise promise) {
   var completer = new Completer();
   promise.then(allowInterop((value) {
     completer.complete(value);
@@ -41,7 +41,7 @@ Future jsPromiseToFuture(JsPromise promise) {
 /// See also:
 /// - [jsPromiseToFuture]
 dynamic futureToJsPromise(Future future) {
-  return new JsPromise(allowInterop((Function resolve, Function reject) {
+  return new Promise(allowInterop((Function resolve, Function reject) {
     future.then(resolve, onError: reject);
   }));
 }

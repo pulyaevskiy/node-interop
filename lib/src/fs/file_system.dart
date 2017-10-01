@@ -91,7 +91,7 @@ class NodeFileSystem implements FileSystem {
   FileStat statSync(String path) => _FileStat.statSync(path);
 
   @override
-  Directory get systemTempDirectory => new _Directory(os.tmpdir());
+  Directory get systemTempDirectory => new _Directory(_nodeOS.tmpdir());
 
   @override
   Future<FileSystemEntityType> type(String path, {bool followLinks: true}) {

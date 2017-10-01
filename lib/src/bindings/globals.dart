@@ -5,13 +5,15 @@ library node_interop.bindings.globals;
 
 import 'package:js/js.dart';
 
+/// Returns a list of keys in [jsObject].
+/// This function binds to JavaScript `Object.keys()`.
 @JS('Object.keys')
 external List<String> jsObjectKeys(jsObject);
 
-@JS('Promise')
-abstract class JsPromise {
-  external factory JsPromise(executor(Function resolve, Function reject));
-  external JsPromise then(Function onFulfilled, [Function onRejected]);
+@JS()
+abstract class Promise {
+  external factory Promise(executor(Function resolve, Function reject));
+  external Promise then(Function onFulfilled, [Function onRejected]);
 }
 
 @JS()
@@ -30,8 +32,8 @@ external String get __dirname;
 @JS()
 external String get __filename;
 
-@JS('Date')
-abstract class JsDate {
+@JS()
+abstract class Date {
   external String toISOString();
 }
 

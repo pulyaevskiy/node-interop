@@ -182,7 +182,7 @@ class _File extends _FileSystemEntity implements File {
       {FileMode mode: FileMode.WRITE,
       Encoding encoding: UTF8,
       bool flush: false}) {
-    nodeFS.writeFileSync(_absolutePath, contents);
+    _nodeFS.writeFileSync(_absolutePath, contents);
   }
 }
 
@@ -206,12 +206,12 @@ class _RandomAccessFile implements RandomAccessFile {
     }
 
     var jsCallback = js.allowInterop(cb);
-    nodeFS.open(path, fileModeToJsFlags(mode), jsCallback);
+    _nodeFS.open(path, fileModeToJsFlags(mode), jsCallback);
     return completer.future;
   }
 
   static _RandomAccessFile openSync(String path, FileMode mode) {
-    var fd = nodeFS.openSync(path, fileModeToJsFlags(mode));
+    var fd = _nodeFS.openSync(path, fileModeToJsFlags(mode));
     return new _RandomAccessFile(fd, path);
   }
 
@@ -244,13 +244,13 @@ class _RandomAccessFile implements RandomAccessFile {
     }
 
     var jsCallback = js.allowInterop(callback);
-    nodeFS.close(fd, jsCallback);
+    _nodeFS.close(fd, jsCallback);
     return completer.future;
   }
 
   @override
   void closeSync() {
-    nodeFS.closeSync(fd);
+    _nodeFS.closeSync(fd);
   }
 
   @override

@@ -44,7 +44,7 @@ void main() {
 
   test('jsPromiseToFuture', () async {
     final JsPromises js = require('./promises.js');
-    JsPromise promise = js.createPromise('Futures are better than Promises');
+    Promise promise = js.createPromise('Futures are better than Promises');
     Future future = jsPromiseToFuture(promise);
     expect(future, completion('Futures are better than Promises'));
   });
@@ -59,7 +59,7 @@ void main() {
 
   test('create promise in Dart', () {
     final JsPromises js = require('./promises.js');
-    var promise = new JsPromise(allowInterop((resolve, reject) {
+    var promise = new Promise(allowInterop((resolve, reject) {
       resolve('Yas');
     }));
     var promise2 = js.receivePromise(promise);
@@ -67,7 +67,7 @@ void main() {
   });
 
   test('reject a Promise', () {
-    var promise = new JsPromise(allowInterop((resolve, reject) {
+    var promise = new Promise(allowInterop((resolve, reject) {
       reject('No');
     }));
     expect(jsPromiseToFuture(promise), throwsA('No'));
@@ -85,6 +85,6 @@ void main() {
 @JS()
 @anonymous
 abstract class JsPromises {
-  external JsPromise createPromise(value);
-  external JsPromise receivePromise(promise);
+  external Promise createPromise(value);
+  external Promise receivePromise(promise);
 }
