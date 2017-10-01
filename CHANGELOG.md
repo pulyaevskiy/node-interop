@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.5
+
+- Streamlined bindings layer and exposed as it's own library. Use
+  `import package:node_interop/bindings.dart` to get access.
+- Added bindings for 'http' module (work in progress).
+
 ## 0.0.4
 
 - Upgraded to `test` package with support for running tests in Node
