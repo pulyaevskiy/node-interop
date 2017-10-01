@@ -12,5 +12,6 @@ library node_interop.bindings;
 export 'src/bindings/events.dart';
 export 'src/bindings/fs.dart';
 export 'src/bindings/globals.dart';
+export 'src/bindings/http.dart';
 export 'src/bindings/os.dart';
 export 'src/bindings/process.dart';
