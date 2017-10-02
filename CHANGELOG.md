@@ -3,6 +3,8 @@
 ## 0.0.6
 
 - `jsObjectToMap`: added null-check.
+- Added basic HTTP client implementation for Node, based on an interface
+  from 'http' package. Use with `import package:node_interop/http.dart`.
 
 ## 0.0.5
 

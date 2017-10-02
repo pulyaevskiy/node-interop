@@ -3,6 +3,7 @@
 @JS()
 library node_interop.bindings.globals;
 
+import 'dart:js';
 import 'package:js/js.dart';
 
 /// Returns a list of keys in [jsObject].
@@ -47,4 +48,9 @@ abstract class Console {
   external void info(data, [List args]);
   external void warn(data, [List args]);
   external factory Console(stdout, [stderr]);
+}
+
+@JS()
+abstract class Buffer implements Iterable<int> {
+  external static from(Iterable<int> bytes);
 }

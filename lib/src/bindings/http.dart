@@ -14,11 +14,62 @@ abstract class HTTP {
   /// The requestListener is a function which is automatically added to the
   /// 'request' event.
   external Server createServer([requestListener]);
-  external ClientRequest request(options, [callback]);
+  external ClientRequest request(RequestOptions options, [callback(IncomingMessage response)]);
+
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
   /// automatically.
-  external ClientRequest get(options, [callback(IncomingMessage response)]);
+  external ClientRequest get(dynamic urlOrOptions,
+      [callback(IncomingMessage response)]);
+
+  external Agent get globalAgent;
+}
+
+@JS()
+abstract class Agent {
+  external factory Agent([AgentOptions options]);
+  external void destroy();
+}
+
+@JS()
+@anonymous
+abstract class AgentOptions {
+  external bool get keepAlive;
+}
+
+@JS()
+@anonymous
+abstract class RequestOptions {
+  external String get protocol;
+  @Deprecated('Use "hostname" instead.')
+  external String get host;
+  external String get hostname;
+  external num get family;
+  external num get port;
+  external String get localAddress;
+  external String get socketPath;
+  external String get method;
+  external String get path;
+  external dynamic get headers;
+  external String get auth;
+  external dynamic get agent;
+  external num get timeout;
+
+  external factory RequestOptions({
+    String protocol,
+    String host,
+    String hostname,
+    num family,
+    num port,
+    String localAddress,
+    String socketPath,
+    String method,
+    String path,
+    dynamic headers,
+    String auth,
+    dynamic agent,
+    num timeout,
+  });
 }
 
 @JS()
