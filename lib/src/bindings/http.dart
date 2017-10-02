@@ -18,7 +18,7 @@ abstract class HTTP {
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
   /// automatically.
-  external ClientRequest get(options, [callback]);
+  external ClientRequest get(options, [callback(IncomingMessage response)]);
 }
 
 @JS()

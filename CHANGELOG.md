@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6
+
+- `jsObjectToMap`: added null-check.
+
 ## 0.0.5
 
 - Streamlined bindings layer and exposed as it's own library. Use

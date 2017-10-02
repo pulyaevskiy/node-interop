@@ -13,6 +13,7 @@ import 'bindings/globals.dart';
 
 /// Converts JsObject into a Dart `Map`.
 Map<String, dynamic> jsObjectToMap(object) {
+  if (object == null) return null;
   var result = new Map<String, dynamic>();
   var keys = jsObjectKeys(object);
   keys.forEach((key) {
