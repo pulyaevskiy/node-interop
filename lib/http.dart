@@ -44,7 +44,6 @@ class NodeClient extends http.BaseClient {
 
   dynamic _jsifyHeaders(Map<String, dynamic> headers) {
     var object = newObject();
-
     for (var key in headers.keys) {
       setProperty(object, key, headers[key]);
     }

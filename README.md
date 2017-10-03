@@ -67,6 +67,13 @@ How to create a simple Node app written in Dart:
   $ # directory contents printed out.
   ```
 
+## Libraries
+
+* `node_interop.dart` - globals (require, exports), platform
+* `fs.dart` - File system abstraction
+* `http.dart` - HTTP client powered by Node IO and 'http' package.
+* `bindings.dart` - Bindings only.
+
 ## Pub transformer
 
 This library provides Pub transformer which by default processes all `.dart`
