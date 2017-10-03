@@ -50,7 +50,7 @@ abstract class Console {
   external factory Console(stdout, [stderr]);
 }
 
-@JS()
-abstract class Buffer implements Iterable<int> {
+@JS('Buffer')
+abstract class Buffer {
   external static from(Iterable<int> bytes);
 }

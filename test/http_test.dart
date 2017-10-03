@@ -20,8 +20,7 @@ void main() {
       server = nodeHTTP
           .createServer(allowInterop((IncomingMessage req, ServerResponse res) {
         List<int> body = [];
-        req.on('data', allowInterop((Buffer chunk) {
-//          var chunkList = new List<int>.from(chunk);
+        req.on('data', allowInterop((Iterable<int> chunk) {
           body.addAll(chunk);
         }));
 

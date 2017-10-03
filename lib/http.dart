@@ -77,7 +77,8 @@ class NodeClient extends http.BaseClient {
         reasonPhrase: response.statusMessage,
       ));
 
-      response.on('data', allowInterop((Buffer buffer) {
+      response.on('data', allowInterop((Iterable<int> buffer) {
+        // buffer is an instance of Node's Buffer.
         controller.add(new List.unmodifiable(buffer));
       }));
       response.on('end', allowInterop(() {
