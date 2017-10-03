@@ -7,6 +7,7 @@ library node_interop.http;
 
 import 'dart:async';
 
+import 'dart:js_util';
 import 'package:http/http.dart' as http;
 import 'package:js/js.dart';
 
@@ -16,20 +17,53 @@ import 'src/util.dart';
 final HTTP _nodeHTTP = require('http');
 
 /// HTTP client which uses Node IO (via 'http' module).
+///
+/// Make sure to call [close] when work with this client is done.
 class NodeClient extends http.BaseClient {
+  /// Keep sockets around even when there are no outstanding requests, so they
+  /// can be used for future requests without having to reestablish a TCP
+  /// connection. Defaults to `true`.
+  final bool keepAlive;
+
+  /// When using the keepAlive option, specifies the initial delay for TCP
+  /// Keep-Alive packets. Ignored when the keepAlive option is false.
+  /// Defaults to 1000.
+  final int keepAliveMsecs;
+
+  NodeClient({
+    this.keepAlive = true,
+    this.keepAliveMsecs = 1000,
+  });
+
+  /// Native JavaScript connection agent used by this client.
+  Agent get agent => _agent ??= createAgent(new AgentOptions(
+        keepAlive: keepAlive,
+        keepAliveMsecs: keepAliveMsecs,
+      ));
+  Agent _agent;
+
+  dynamic _jsifyHeaders(Map<String, dynamic> headers) {
+    var object = newObject();
+
+    for (var key in headers.keys) {
+      setProperty(object, key, headers[key]);
+    }
+    return object;
+  }
+
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     var url = request.url;
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
     var options = new RequestOptions(
-      protocol: "${url.scheme}:",
-      hostname: url.host,
-      port: url.port,
-      method: request.method,
-      path: pathWithQuery,
-      headers: request.headers,
-    );
+        protocol: "${url.scheme}:",
+        hostname: url.host,
+        port: url.port,
+        method: request.method,
+        path: pathWithQuery,
+        headers: _jsifyHeaders(request.headers),
+        agent: agent);
     var completer = new Completer<http.StreamedResponse>();
 
     void handleResponse(IncomingMessage response) {
@@ -73,7 +107,6 @@ class NodeClient extends http.BaseClient {
 
   @override
   void close() {
-    // TODO: Create own instance of http.Agent and handle lifecycle internally.
-    _nodeHTTP.globalAgent.destroy();
+    agent.destroy();
   }
 }

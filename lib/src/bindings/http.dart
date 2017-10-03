@@ -4,8 +4,16 @@
 library node_interop.bindings.http;
 
 import 'dart:js';
+import 'dart:js_util';
 import 'package:js/js.dart';
 import 'events.dart';
+import 'globals.dart';
+
+Agent createAgent([AgentOptions options]) {
+  _HTTPAgentAccess http = require('http');
+  var args = (options == null) ? [] : [options];
+  return callConstructor(http.Agent, args);
+}
 
 @JS()
 abstract class HTTP {
@@ -14,7 +22,8 @@ abstract class HTTP {
   /// The requestListener is a function which is automatically added to the
   /// 'request' event.
   external Server createServer([requestListener]);
-  external ClientRequest request(RequestOptions options, [callback(IncomingMessage response)]);
+  external ClientRequest request(RequestOptions options,
+      [callback(IncomingMessage response)]);
 
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
@@ -23,6 +32,11 @@ abstract class HTTP {
       [callback(IncomingMessage response)]);
 
   external Agent get globalAgent;
+}
+
+@JS()
+abstract class _HTTPAgentAccess {
+  external dynamic get Agent;
 }
 
 @JS()
@@ -35,6 +49,15 @@ abstract class Agent {
 @anonymous
 abstract class AgentOptions {
   external bool get keepAlive;
+  external num get keepAliveMsecs;
+  external num get maxSockets;
+  external num get maxFreeSockets;
+  external factory AgentOptions({
+    bool keepAlive,
+    num keepAliveMsecs,
+    num maxSockets,
+    num maxFreeSockets,
+  });
 }
 
 @JS()

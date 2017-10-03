@@ -17,12 +17,24 @@ void main() {
     Server server;
 
     setUpAll(() {
-      server = nodeHTTP.createServer(allowInterop((IncomingMessage req, ServerResponse res) {
-        res.setHeader('Content-Type', 'text/plain');
-        res.setHeader('X-Foo', 'bar');
-        res.writeHead(200, 'Ok');
-        res.end('ok');
+      server = nodeHTTP
+          .createServer(allowInterop((IncomingMessage req, ServerResponse res) {
+        List<int> body = [];
+        req.on('data', allowInterop((Buffer chunk) {
+//          var chunkList = new List<int>.from(chunk);
+          body.addAll(chunk);
+        }));
+
+        req.on('end', allowInterop(() {
+          res.setHeader('Content-Type', 'text/plain');
+          res.setHeader('X-Foo', 'bar');
+          res.writeHead(200, 'Ok');
+          var bodyString =
+              body.isNotEmpty ? new String.fromCharCodes(body) : 'ok';
+          res.end(bodyString);
+        }));
       }));
+
       var completer = new Completer();
       server.listen(8181, allowInterop(() {
         completer.complete();
@@ -38,12 +50,22 @@ void main() {
       return completer.future;
     });
 
-    test('make request', () async {
+    test('make get request', () async {
       var client = new NodeClient();
       var response = await client.get('http://localhost:8181/test');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
-      expect(response.body, 'ok');
+      expect(response.body, equals('ok'));
+      client.close();
+    });
+
+    test('make post request with a body', () async {
+      var client = new NodeClient();
+      var response =
+          await client.post('http://localhost:8181/test', body: 'hello');
+      expect(response.statusCode, 200);
+      expect(response.contentLength, greaterThan(0));
+      expect(response.body, equals('hello'));
       client.close();
     });
   });
