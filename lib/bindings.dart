@@ -15,3 +15,4 @@ export 'src/bindings/globals.dart';
 export 'src/bindings/http.dart';
 export 'src/bindings/os.dart';
 export 'src/bindings/process.dart';
+export 'src/bindings/child_process.dart';
