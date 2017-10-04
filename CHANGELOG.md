@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.7
+
+- Added `node_interop/test.dart` library with `installNodeModules()`
+  helper function. See dartdoc for more details.
+
 ## 0.0.6
 
 - `jsObjectToMap`: added null-check.

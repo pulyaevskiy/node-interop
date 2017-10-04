@@ -1,15 +1,14 @@
-@JS()
 library node_interop.test;
 
 import 'dart:convert';
-import 'package:js/js.dart';
-import 'fs.dart';
+
 import 'bindings.dart';
+import 'fs.dart';
 import 'node_interop.dart';
 
 /// Installs specified NodeJS [modules] in the same directory with compiled
-/// test file. Should normally be used in `setUpAll()` hook of a test file or
-/// as a very first command in the `main()` function.
+/// test file. Should normally be used as a very first command in the `main()`
+/// function of a test file.
 ///
 /// This function creates 'package.json' with [modules] added to 'dependencies'
 /// section and runs `npm install`.
