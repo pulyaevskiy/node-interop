@@ -1,6 +1,21 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
-@JS()
+
+/// File system implementation powered by Node's IO and "fs" module.
+///
+/// _This library implements interfaces defined in the "file" package._
+///
+/// Use [NodeFileSystem] class as the main entry point:
+///
+///     import 'package:node_interop/fs.dart';
+///
+///     void main() {
+///       const fs = const NodeFileSystem();
+///       print(fs.currentDirectory);
+///       Directory dir = fs.directory('/some/path');
+///       print("Directory ${dir.path} exists: ${dir.existsSync()}");
+///       // et cetera
+///     }
 library node_interop.fs;
 
 import 'dart:async';
@@ -8,7 +23,6 @@ import 'dart:convert';
 import 'dart:js' as js;
 
 import 'package:file/file.dart';
-import 'package:js/js.dart';
 import 'package:path/path.dart';
 
 import 'src/bindings/fs.dart';
