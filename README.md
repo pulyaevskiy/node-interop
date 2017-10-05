@@ -115,7 +115,7 @@ How to create a simple Node app written in Dart:
 
 ## Libraries
 
-This package consists of a set of libraries which can be used separately.
+This package consists of a set of libraries.
 
 ### Node Interop
 

@@ -11,11 +11,11 @@ void main() {
     var settings = new BarbackSettings({}, BarbackMode.RELEASE);
     var transformer = new NodePreambleTransformer.asPlugin(settings);
     expect(
-        transformer.isPrimary(new AssetId('node_interop', 'bin/main.dart.js')),
+        transformer.isPrimary(new AssetId('node_interop', 'node/main.dart.js')),
         completion(isTrue));
     expect(
         transformer.isPrimary(new AssetId('node_interop', 'lib/main.dart.js')),
-        completion(isFalse));
+        completion(isTrue));
     expect(
         transformer.isPrimary(new AssetId('node_interop', 'bin/other.dart.js')),
         completion(isTrue));
