@@ -8,14 +8,14 @@
 * [Usage](#usage)
 * [Libraries](#libraries)
   * [Node Interop](#node-interop)
-  * [Bindings](#bindings)
+  * [FS](#fs)
   * [HTTP](#http)
 * [Pub transformer](#pub-transformer)
 
 ## What is this?
 
 `node_interop` provides bindings for NodeJS APIs and enables writing Dart
-applications and libraries which can be compiled and run in NodeJS.
+applications and libraries which can be compiled and ran in NodeJS.
 
 In addition to bindings some modules went through "dartification" which mostly
 involved:
@@ -27,8 +27,8 @@ involved:
 
 For instance, in addition to Node's [http](https://nodejs.org/api/http.html)
 module bindings this package exposes "http.dart" library with HTTP client
-which implements `Client` interface of Dart's [http](https://pub.dartlang.org/packages/http)
-package.
+which implements `Client` interface of Dart's
+[http](https://pub.dartlang.org/packages/http) package.
 
 Here is an example Dart app using this client:
 
@@ -55,16 +55,16 @@ apps using different APIs.
 
 This package is under active development which means that you should expect
 for things to change quickly. Of course breaking changes are likely to happen.
-The `bindings.dart` library should be a lot less prone to breaking changes
-though as it's just an interface to Node's APIs which are fairly stable at
-this point.
 
-Also libraries like `http.dart` are also unlikely to get breaking changes as
-they just implement interfaces from other Dart packages which are also pretty
-stable most of the time.
+The bindings themselves should be a lot less prone to breaking changes
+though since it's just an interface to Node's APIs which are fairly stable at
+this point. Also libraries like `http.dart` are also unlikely to get breaking
+changes as they just implement interfaces from other Dart packages which are
+fairly stable as well.
 
-And there are also bugs, which haven't been found yet. If you do find one,
-please create an issue in the [issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new).
+There are always bugs, of course, which haven't been found yet. If you do find
+one, please create an issue in the
+[issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new).
 
 ## Usage
 
@@ -82,7 +82,7 @@ How to create a simple Node app written in Dart:
 2. Add dependency and transformers to the generated `pubspec.yaml`
   ```yaml
   dependencies:
-    node_interop: ^0.0.7
+    node_interop: ^0.1.0
 
   transformers:
     - $dart2js
@@ -119,17 +119,10 @@ This package consists of a set of libraries.
 
 ### Node Interop
 
-> Usage: `import 'package:node_interop/node_interop.dart'`.
+> `import 'package:node_interop/node_interop.dart'`.
 
-Main library which only exposes globals like `require()` and `exports` as well
-as some convenience utilities.
-
-### Bindings
-
-> Usage: `import 'package:node_interop/bindings.dart'`.
-
-This library exposes NodeJS API bindings as-is. Not all of the APIs are
-exposed at this point, in fact, it's a small percentage. If you didn't find
+Main library which exposes NodeJS API bindings as-is. Not all of the APIs are
+implemented at this point, in fact, it's a small percentage. If you didn't find
 a class or method you were looking for, please create an issue or submit a
 pull request (even better!).
 
@@ -138,7 +131,7 @@ to use. Refer to dartdoc for more details. Here is an example if using
 bindings directly:
 
 ```dart
-import 'package:node_interop/bindings.dart';
+import 'package:node_interop/node_interop.dart';
 
 void main() {
   // Require specific modules:
@@ -148,6 +141,24 @@ void main() {
   console.log('message');
 }
 ```
+
+### FS
+
+> `import 'package:node_interop/fs.dart'`.
+
+Exposes Node's file system API as a set of Dart classes compatible with
+interfaces from "dart:io" (in particular it implements interfaces provided by
+the [file](https://pub.dartlang.org/packages/file) package).
+
+_Note that not all methods are currently implemented for `File` and `Directory`
+classes._
+
+### HTTP
+
+> `import 'package:node_interop/http.dart'`.
+
+Implements Dart-style HTTP client using [http](https://pub.dartlang.org/packages/file)
+package interface.
 
 ## Pub transformer
 
@@ -191,4 +202,5 @@ console.log(bang.bang('Hi'));
 
 ## Features and bugs
 
-Please file feature requests and bugs at the [issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new)
+Please file feature requests and bugs at the
+[issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new)

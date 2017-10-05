@@ -2,7 +2,6 @@ library node_interop.test;
 
 import 'dart:convert';
 
-import 'bindings.dart';
 import 'fs.dart';
 import 'node_interop.dart';
 
@@ -14,9 +13,8 @@ import 'node_interop.dart';
 /// section and runs `npm install`.
 void installNodeModules(Map<String, String> modules) {
   var fs = new NodeFileSystem();
-  var platform = new NodePlatform();
-  var segments = platform.script.pathSegments.toList();
-  var cwd = fs.path.dirname(platform.script.path);
+  var segments = node.platform.script.pathSegments.toList();
+  var cwd = fs.path.dirname(node.platform.script.path);
   segments
     ..removeLast()
     ..add('package.json');

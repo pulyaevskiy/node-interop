@@ -2,8 +2,15 @@
 library node_interop.bindings.child_process;
 
 import 'package:js/js.dart';
+
 import 'events.dart';
 
+/// Main entry point to Node's "child_process" module.
+///
+/// Usage:
+///
+///     ChildProcessModule child = require("child_process");
+///     child.execSync("npm install");
 @JS()
 abstract class ChildProcessModule {
   external ChildProcess execSync(String command, [ExecOptions options]);

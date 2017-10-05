@@ -5,42 +5,69 @@
 ///
 /// Provides interface definitions for NodeJS APIs and allows writing Dart
 /// applications and libraries which can be compiled and used in NodeJS.
+///
+/// Some APIs, like 'fs' and 'http' Node modules must be `require`d to use, e.g.:
+///
+///     FS nodeFS = require('fs');
+///     HTTP nodeHTTP = require('http');
+///
+/// This library also exposes [node] object which provides centralized access to
+/// Node's runtime and platform information, as well as some convenience methods
+/// for `require` and `exports`.
+///
+/// See also:
+/// - [HTTP]
+/// - [FS]
+/// - [ChildProcessModule]
 @JS()
 library node_interop;
 
-import 'dart:js' as js;
+import 'dart:js_util' as js_util;
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart' as js_util;
 
 import 'src/bindings/globals.dart' as globals;
+import 'src/platform.dart';
 
-export 'src/bindings/globals.dart' show require, Promise, Console, console;
-export 'src/platform.dart' show NodePlatform, Platform;
+export 'src/bindings/child_process.dart';
+export 'src/bindings/events.dart';
+export 'src/bindings/fs.dart';
+export 'src/bindings/globals.dart';
+export 'src/bindings/http.dart';
+export 'src/bindings/os.dart';
+export 'src/bindings/process.dart';
 export 'src/util.dart';
 
-/// Keeps reference to the global native `exports` object provided by Node.
-/// Use [exports.setProperty] to expose functionality of your module:
-///
-///     exports.setProperty('simplePi', 3.14);
-Exports get exports {
-  if (_exports != null) return _exports;
-  _exports = new Exports._(globals.exports);
-  return _exports;
-}
+/// Node environment helper. Provides access to runtime platform information
+/// as well as convenience wrappers for `require` and `exports`.
+const node = const Node._();
 
-Exports _exports;
+class Node {
+  const Node._();
 
-class Exports {
-  final dynamic _exports;
+  /// Platform specific information about this Node process.
+  Platform get platform => const NodePlatform();
 
-  Exports._(this._exports);
+  /// Loads a module specified by its [id].
+  ///
+  /// This is a proxy to Node's built-in `require` function.
+  dynamic require(String id) => globals.require(id);
 
-  void setProperty(String name, dynamic value) {
+  /// Exports [value] with specified property [name].
+  ///
+  /// This is a proxy to Node's built-in `exports` object.
+  ///
+  /// If `value` is a Function it's automatically wrapped with `allowInterop`,
+  /// otherwise it's passed unchanged so users should make sure to export
+  /// functionality which can be directly accessed/executed by JavaScript.
+  void export(String name, dynamic value) {
     if (value is Function) {
-      js_util.setProperty(_exports, name, js.allowInterop(value));
+      js_util.setProperty(globals.exports, name, allowInterop(value));
     } else {
-      js_util.setProperty(_exports, name, value);
+      js_util.setProperty(globals.exports, name, value);
     }
   }
+
+  String get dirname => globals.nodeDirname;
+  String get filename => globals.nodeFilename;
 }

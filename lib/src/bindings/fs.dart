@@ -6,6 +6,13 @@ library node_interop.bindings.fs;
 import 'package:js/js.dart';
 import 'globals.dart';
 
+/// Main entry point to Node's "fs" module.
+///
+/// Usage:
+///
+///     FS fs = require("fs");
+///     var list = fs.readdirSync("/home/me");
+///     print(list);
 @JS()
 abstract class FS {
   external void readdir(String path, void callback(err, List<String> files));

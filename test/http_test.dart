@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:js/js.dart';
-import 'package:node_interop/bindings.dart';
+import 'package:node_interop/node_interop.dart';
 import 'package:node_interop/http.dart';
 import 'package:test/test.dart';
 

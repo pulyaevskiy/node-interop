@@ -3,7 +3,6 @@
 @JS()
 library node_interop.bindings.globals;
 
-import 'dart:js';
 import 'package:js/js.dart';
 
 /// Returns a list of keys in [jsObject].
@@ -23,15 +22,11 @@ external dynamic require(String id);
 @JS()
 external dynamic get exports;
 
-// Need these because underscored names are private to this library.
-String get dirname => __dirname;
-String get filename => __filename;
+@JS('__dirname')
+external String get nodeDirname;
 
-@JS()
-external String get __dirname;
-
-@JS()
-external String get __filename;
+@JS('__filename')
+external String get nodeFilename;
 
 @JS()
 abstract class Date {
@@ -50,7 +45,7 @@ abstract class Console {
   external factory Console(stdout, [stderr]);
 }
 
-@JS('Buffer')
+@JS()
 abstract class Buffer {
   external static from(Iterable<int> bytes);
 }

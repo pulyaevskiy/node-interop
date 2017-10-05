@@ -2,6 +2,8 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 /// HTTP client implementation for Node.
+///
+/// See [NodeClient] for details.
 @JS()
 library node_interop.http;
 
@@ -11,7 +13,7 @@ import 'dart:js_util';
 import 'package:http/http.dart' as http;
 import 'package:js/js.dart';
 
-import 'bindings.dart';
+import 'node_interop.dart';
 import 'src/util.dart';
 
 final HTTP _nodeHTTP = require('http');

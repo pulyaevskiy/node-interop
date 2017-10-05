@@ -9,12 +9,24 @@ import 'package:js/js.dart';
 import 'events.dart';
 import 'globals.dart';
 
+/// Convenience method for creating instances of "http" module's Agent class.
+///
+/// This is equivalent of Node's `new http.Agent([options])`.
 Agent createAgent([AgentOptions options]) {
   _HTTPAgentAccess http = require('http');
   var args = (options == null) ? [] : [options];
   return callConstructor(http.Agent, args);
 }
 
+/// Main entry point to Node's "http" module functionality.
+///
+/// Usage:
+///
+///     HTTP http = require('http');
+///     http.get("http://example.com");
+///
+/// See also:
+/// - [createAgent]
 @JS()
 abstract class HTTP {
   /// Returns a new instance of [Server].

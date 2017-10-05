@@ -14,7 +14,6 @@
 ///       print(fs.currentDirectory);
 ///       Directory dir = fs.directory('/some/path');
 ///       print("Directory ${dir.path} exists: ${dir.existsSync()}");
-///       // et cetera
 ///     }
 library node_interop.fs;
 

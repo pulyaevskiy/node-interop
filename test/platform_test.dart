@@ -1,6 +1,6 @@
 @TestOn('node')
+import 'package:node_interop/src/platform.dart';
 import 'package:node_interop/node_interop.dart';
-import 'package:node_interop/bindings.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -16,7 +16,7 @@ void main() {
     test('script', () {
       expect(platform.script, new isInstanceOf<Uri>());
       expect(platform.script.isAbsolute, isTrue);
-      expect(platform.script.path, filename);
+      expect(platform.script.path, node.filename);
       expect(platform.script.pathSegments.last,
           'platform_test.dart.node_test.dart.js');
     });
@@ -95,7 +95,7 @@ void main() {
 
     test('script', () {
       expect(platform.script, new isInstanceOf<Uri>());
-      expect(platform.script.path, filename);
+      expect(platform.script.path, node.filename);
     });
 
     test('stdinSupportsAnsi', () {

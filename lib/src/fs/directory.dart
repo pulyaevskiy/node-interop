@@ -47,8 +47,7 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   void deleteSync({bool recursive: false}) {
     if (recursive)
-      throw new UnsupportedError(
-          'Recursive delete is not supported by Node API');
+      throw new UnsupportedError('Recursive delete is not supported in Node.');
     _nodeFS.rmdirSync(path);
   }
 
@@ -116,8 +115,7 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   Future<Directory> create({bool recursive: false}) {
     if (recursive)
-      throw new UnsupportedError(
-          'Recursive create is not supported by Node API');
+      throw new UnsupportedError('Recursive create is not supported in Node.');
     var completer = new Completer();
     void callback(err) {
       if (err == null) {
@@ -136,8 +134,7 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   void createSync({bool recursive: false}) {
     if (recursive)
-      throw new UnsupportedError(
-          'Recursive create is not supported by Node API');
+      throw new UnsupportedError('Recursive create is not supported in Node.');
     _nodeFS.mkdirSync(path);
   }
 
@@ -154,6 +151,6 @@ class _Directory extends _FileSystemEntity implements Directory {
   @override
   List<FileSystemEntity> listSync(
       {bool recursive: false, bool followLinks: true}) {
-    return null; // fs.readdirSync(path).toList();
+    throw new UnimplementedError();
   }
 }

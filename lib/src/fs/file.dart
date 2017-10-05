@@ -14,37 +14,37 @@ class _File extends _FileSystemEntity implements File {
   @override
   Future<File> copy(String newPath) {
     // TODO: implement copy
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
   File copySync(String newPath) {
     // TODO: implement copySync
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
   Future<File> create({bool recursive: false}) {
     // TODO: implement create
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
   void createSync({bool recursive: false}) {
     // TODO: implement createSync
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
   Future<FileSystemEntity> delete({bool recursive: false}) {
     // TODO: implement delete
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
   void deleteSync({bool recursive: false}) {
     // TODO: implement deleteSync
-    return null;
+    throw new UnimplementedError();
   }
 
   @override
@@ -86,6 +86,7 @@ class _File extends _FileSystemEntity implements File {
   @override
   Stream<List<int>> openRead([int start, int end]) {
     // TODO: implement openRead
+    throw new UnimplementedError();
   }
 
   @override
@@ -95,78 +96,93 @@ class _File extends _FileSystemEntity implements File {
   @override
   IOSink openWrite({FileMode mode: FileMode.WRITE, Encoding encoding: UTF8}) {
     // TODO: implement openWrite
+    throw new UnimplementedError();
   }
 
   @override
   Future<List<int>> readAsBytes() {
     // TODO: implement readAsBytes
+    throw new UnimplementedError();
   }
 
   @override
   List<int> readAsBytesSync() {
     // TODO: implement readAsBytesSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<List<String>> readAsLines({Encoding encoding: UTF8}) {
     // TODO: implement readAsLines
+    throw new UnimplementedError();
   }
 
   @override
   List<String> readAsLinesSync({Encoding encoding: UTF8}) {
     // TODO: implement readAsLinesSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<String> readAsString({Encoding encoding: UTF8}) {
     // TODO: implement readAsString
+    throw new UnimplementedError();
   }
 
   @override
   String readAsStringSync({Encoding encoding: UTF8}) {
     // TODO: implement readAsStringSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<File> rename(String newPath) {
     // TODO: implement rename
+    throw new UnimplementedError();
   }
 
   @override
   File renameSync(String newPath) {
     // TODO: implement renameSync
+    throw new UnimplementedError();
   }
 
   @override
   Future setLastAccessed(DateTime time) {
     // TODO: implement setLastAccessed
+    throw new UnimplementedError();
   }
 
   @override
   void setLastAccessedSync(DateTime time) {
     // TODO: implement setLastAccessedSync
+    throw new UnimplementedError();
   }
 
   @override
   Future setLastModified(DateTime time) {
     // TODO: implement setLastModified
+    throw new UnimplementedError();
   }
 
   @override
   void setLastModifiedSync(DateTime time) {
     // TODO: implement setLastModifiedSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<File> writeAsBytes(List<int> bytes,
       {FileMode mode: FileMode.WRITE, bool flush: false}) {
     // TODO: implement writeAsBytes
+    throw new UnimplementedError();
   }
 
   @override
   void writeAsBytesSync(List<int> bytes,
       {FileMode mode: FileMode.WRITE, bool flush: false}) {
     // TODO: implement writeAsBytesSync
+    throw new UnimplementedError();
   }
 
   @override
@@ -175,6 +191,7 @@ class _File extends _FileSystemEntity implements File {
       Encoding encoding: UTF8,
       bool flush: false}) {
     // TODO: implement writeAsString
+    throw new UnimplementedError();
   }
 
   @override
@@ -264,124 +281,148 @@ class _RandomAccessFile implements RandomAccessFile {
   @override
   Future<int> length() {
     // TODO: implement length
+    throw new UnimplementedError();
   }
 
   @override
   int lengthSync() {
     // TODO: implement lengthSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> lock(
       [FileLock mode = FileLock.EXCLUSIVE, int start = 0, int end = -1]) {
     // TODO: implement lock
+    throw new UnimplementedError();
   }
 
   @override
   void lockSync(
       [FileLock mode = FileLock.EXCLUSIVE, int start = 0, int end = -1]) {
     // TODO: implement lockSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<int> position() {
     // TODO: implement position
+    throw new UnimplementedError();
   }
 
   @override
   int positionSync() {
     // TODO: implement positionSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<List<int>> read(int bytes) {
     // TODO: implement read
+    throw new UnimplementedError();
   }
 
   @override
   Future<int> readByte() {
     // TODO: implement readByte
+    throw new UnimplementedError();
   }
 
   @override
   int readByteSync() {
     // TODO: implement readByteSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<int> readInto(List<int> buffer, [int start = 0, int end]) {
     // TODO: implement readInto
+    throw new UnimplementedError();
   }
 
   @override
   int readIntoSync(List<int> buffer, [int start = 0, int end]) {
     // TODO: implement readIntoSync
+    throw new UnimplementedError();
   }
 
   @override
   List<int> readSync(int bytes) {
     // TODO: implement readSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> setPosition(int position) {
     // TODO: implement setPosition
+    throw new UnimplementedError();
   }
 
   @override
   void setPositionSync(int position) {
     // TODO: implement setPositionSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> truncate(int length) {
     // TODO: implement truncate
+    throw new UnimplementedError();
   }
 
   @override
   void truncateSync(int length) {
     // TODO: implement truncateSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> unlock([int start = 0, int end = -1]) {
     // TODO: implement unlock
+    throw new UnimplementedError();
   }
 
   @override
   void unlockSync([int start = 0, int end = -1]) {
     // TODO: implement unlockSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> writeByte(int value) {
     // TODO: implement writeByte
+    throw new UnimplementedError();
   }
 
   @override
   int writeByteSync(int value) {
     // TODO: implement writeByteSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> writeFrom(List<int> buffer,
       [int start = 0, int end]) {
     // TODO: implement writeFrom
+    throw new UnimplementedError();
   }
 
   @override
   void writeFromSync(List<int> buffer, [int start = 0, int end]) {
     // TODO: implement writeFromSync
+    throw new UnimplementedError();
   }
 
   @override
   Future<RandomAccessFile> writeString(String string,
       {Encoding encoding: UTF8}) {
     // TODO: implement writeString
+    throw new UnimplementedError();
   }
 
   @override
   void writeStringSync(String string, {Encoding encoding: UTF8}) {
     // TODO: implement writeStringSync
+    throw new UnimplementedError();
   }
 }

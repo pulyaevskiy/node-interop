@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.0
+
+- **Breaking changes:**
+  - `NodePlatform` is no longer exported from `node_interop.dart` library.
+  - Library-level `exports` getter was removed. Now  `exports` is a direct reference
+    to native JS object. Replace any calls to `exports.setProperty(name, value)`
+    with new API: `node.export(name, value)`.
+- **Deprecated:**
+  - `node_interop/bindings.dart` is deprecated and will be removed in 0.2.0.
+    All bindings are available through main `node_interop/node_interop.dart`
+    import.
+- **New:**
+  - Many updates to documentation.
+  - Main package's library now exposes all (implemented) Node API bindings.
+  - New `node` library object with centralized access to the Node platform and
+    runtime information, which also exposes helpers for `require` and `exports`.
+
 ## 0.0.7
 
 - Added `node_interop/test.dart` library with `installNodeModules()`

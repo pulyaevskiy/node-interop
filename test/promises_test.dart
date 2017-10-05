@@ -32,8 +32,7 @@ exports.receivePromise = function (promise) {
 void main() {
   setUpAll(() {
     var fs = new NodeFileSystem();
-    var platform = new NodePlatform();
-    var segments = platform.script.pathSegments.toList();
+    var segments = node.platform.script.pathSegments.toList();
     segments
       ..removeLast()
       ..add('promises.js');

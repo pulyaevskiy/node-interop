@@ -53,13 +53,13 @@ class NodePlatform implements Platform {
   @override
   String get packageConfig {
     throw new UnsupportedError(
-        'Package config is not supported in Node environment');
+        'Package config is not supported in Node environment.');
   }
 
   @override
   String get packageRoot {
     throw new UnsupportedError(
-        'Package root is not supported in Node environment');
+        'Package root is not supported in Node environment.');
   }
 
   @override
@@ -69,7 +69,7 @@ class NodePlatform implements Platform {
   String get resolvedExecutable => process.execPath;
 
   @override
-  Uri get script => new Uri.file(filename, windows: isWindows);
+  Uri get script => new Uri.file(nodeFilename, windows: isWindows);
 
   @override
   bool get stdinSupportsAnsi => throw new UnimplementedError();
@@ -85,7 +85,7 @@ class NodePlatform implements Platform {
   @override
   String get version {
     throw new UnsupportedError(
-        'Dart version is not supported in Node environment');
+        'Dart version is not supported in Node environment.');
   }
 
   @override
