@@ -1,8 +1,6 @@
 # NodeJS interop library
 
-[![Join the chat at https://gitter.im/pulyaevskiy/node-interop](https://badges.gitter.im/pulyaevskiy/node-interop.svg)](https://gitter.im/pulyaevskiy/node-interop?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/pulyaevskiy/node-interop.svg?branch=master)](https://travis-ci.org/pulyaevskiy/node-interop)
+[![Build Status](https://img.shields.io/travis-ci/pulyaevskiy/node-interop.svg?branch=master&style=flat-square)](https://travis-ci.org/pulyaevskiy/node-interop) [![Pub](https://img.shields.io/pub/v/node_interop.svg?style=flat-square)](https://pub.dartlang.org/packages/node_interop) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-c73061.svg?style=flat-square)](https://gitter.im/pulyaevskiy/node-interop)
 
 * [What is this?](#what-is-this?)
 * [Examples](#examples)
