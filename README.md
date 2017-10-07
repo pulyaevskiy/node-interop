@@ -1,5 +1,7 @@
 # NodeJS interop library
 
+[![Join the chat at https://gitter.im/pulyaevskiy/node-interop](https://badges.gitter.im/pulyaevskiy/node-interop.svg)](https://gitter.im/pulyaevskiy/node-interop?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/pulyaevskiy/node-interop.svg?branch=master)](https://travis-ci.org/pulyaevskiy/node-interop)
 
 * [What is this?](#what-is-this?)
