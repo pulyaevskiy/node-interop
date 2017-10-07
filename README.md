@@ -14,23 +14,15 @@
 
 ## What is this?
 
-`node_interop` provides bindings for NodeJS APIs and enables writing Dart
-applications and libraries which can be compiled and ran in NodeJS.
+`node_interop` provides NodeJS API bindings and enables running Dart
+applications in NodeJS.
 
-In addition to bindings some modules went through "dartification" which mostly
-involved:
+In addition to bindings some modules are also exposed as idiomatic Dart
+libraries. For instance, in addition to Node's [http](https://nodejs.org/api/http.html)
+module bindings this package provides a HTTP client implementation
+based on Dart's [http](https://pub.dartlang.org/packages/http) package.
 
-* callbacks and/or Promises replaced with Dart Futures and Streams
-* when available, Dart-specific interfaces implemented
-* strongly typed everything (which sometimes means sacrificing flexibility
-  of Node APIs to consistency/simplicity)
-
-For instance, in addition to Node's [http](https://nodejs.org/api/http.html)
-module bindings this package exposes "http.dart" library with HTTP client
-which implements `Client` interface of Dart's
-[http](https://pub.dartlang.org/packages/http) package.
-
-Here is an example Dart app using this client:
+Here is an example app using this client:
 
 ```dart
 import 'package:node_interop/http.dart';
@@ -48,22 +40,18 @@ regular Dart app. This is pretty much why `node_interop` exists.
 
 ## Examples
 
-Feel free to checkout `example/` folder of this repository for some example
+Checkout `example/` folder of this repository for some example
 apps using different APIs.
 
 ## Status
 
-This package is under active development which means that you should expect
-for things to change quickly. Of course breaking changes are likely to happen.
+This package is under active development which means things are likely to
+change rather rapidly.
 
-The bindings themselves should be a lot less prone to breaking changes
-though since it's just an interface to Node's APIs which are fairly stable at
-this point. Also libraries like `http.dart` are also unlikely to get breaking
-changes as they just implement interfaces from other Dart packages which are
-fairly stable as well.
+Make sure to checkout [CHANGELOG.md](CHANGELOG.md) for every release, all
+notable changes and upgrade instructions will be announced there.
 
-There are always bugs, of course, which haven't been found yet. If you do find
-one, please create an issue in the
+If you found a bug, please don't hesitate to create an issue in the
 [issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new).
 
 ## Usage
@@ -100,8 +88,7 @@ How to create a simple Node app written in Dart:
   }
   ```
 4. **Compile.**
-  Pub by default assumes you are building for web so it builds `web/` subfolder
-  by default. So we need to explicitly tell it to look in `node/` instead:
+  Tell Pub to build `node/` folder:
   ```bash
   $ pub build node/
   ```
@@ -121,7 +108,7 @@ This package consists of a set of libraries.
 
 > `import 'package:node_interop/node_interop.dart'`.
 
-Main library which exposes NodeJS API bindings as-is. Not all of the APIs are
+Main library which provides NodeJS API bindings as-is. Not all of the APIs are
 implemented at this point, in fact, it's a small percentage. If you didn't find
 a class or method you were looking for, please create an issue or submit a
 pull request (even better!).
@@ -141,6 +128,10 @@ void main() {
   console.log('message');
 }
 ```
+
+Note that bindings provide direct access to JavaScript objects and functions and
+you still need to make sure Dart/JS object a converted properly as well as
+Dart functions are wrapped with `allowInterop` when passed to JS.
 
 ### FS
 
