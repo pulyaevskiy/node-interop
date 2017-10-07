@@ -130,8 +130,12 @@ void main() {
 ```
 
 Note that bindings provide direct access to JavaScript objects and functions and
-you still need to make sure Dart/JS object a converted properly as well as
-Dart functions are wrapped with `allowInterop` when passed to JS.
+you still need to make sure objects are properly converted when passed
+between Dart and JS parts of the app, as well as Dart functions are wrapped with
+`allowInterop` when passed to JS.
+
+This is why it is recommended to use "dartified" libraries described below, as
+they take care of all details communicating with JavaScript side of your app.
 
 ### FS
 
