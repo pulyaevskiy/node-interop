@@ -47,8 +47,9 @@ different APIs.
 This package is under active development which means things are likely to
 change.
 
-Make sure to checkout [CHANGELOG.md](CHANGELOG.md) after every release, all
-notable changes and upgrade instructions will be described there.
+Make sure to checkout [CHANGELOG.md](https://github.com/pulyaevskiy/node-interop/blob/master/CHANGELOG.md)
+after every release, all notable changes and upgrade instructions will
+be described there.
 
 If you found a bug, please don't hesitate to create an issue in the
 [issue tracker](http://github.com/pulyaevskiy/node-interop/issues/new).
