@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0
+## 0.1.0-beta.1
 
 - **Breaking changes:**
   - `NodePlatform` is no longer exported from `node_interop.dart` library.
