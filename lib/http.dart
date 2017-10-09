@@ -19,6 +19,7 @@ import 'src/util.dart';
 //export 'src/internet_address.dart'; // not ready yet.
 
 final HTTP _nodeHTTP = require('http');
+final HTTPS _nodeHTTPS = require('https');
 
 /// HTTP client which uses Node IO (via 'http' module).
 ///
@@ -39,12 +40,23 @@ class NodeClient extends http.BaseClient {
     this.keepAliveMsecs = 1000,
   });
 
-  /// Native JavaScript connection agent used by this client.
-  Agent get agent => _agent ??= createAgent(new AgentOptions(
+  /// Native JavaScript connection agent used by this client for insecure
+  /// requests.
+  HttpAgent get httpAgent =>
+      _httpAgent ??= createHttpAgent(new HttpAgentOptions(
         keepAlive: keepAlive,
         keepAliveMsecs: keepAliveMsecs,
       ));
-  Agent _agent;
+  HttpAgent _httpAgent;
+
+  /// Native JavaScript connection agent used by this client for secure
+  /// requests.
+  HttpAgent get httpsAgent =>
+      _httpsAgent ??= createHttpsAgent(new HttpAgentOptions(
+        keepAlive: keepAlive,
+        keepAliveMsecs: keepAliveMsecs,
+      ));
+  HttpAgent _httpsAgent;
 
   dynamic _jsifyHeaders(Map<String, dynamic> headers) {
     var object = newObject();
@@ -57,6 +69,10 @@ class NodeClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     var url = request.url;
+    var usedAgent = (url.scheme == 'http') ? httpAgent : httpsAgent;
+    var sendRequest =
+        (url.scheme == 'http') ? _nodeHTTP.request : _nodeHTTPS.request;
+
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
     var options = new RequestOptions(
@@ -66,7 +82,7 @@ class NodeClient extends http.BaseClient {
         method: request.method,
         path: pathWithQuery,
         headers: _jsifyHeaders(request.headers),
-        agent: agent);
+        agent: usedAgent);
     var completer = new Completer<http.StreamedResponse>();
 
     void handleResponse(IncomingMessage response) {
@@ -89,7 +105,7 @@ class NodeClient extends http.BaseClient {
       }));
     }
 
-    var nodeRequest = _nodeHTTP.request(options, allowInterop(handleResponse));
+    var nodeRequest = sendRequest(options, allowInterop(handleResponse));
     nodeRequest.on('error', allowInterop((e) {
       completer.completeError(e.message);
     }));
@@ -111,6 +127,7 @@ class NodeClient extends http.BaseClient {
 
   @override
   void close() {
-    agent.destroy();
+    httpAgent.destroy();
+    httpsAgent.destroy();
   }
 }

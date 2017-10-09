@@ -7,16 +7,19 @@
   - Library-level `exports` getter was removed. Now  `exports` is a direct reference
     to native JS object. Replace any calls to `exports.setProperty(name, value)`
     with new API: `node.export(name, value)`.
-- **Deprecated:**
-  - `node_interop/bindings.dart` is deprecated and will be removed in 0.2.0.
-    All bindings are available through main `node_interop/node_interop.dart`
-    import.
+  - "http" module: `Agent`, `Server`, `AgentOptions` renamed to
+    `HttpAgent`, `HttpServer`, `HttpAgentOptions` respectively.
+  - "http" module: `createAgent` renamed to `createHttpAgent`.
+  - `node_interop/bindings.dart` was removed. All bindings are available
+    through main `node_interop/node_interop.dart` import.
 - **New:**
   - Many updates to documentation.
   - Main package's library now exposes all (implemented) Node API bindings.
   - New `node` library object with centralized access to the Node platform and
-    runtime information, which also exposes helpers for `require` and `exports`.
-  - Exposed parts of "dns" and "net" module bindings.
+    runtime information, as well as module globals like `require` and `exports`.
+  - Exposed parts of "https", "tls", "dns" and "net" module bindings.
+  - Added HTTPS support to `NodeClient` from `node_interop/http.dart`.
+  - Updated examples.
   - Gitter channel is now up: https://gitter.im/pulyaevskiy/node-interop.
 
 ## 0.0.7

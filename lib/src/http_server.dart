@@ -7,12 +7,12 @@ import 'dart:io' as io;
 import 'package:js/js.dart';
 
 import 'bindings/globals.dart';
-import 'bindings/http.dart';
+import 'bindings/http.dart' as nodeHTTP;
 import 'internet_address.dart';
 
 export 'dart:io' show HttpStatus, HttpHeaders;
 
-final HTTP _nodeHTTP = require('http');
+final nodeHTTP.HTTP _http = require('http');
 
 class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
   @override
@@ -20,7 +20,7 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
   @override
   final int port;
 
-  Server _server;
+  nodeHTTP.HttpServer _server;
   Completer<HttpServer> _listenCompleter;
   StreamController<io.HttpRequest> _controller;
 
@@ -31,7 +31,7 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
       onResume: _onResume,
       onCancel: _onCancel,
     );
-    _server = _nodeHTTP.createServer(allowInterop(_jsRequestHandler));
+    _server = _http.createServer(allowInterop(_jsRequestHandler));
     _server.on('error', allowInterop(_jsErrorHandler));
   }
 
@@ -50,7 +50,8 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
     _controller.addError(error);
   }
 
-  void _jsRequestHandler(IncomingMessage request, ServerResponse response) {
+  void _jsRequestHandler(
+      nodeHTTP.IncomingMessage request, nodeHTTP.ServerResponse response) {
     if (!_controller.isPaused) {
       // Reject any incoming request before listening started or subscription
       // is paused.
@@ -113,54 +114,48 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
 }
 
 class HttpRequest extends Stream<List<int>> implements io.HttpRequest {
-  final IncomingMessage _nativeRequest;
-  final ServerResponse _nativeResponse;
+  final nodeHTTP.IncomingMessage _nativeRequest;
+  final nodeHTTP.ServerResponse _nativeResponse;
 
   HttpRequest._(this._nativeRequest, this._nativeResponse);
 
-  // TODO: implement certificate
   @override
-  io.X509Certificate get certificate => null;
+  io.X509Certificate get certificate => throw new UnimplementedError();
 
-  // TODO: implement connectionInfo
   @override
-  io.HttpConnectionInfo get connectionInfo => null;
+  io.HttpConnectionInfo get connectionInfo => throw new UnimplementedError();
 
-  // TODO: implement contentLength
   @override
-  int get contentLength => null;
+  int get contentLength => throw new UnimplementedError();
 
-  // TODO: implement cookies
   @override
-  List<io.Cookie> get cookies => null;
+  List<io.Cookie> get cookies => throw new UnimplementedError();
 
-  // TODO: implement headers
   @override
-  io.HttpHeaders get headers => null;
+  io.HttpHeaders get headers => throw new UnimplementedError();
 
   @override
   StreamSubscription<List<int>> listen(void onData(List<int> event),
       {Function onError, void onDone(), bool cancelOnError}) {
-    // TODO: implement listen
+    throw new UnimplementedError();
   }
 
   @override
   String get method => _nativeRequest.method;
 
-  // TODO: implement persistentConnection
   @override
   bool get persistentConnection => throw new UnimplementedError();
 
   @override
   String get protocolVersion => _nativeRequest.httpVersion;
 
-  // TODO: implement requestedUri
   @override
-  Uri get requestedUri => null;
+  Uri get requestedUri => throw new UnimplementedError();
 
-  // TODO: implement response
   @override
-  io.HttpResponse get response => null;
+  io.HttpResponse get response =>
+      _response ??= new HttpResponse._(_nativeResponse);
+  io.HttpResponse _response;
 
   // TODO: implement session
   @override
@@ -172,7 +167,7 @@ class HttpRequest extends Stream<List<int>> implements io.HttpRequest {
 }
 
 class HttpResponse extends io.HttpResponse {
-  final ServerResponse _nativeResponse;
+  final nodeHTTP.ServerResponse _nativeResponse;
 
   @override
   Encoding encoding;
@@ -181,17 +176,17 @@ class HttpResponse extends io.HttpResponse {
 
   @override
   void add(List<int> data) {
-    // TODO: implement add
+    throw new UnimplementedError();
   }
 
   @override
   void addError(Object error, [StackTrace stackTrace]) {
-    // TODO: implement addError
+    throw new UnimplementedError();
   }
 
   @override
   Future addStream(Stream<List<int>> stream) {
-    // TODO: implement addStream
+    throw new UnimplementedError();
   }
 
   @override
@@ -200,50 +195,46 @@ class HttpResponse extends io.HttpResponse {
     return new Future.value();
   }
 
-  // TODO: implement connectionInfo
   @override
-  io.HttpConnectionInfo get connectionInfo => null;
+  io.HttpConnectionInfo get connectionInfo => throw new UnimplementedError();
 
-  // TODO: implement cookies
   @override
-  List<io.Cookie> get cookies => null;
+  List<io.Cookie> get cookies => throw new UnimplementedError();
 
   @override
   Future<io.Socket> detachSocket({bool writeHeaders: true}) {
-    // TODO: implement detachSocket
+    throw new UnimplementedError();
   }
 
-  // TODO: implement done
   @override
-  Future get done => null;
+  Future get done => throw new UnimplementedError();
 
   @override
   Future flush() {
-    // TODO: implement flush
+    throw new UnimplementedError();
   }
 
-  // TODO: implement headers
   @override
-  io.HttpHeaders get headers => null;
+  io.HttpHeaders get headers => throw new UnimplementedError();
 
   @override
   Future redirect(Uri location, {int status: io.HttpStatus.MOVED_TEMPORARILY}) {
-    // TODO: implement redirect
+    throw new UnimplementedError();
   }
 
   @override
   void write(Object obj) {
-    // TODO: implement write
+    throw new UnimplementedError();
   }
 
   @override
   void writeAll(Iterable objects, [String separator = ""]) {
-    // TODO: implement writeAll
+    throw new UnimplementedError();
   }
 
   @override
   void writeCharCode(int charCode) {
-    // TODO: implement writeCharCode
+    throw new UnimplementedError();
   }
 
   @override

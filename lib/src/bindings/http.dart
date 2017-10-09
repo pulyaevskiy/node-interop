@@ -12,8 +12,8 @@ import 'globals.dart';
 /// Convenience method for creating instances of "http" module's Agent class.
 ///
 /// This is equivalent of Node's `new http.Agent([options])`.
-Agent createAgent([AgentOptions options]) {
-  _HTTPAgentAccess http = require('http');
+HttpAgent createHttpAgent([HttpAgentOptions options]) {
+  HTTP http = require('http');
   var args = (options == null) ? [] : [options];
   return callConstructor(http.Agent, args);
 }
@@ -26,14 +26,14 @@ Agent createAgent([AgentOptions options]) {
 ///     http.get("http://example.com");
 ///
 /// See also:
-/// - [createAgent]
+/// - [createHttpAgent]
 @JS()
 abstract class HTTP {
-  /// Returns a new instance of [Server].
+  /// Returns a new instance of [HttpServer].
   ///
   /// The requestListener is a function which is automatically added to the
   /// 'request' event.
-  external Server createServer([requestListener]);
+  external HttpServer createServer([requestListener]);
   external ClientRequest request(RequestOptions options,
       [callback(IncomingMessage response)]);
 
@@ -43,28 +43,24 @@ abstract class HTTP {
   external ClientRequest get(dynamic urlOrOptions,
       [callback(IncomingMessage response)]);
 
-  external Agent get globalAgent;
-}
-
-@JS()
-abstract class _HTTPAgentAccess {
+  external HttpAgent get globalAgent;
   external dynamic get Agent;
 }
 
 @JS()
-abstract class Agent {
-  external factory Agent([AgentOptions options]);
+abstract class HttpAgent {
+  external factory HttpAgent([HttpAgentOptions options]);
   external void destroy();
 }
 
 @JS()
 @anonymous
-abstract class AgentOptions {
+abstract class HttpAgentOptions {
   external bool get keepAlive;
   external num get keepAliveMsecs;
   external num get maxSockets;
   external num get maxFreeSockets;
-  external factory AgentOptions({
+  external factory HttpAgentOptions({
     bool keepAlive,
     num keepAliveMsecs,
     num maxSockets,
@@ -126,7 +122,7 @@ abstract class ClientRequest implements EventEmitter {
 }
 
 @JS()
-abstract class Server implements EventEmitter {
+abstract class HttpServer implements EventEmitter {
   external void close([callback]);
   external void listen(handleOrPathOrPort,
       [callbackOrHostname, backlog, callback]);

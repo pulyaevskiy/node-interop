@@ -173,6 +173,14 @@ classes._
 Implements Dart-style HTTP client using [http](https://pub.dartlang.org/packages/file)
 package interface.
 
+There are several benefits to use this client over plain JS bindings:
+
+- Encapsulates HTTP/HTTPS connections, no need to juggle with
+  Node's "http" and "https" modules.
+- Replaces callbacks with Dart Futures which enables async/await.
+- Encapsulates JS interop logic like `allowInterop`.
+- Provides very Dart-like experience.
+
 ## Features and bugs
 
 Please file feature requests and bugs at the

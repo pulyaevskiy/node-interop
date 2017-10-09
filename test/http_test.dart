@@ -14,7 +14,7 @@ final HTTP nodeHTTP = require('http');
 
 void main() {
   group('HTTP client', () {
-    Server server;
+    HttpServer server;
 
     setUpAll(() {
       server = nodeHTTP

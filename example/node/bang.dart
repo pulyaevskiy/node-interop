@@ -3,9 +3,9 @@
 
 import 'package:node_interop/node_interop.dart';
 
-/// A module which exports a bang function.
+/// Example of a module which exports a bang function.
 main() {
-  exports.setProperty('bang', bang);
+  node.export('bang', bang);
 }
 
 String bang(String value) {
