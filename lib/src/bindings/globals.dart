@@ -6,6 +6,7 @@ library node_interop.bindings.globals;
 import 'package:js/js.dart';
 
 /// Returns a list of keys in [jsObject].
+///
 /// This function binds to JavaScript `Object.keys()`.
 @JS('Object.keys')
 external List<String> jsObjectKeys(jsObject);
@@ -16,11 +17,45 @@ abstract class Promise {
   external Promise then(Function onFulfilled, [Function onRejected]);
 }
 
+/// Requires (imports) a module specified by [id].
+///
+/// Example using "dns" module:
+///
+///     DNS dns = require('dns');
+///     var options = new DNSLookupOptions(all: true, verbatim: true);
+///     void lookupHandler(error, List<DNSAddress> addresses) {
+///       console.log(addresses);
+///     }
+///     dns.lookup('google.com', options, allowInterop(lookupHandler));
 @JS()
 external dynamic require(String id);
 
+/// Reference to Node's `module` object;
+///
+/// See also:
+///   - [https://nodejs.org/api/modules.html#modules_the_module_object](https://nodejs.org/api/modules.html#modules_the_module_object)
+@JS()
+external Module get module;
+
+@JS()
+abstract class Module {
+  external dynamic get children;
+  external dynamic get exports;
+  external set exports(value);
+}
+
+/// Returns reference to Node's `exports` object.
 @JS()
 external dynamic get exports;
+
+/// Replaces current module exports with [value].
+///
+/// Use with care, this effectively detaches `exports` from `module.exports`.
+///
+/// See also:
+///   - [https://nodejs.org/api/modules.html#modules_exports_shortcut](https://nodejs.org/api/modules.html#modules_exports_shortcut)
+@JS()
+external set exports(dynamic value);
 
 @JS('__dirname')
 external String get nodeDirname;

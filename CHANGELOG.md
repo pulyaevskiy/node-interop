@@ -16,6 +16,7 @@
   - Main package's library now exposes all (implemented) Node API bindings.
   - New `node` library object with centralized access to the Node platform and
     runtime information, which also exposes helpers for `require` and `exports`.
+  - Exposed parts of "dns" and "net" module bindings.
   - Gitter channel is now up: https://gitter.im/pulyaevskiy/node-interop.
 
 ## 0.0.7

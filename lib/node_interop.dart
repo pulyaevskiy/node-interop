@@ -30,10 +30,12 @@ import 'src/bindings/globals.dart' as globals;
 import 'src/platform.dart';
 
 export 'src/bindings/child_process.dart';
+export 'src/bindings/dns.dart';
 export 'src/bindings/events.dart';
 export 'src/bindings/fs.dart';
-export 'src/bindings/globals.dart';
+export 'src/bindings/globals.dart' hide nodeDirname, nodeFilename;
 export 'src/bindings/http.dart';
+export 'src/bindings/net.dart';
 export 'src/bindings/os.dart';
 export 'src/bindings/process.dart';
 export 'src/util.dart';
@@ -68,6 +70,10 @@ class Node {
     }
   }
 
+  /// The directory name of the current module.
   String get dirname => globals.nodeDirname;
+
+  /// The file name of the current module. This is the resolved absolute path of
+  /// the current module file.
   String get filename => globals.nodeFilename;
 }

@@ -16,6 +16,8 @@ import 'package:js/js.dart';
 import 'node_interop.dart';
 import 'src/util.dart';
 
+//export 'src/internet_address.dart'; // not ready yet.
+
 final HTTP _nodeHTTP = require('http');
 
 /// HTTP client which uses Node IO (via 'http' module).
