@@ -69,7 +69,7 @@ How to create a simple Node app written in Dart:
 2. Add dependency and transformers to the generated `pubspec.yaml`
   ```yaml
   dependencies:
-    node_interop: ^0.1.0
+    node_interop: '>=0.1.0 <0.2.0'
 
   transformers:
     - $dart2js
