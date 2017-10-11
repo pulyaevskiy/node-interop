@@ -86,7 +86,7 @@ class NodeClient extends http.BaseClient {
     var completer = new Completer<http.StreamedResponse>();
 
     void handleResponse(IncomingMessage response) {
-      Map<String, dynamic> headers = jsObjectToMap(response.headers);
+      Map<String, dynamic> headers = dartify(response.headers);
       var controller = new StreamController<List<int>>();
       completer.complete(new http.StreamedResponse(
         controller.stream,

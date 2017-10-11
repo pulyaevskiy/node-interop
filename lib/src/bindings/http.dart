@@ -18,6 +18,13 @@ HttpAgent createHttpAgent([HttpAgentOptions options]) {
   return callConstructor(http.Agent, args);
 }
 
+/// Listener on HTTP requests of [HttpServer].
+///
+/// See also:
+///   - [HTTP.createServer]
+typedef void HttpRequestListener(
+    IncomingMessage request, ServerResponse response);
+
 /// Main entry point to Node's "http" module functionality.
 ///
 /// Usage:
@@ -31,9 +38,9 @@ HttpAgent createHttpAgent([HttpAgentOptions options]) {
 abstract class HTTP {
   /// Returns a new instance of [HttpServer].
   ///
-  /// The requestListener is a function which is automatically added to the
-  /// 'request' event.
-  external HttpServer createServer([requestListener]);
+  /// The [requestListener] is a function which is automatically added to the
+  /// "request event.
+  external HttpServer createServer([HttpRequestListener requestListener]);
   external ClientRequest request(RequestOptions options,
       [callback(IncomingMessage response)]);
 

@@ -43,7 +43,8 @@ abstract class HTTPS {
   ///
   /// The requestListener is a function which is automatically added to the
   /// 'request' event.
-  external HttpsServer createServer([TlsServerOptions options, requestListener]);
+  external HttpsServer createServer(
+      [TlsServerOptions options, HttpRequestListener requestListener]);
   external ClientRequest request(RequestOptions options,
       [callback(IncomingMessage response)]);
 

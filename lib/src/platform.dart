@@ -15,7 +15,7 @@ class NodePlatform implements Platform {
   const NodePlatform();
 
   @override
-  Map<String, String> get environment => jsObjectToMap(process.env);
+  Map<String, String> get environment => dartify(process.env);
 
   @override
   String get executable => process.argv0;

@@ -5,6 +5,52 @@ import 'dart:convert';
 import 'fs.dart';
 import 'node_interop.dart';
 
+export 'node_interop.dart';
+
+/// Creates JavaScript file in the same directory with compiled test file.
+///
+/// This is useful for creating native Node modules for testing interactions
+/// between Dart and JS.
+///
+/// Example test case:
+///
+///     @JS()
+///     @TestOn('node')
+///     library pi_test;
+///
+///     import 'package:node_interop/test.dart';
+///     import 'package:test/test.dart';
+///     import 'package:js/js.dart';
+///
+///     /// Simple JS module which exports one value.
+///     const fixtureJS = '''
+///     exports.simplePI = 3.1415;
+///     '''
+///
+///     @JS()
+///     abstract class Fixture {
+///       external num get simplePI;
+///     }
+///
+///     void main() {
+///       createJSFile('fixture.js', fixtureJS);
+///
+///       test('simple PI', function() {
+///         Fixture fixture = require('./fixture.js');
+///         expect(fixture.simplePI, 3.1415);
+///       });
+///     }
+void createJSFile(String name, String contents) {
+  var fs = new NodeFileSystem();
+  var segments = node.platform.script.pathSegments.toList();
+  segments
+    ..removeLast()
+    ..add(name);
+  var jsFilepath = fs.path.separator + fs.path.joinAll(segments);
+  var file = fs.file(jsFilepath);
+  file.writeAsStringSync(contents);
+}
+
 /// Installs specified NodeJS [modules] in the same directory with compiled
 /// test file. Should normally be used as a very first command in the `main()`
 /// function of a test file.

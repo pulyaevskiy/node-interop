@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-beta.2
+
+- `jsObjectToMap` deprecated. There is new helper function `dartify`.
+  See documentation for more details.
+- New `jsify` helper function.
+- Clarified type of HTTP server `requestListener`.
+- New `createJSFile` test util in `test.dart`.
+
 ## 0.1.0-beta.1
 
 - **Breaking changes:**

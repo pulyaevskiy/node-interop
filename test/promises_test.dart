@@ -6,9 +6,9 @@
 library promises_test;
 
 import 'dart:async';
+
 import 'package:js/js.dart';
-import 'package:node_interop/node_interop.dart';
-import 'package:node_interop/fs.dart';
+import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 
 const promisesJS = '''
@@ -29,17 +29,14 @@ exports.receivePromise = function (promise) {
 }
 ''';
 
+@JS()
+abstract class JsPromises {
+  external Promise createPromise(value);
+  external Promise receivePromise(promise);
+}
+
 void main() {
-  setUpAll(() {
-    var fs = new NodeFileSystem();
-    var segments = node.platform.script.pathSegments.toList();
-    segments
-      ..removeLast()
-      ..add('promises.js');
-    var jsFilepath = fs.path.separator + fs.path.joinAll(segments);
-    var file = fs.file(jsFilepath);
-    file.writeAsStringSync(promisesJS);
-  });
+  createJSFile('promises.js', promisesJS);
 
   test('jsPromiseToFuture', () async {
     final JsPromises js = require('./promises.js');
@@ -79,11 +76,4 @@ void main() {
     var promise2 = js.receivePromise(promise);
     expect(jsPromiseToFuture(promise2), throwsA('NoNoNo'));
   });
-}
-
-@JS()
-@anonymous
-abstract class JsPromises {
-  external Promise createPromise(value);
-  external Promise receivePromise(promise);
 }
