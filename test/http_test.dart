@@ -55,6 +55,7 @@ void main() {
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('ok'));
+      expect(response.headers, contains('content-type'));
       client.close();
     });
 

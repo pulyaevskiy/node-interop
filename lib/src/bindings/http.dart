@@ -8,6 +8,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 import 'events.dart';
 import 'globals.dart';
+import 'net.dart';
 
 /// Convenience method for creating instances of "http" module's Agent class.
 ///
@@ -175,7 +176,7 @@ abstract class IncomingMessage implements EventEmitter {
   external JsArray<String> get rawHeaders;
   external JsArray<String> get rawTrailers;
   external void setTimeout(num msecs, callback);
-  external JsObject get socket; // TODO: Add net.Socket bindings
+  external Socket get socket;
   external num get statusCode;
   external String get statusMessage;
   external JsObject get trailers;

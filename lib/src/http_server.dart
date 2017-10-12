@@ -9,8 +9,10 @@ import 'package:js/js.dart';
 import 'bindings/globals.dart';
 import 'bindings/http.dart' as nodeHTTP;
 import 'internet_address.dart';
+import 'package:js/js_util.dart';
+import 'util.dart';
 
-export 'dart:io' show HttpStatus, HttpHeaders;
+export 'dart:io' show HttpStatus, HttpHeaders, ContentType;
 
 final nodeHTTP.HTTP _http = require('http');
 
@@ -113,6 +115,187 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
   }
 }
 
+class _HttpConnectionInfo implements io.HttpConnectionInfo {
+  @override
+  final int localPort;
+
+  @override
+  final InternetAddress remoteAddress;
+
+  @override
+  final int remotePort;
+
+  _HttpConnectionInfo(this.localPort, this.remoteAddress, this.remotePort);
+}
+
+/// HTTP headers which can not be modified.
+///
+/// All mutation methods of this class throw [UnsupportedError].
+class ImmutableHttpHeaders implements io.HttpHeaders {
+  final int _port;
+  final dynamic _headers;
+
+  ImmutableHttpHeaders(this._headers, this._port);
+
+  @override
+  bool get chunkedTransferEncoding =>
+      getProperty(_headers, io.HttpHeaders.TRANSFER_ENCODING) == 'chunked';
+
+  @override
+  void set chunkedTransferEncoding(bool chunked) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  int get contentLength {
+    var value = getProperty(_headers, io.HttpHeaders.CONTENT_LENGTH);
+    if (value != null) return int.parse(value);
+    return 0;
+  }
+
+  @override
+  set contentLength(int length) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  io.ContentType get contentType {
+    if (_contentType != null) return _contentType;
+    String value = getProperty(_headers, io.HttpHeaders.CONTENT_TYPE);
+    if (value == null || value.isEmpty) return null;
+    var types = value.split(',');
+    _contentType = io.ContentType.parse(types.first);
+    return _contentType;
+  }
+
+  io.ContentType _contentType;
+
+  @override
+  set contentType(io.ContentType type) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  DateTime get date {
+    String value = getProperty(_headers, io.HttpHeaders.DATE);
+    if (value == null || value.isEmpty) return null;
+    try {
+      return io.HttpDate.parse(value);
+    } on Exception catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  set date(DateTime date) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  DateTime get expires {
+    String value = getProperty(_headers, io.HttpHeaders.EXPIRES);
+    if (value == null || value.isEmpty) return null;
+    try {
+      return io.HttpDate.parse(value);
+    } on Exception catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  set expires(DateTime expires) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  String get host => getProperty(_headers, io.HttpHeaders.HOST);
+
+  @override
+  set host(String host) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  DateTime get ifModifiedSince {
+    String value = getProperty(_headers, io.HttpHeaders.IF_MODIFIED_SINCE);
+    if (value == null || value.isEmpty) return null;
+    try {
+      return io.HttpDate.parse(value);
+    } on Exception catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  set ifModifiedSince(DateTime ifModifiedSince) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  bool get persistentConnection {
+    var connection = getProperty(_headers, io.HttpHeaders.CONNECTION);
+    return (connection == 'keep-alive');
+  }
+
+  @override
+  set persistentConnection(bool persistentConnection) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  List<String> operator [](String name) {
+    throw new UnimplementedError();
+  }
+
+  @override
+  void add(String name, Object value) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  void clear() {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  void forEach(void f(String name, List<String> values)) {
+    throw new UnimplementedError();
+  }
+
+  @override
+  void noFolding(String name) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  void remove(String name, Object value) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  void removeAll(String name) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  void set(String name, Object value) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  String value(String name) {
+    throw new UnimplementedError();
+  }
+
+  @override
+  set port(int port) {
+    throw new UnsupportedError('HttpHeaders are immutable');
+  }
+
+  @override
+  int get port => _port;
+}
+
 class HttpRequest extends Stream<List<int>> implements io.HttpRequest {
   final nodeHTTP.IncomingMessage _nativeRequest;
   final nodeHTTP.ServerResponse _nativeResponse;
@@ -123,28 +306,44 @@ class HttpRequest extends Stream<List<int>> implements io.HttpRequest {
   io.X509Certificate get certificate => throw new UnimplementedError();
 
   @override
-  io.HttpConnectionInfo get connectionInfo => throw new UnimplementedError();
+  io.HttpConnectionInfo get connectionInfo {
+    var netAddress = _nativeRequest.socket.address();
+    var address = new InternetAddress(netAddress.address, null);
+    return new _HttpConnectionInfo(netAddress.port, address, null);
+  }
 
   @override
-  int get contentLength => throw new UnimplementedError();
+  int get contentLength => headers.contentLength;
 
   @override
   List<io.Cookie> get cookies => throw new UnimplementedError();
 
   @override
-  io.HttpHeaders get headers => throw new UnimplementedError();
+  io.HttpHeaders get headers => new ImmutableHttpHeaders(
+      _nativeRequest.headers, connectionInfo.remotePort);
 
+  StreamController<List<int>> _controller;
   @override
   StreamSubscription<List<int>> listen(void onData(List<int> event),
       {Function onError, void onDone(), bool cancelOnError}) {
-    throw new UnimplementedError();
+    assert(_controller == null);
+    _controller = new StreamController();
+
+    _nativeRequest.on('close', allowInterop(() {
+      _controller.close();
+    }));
+    _nativeRequest.on('data', allowInterop((Iterable<int> chunk) {
+      _controller.add(new List.unmodifiable(chunk));
+    }));
+    return _controller.stream.listen(onData,
+        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
   @override
   String get method => _nativeRequest.method;
 
   @override
-  bool get persistentConnection => throw new UnimplementedError();
+  bool get persistentConnection => headers.persistentConnection;
 
   @override
   String get protocolVersion => _nativeRequest.httpVersion;
@@ -157,7 +356,6 @@ class HttpRequest extends Stream<List<int>> implements io.HttpRequest {
       _response ??= new HttpResponse._(_nativeResponse);
   io.HttpResponse _response;
 
-  // TODO: implement session
   @override
   io.HttpSession get session => throw new UnsupportedError(
       'Sessions are not supported by Node HTTP server.');

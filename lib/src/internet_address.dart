@@ -15,11 +15,13 @@ DNS _dns = require('dns');
 Net _net = require('net');
 
 class InternetAddress implements io.InternetAddress {
+  final String _host;
+
   @override
   final String address;
 
   @override
-  final String host;
+  String get host => _host ?? address;
 
   @override
   io.InternetAddressType get type => _net.isIPv4(address)
@@ -30,7 +32,7 @@ class InternetAddress implements io.InternetAddress {
   set type(io.InternetAddressType value) =>
       throw new UnsupportedError('Setting address type is not supported.');
 
-  InternetAddress(this.address, this.host) {
+  InternetAddress(this.address, this._host) {
     if (_net.isIP(address) == 0)
       throw new ArgumentError('${address} is not valid.');
   }
