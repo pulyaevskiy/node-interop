@@ -4,7 +4,6 @@
 /// HTTP client implementation for Node.
 ///
 /// See [NodeClient] for details.
-@JS()
 library node_interop.http;
 
 import 'dart:async';
@@ -17,6 +16,7 @@ import 'node_interop.dart';
 import 'src/util.dart';
 
 //export 'src/internet_address.dart'; // not ready yet.
+export 'src/http_server.dart' hide HttpServer;
 
 final HTTP _nodeHTTP = require('http');
 final HTTPS _nodeHTTPS = require('https');

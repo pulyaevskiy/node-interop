@@ -7,6 +7,7 @@ import 'dart:js';
 import 'dart:js_util';
 import 'package:js/js.dart';
 import 'events.dart';
+import 'stream.dart';
 import 'globals.dart';
 import 'net.dart';
 
@@ -112,7 +113,7 @@ abstract class RequestOptions {
 }
 
 @JS()
-abstract class ClientRequest implements EventEmitter {
+abstract class ClientRequest extends EventEmitter {
   external void abort();
   external bool get aborted;
   external JsObject get connection; // TODO: Add net.Socket bindings
@@ -130,7 +131,7 @@ abstract class ClientRequest implements EventEmitter {
 }
 
 @JS()
-abstract class HttpServer implements EventEmitter {
+abstract class HttpServer extends EventEmitter {
   external void close([callback]);
   external void listen(handleOrPathOrPort,
       [callbackOrHostname, backlog, callback]);
@@ -142,10 +143,9 @@ abstract class HttpServer implements EventEmitter {
 }
 
 @JS()
-abstract class ServerResponse implements EventEmitter {
+abstract class ServerResponse extends Writable {
   external void addTrailers(headers);
-  external JsObject get connection; // TODO: Add net.Socket bindings
-  external void end([dynamic data, String encoding, callback]);
+  external Socket get connection;
   external bool get finished;
   external String getHeader(String name);
   external JsArray<String> getHeaderNames();
@@ -156,19 +156,17 @@ abstract class ServerResponse implements EventEmitter {
   external bool get sendDate;
   external void setHeader(String name, dynamic value);
   external void setTimeout(num msecs, [callback]);
-  external JsObject get socket; // TODO: Add net.Socket bindings
+  external Socket get socket;
   external num get statusCode;
   external void set statusCode(num value);
   external String get statusMessage;
   external void set statusMessage(String value);
-  external void write(chunk,
-      [String encoding, callback]); // TODO: Add Buffer bindings
   external void writeContinue();
   external void writeHead(num statusCode, [String statusMessage, headers]);
 }
 
 @JS()
-abstract class IncomingMessage implements EventEmitter {
+abstract class IncomingMessage extends Readable {
   external void destroy([error]);
   external JsObject get headers;
   external String get httpVersion;

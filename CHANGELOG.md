@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-beta.3
+
+- Added new `async.dart` library with basic implementations of
+  `ReadableStream`, `WritableStream` and `NodeIOSink`.
+- Added implementations of server side `HttpRequest` and `HttpResponse`
+  to `http.dart`, as well as `HttpHeaders`.
+- More updates to bindings.
+
 ## 0.1.0-beta.2
 
 - `jsObjectToMap` deprecated. There is new helper function `dartify`.

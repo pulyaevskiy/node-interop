@@ -19,7 +19,6 @@
 /// - [HTTP]
 /// - [FS]
 /// - [ChildProcessModule]
-@JS()
 library node_interop;
 
 import 'dart:js_util' as js_util;
@@ -39,6 +38,7 @@ export 'src/bindings/https.dart';
 export 'src/bindings/net.dart';
 export 'src/bindings/os.dart';
 export 'src/bindings/process.dart';
+export 'src/bindings/stream.dart';
 export 'src/util.dart';
 
 /// Node environment helper. Provides access to runtime platform information

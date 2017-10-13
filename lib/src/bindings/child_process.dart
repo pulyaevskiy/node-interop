@@ -17,7 +17,7 @@ abstract class ChildProcessModule {
 }
 
 @JS()
-abstract class ChildProcess implements EventEmitter {}
+abstract class ChildProcess extends EventEmitter {}
 
 @JS()
 @anonymous

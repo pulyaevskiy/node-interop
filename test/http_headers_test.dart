@@ -5,45 +5,52 @@
 @TestOn('node')
 library node_interop.http_headers_test;
 
-import 'dart:async';
-import 'dart:js';
+import 'dart:io';
 
 import 'package:js/js.dart';
 import 'package:node_interop/node_interop.dart';
 import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
-import 'package:node_interop/src/http_server.dart';
+import 'package:node_interop/src/http_headers.dart';
 
 final HTTP nodeHTTP = require('http');
 
 const headersJS = '''
-exports.headers = {
-  'transfer-encoding': 'chunked',
-  'content-type': 'text/html; charset=utf-8',
-  'date': 'Thu, 1 Jan 1970 00:00:00 GMT',
-  'expires': 'Thu, 1 Jan 1970 01:15:00 GMT',
-  'host': 'example.com',
-  'if-modified-since': 'Thu, 1 Jan 1970 03:15:00 GMT',
-  'connection': 'keep-alive'
+exports.request = {
+  headers: {
+    'host': 'localhost:80',
+    'transfer-encoding': 'chunked',
+    'content-type': 'text/html; charset=utf-8',
+    'date': 'Thu, 1 Jan 1970 00:00:00 GMT',
+    'expires': 'Thu, 1 Jan 1970 01:15:00 GMT',
+    'if-modified-since': 'Thu, 1 Jan 1970 03:15:00 GMT',
+    'connection': 'keep-alive',
+    'set-cookie': [
+      'Set-Cookie: id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly',
+      'Set-Cookie: id=abcde; Expires=Wed, 22 Oct 2015 07:28:00 GMT;'
+    ]
+  }
 };
 exports.minimal = {
-  'user-agent': 'curl/7.22.0'
+  headers: {
+    'user-agent': 'curl/7.22.0'
+  }
 };
 ''';
 
 @JS()
 abstract class HeadersFixture {
-  external dynamic get headers;
-  external dynamic get minimal;
+  external IncomingMessage get request;
+  external IncomingMessage get minimal;
 }
 
 void main() {
   createJSFile('headers.js', headersJS);
 
-  group('ImmutableHttpHeaders', () {
+  group('RequestHttpHeaders', () {
     HeadersFixture jsHeaders = node.require('./headers.js');
-    var headers = new ImmutableHttpHeaders(jsHeaders.headers, 80);
-    var emptyHeaders = new ImmutableHttpHeaders(jsHeaders.minimal, 80);
+    var headers = new RequestHttpHeaders(jsHeaders.request);
+    var emptyHeaders = new RequestHttpHeaders(jsHeaders.minimal);
 
     test('chunkedTransferEncoding', () async {
       expect(headers.chunkedTransferEncoding, isTrue);
@@ -67,7 +74,7 @@ void main() {
     });
 
     test('host', () async {
-      expect(headers.host, 'example.com');
+      expect(headers.host, 'localhost');
       expect(emptyHeaders.host, isNull);
     });
 
@@ -80,10 +87,20 @@ void main() {
       expect(emptyHeaders.ifModifiedSince, isNull);
     });
 
-
     test('persistentConnection', () async {
       expect(headers.persistentConnection, isTrue);
       expect(emptyHeaders.persistentConnection, isFalse);
+    });
+
+    test('[] operator', () async {
+      expect(headers['transfer-encoding'], ['chunked']);
+    });
+
+    test('value', () async {
+      expect(headers.value('transfer-encoding'), 'chunked');
+      expect(() {
+        headers.value('set-cookie');
+      }, throwsA(new isInstanceOf<HttpException>()));
     });
   });
 }

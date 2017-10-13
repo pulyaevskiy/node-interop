@@ -14,8 +14,14 @@ abstract class Net {
 }
 
 @JS()
-abstract class Socket implements EventEmitter {
+abstract class Socket extends EventEmitter {
   external NetAddress address();
+  external String get remoteAddress;
+  external String get remoteFamily;
+  external int get remotePort;
+  external String get localAddress;
+  external String get localFamily;
+  external int get localPort;
 }
 
 @JS()
