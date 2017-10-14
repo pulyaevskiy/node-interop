@@ -1,6 +1,7 @@
-# NodeJS interop library
+# NodeJS interop library [![Build Status](https://img.shields.io/travis-ci/pulyaevskiy/node-interop.svg?branch=master&style=flat-square)](https://travis-ci.org/pulyaevskiy/node-interop) [![Pub](https://img.shields.io/pub/v/node_interop.svg?style=flat-square)](https://pub.dartlang.org/packages/node_interop) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-c73061.svg?style=flat-square)](https://gitter.im/pulyaevskiy/node-interop)
 
-[![Build Status](https://img.shields.io/travis-ci/pulyaevskiy/node-interop.svg?branch=master&style=flat-square)](https://travis-ci.org/pulyaevskiy/node-interop) [![Pub](https://img.shields.io/pub/v/node_interop.svg?style=flat-square)](https://pub.dartlang.org/packages/node_interop) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-c73061.svg?style=flat-square)](https://gitter.im/pulyaevskiy/node-interop)
+Write applications in Dart, run in NodeJS. This is an early preview,
+alpha open-source project.
 
 * [What is this?](#what-is-this?)
 * [Examples](#examples)
@@ -36,7 +37,8 @@ void main() async {
 ```
 
 There is not much Node or JS specific about this app, it looks very much like a
-regular Dart app. This is one of the main goals for `node_interop`.
+regular Dart app. If you are familiar with Dart `node_interop` allows you to
+stay in comfortable environment of all the tools provided in Dart SDK and IDEs.
 
 ## Examples
 
@@ -45,8 +47,8 @@ different APIs.
 
 ## Status
 
-This package is under active development which means things are likely to
-change.
+This is a early preview, alpha version which is far from being feature complete.
+Breaking changes are likely to occur.
 
 Make sure to checkout [CHANGELOG.md](https://github.com/pulyaevskiy/node-interop/blob/master/CHANGELOG.md)
 after every release, all notable changes and upgrade instructions will
