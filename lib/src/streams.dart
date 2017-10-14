@@ -9,7 +9,7 @@ import 'bindings/stream.dart' as js;
 import 'bindings/globals.dart';
 import 'errors.dart';
 
-/// [Stream] wrapper around Node's `Readable` stream.
+/// [Stream] wrapper around Node's [Readable] stream.
 class ReadableStream<T> extends Stream<T> {
   /// Native `Readable` instance wrapped by this stream.
   ///
@@ -65,7 +65,7 @@ class ReadableStream<T> extends Stream<T> {
   }
 }
 
-/// [StreamSink] wrapper around Node's `Writable` stream.
+/// [StreamSink] wrapper around Node's [Writable] stream.
 class WritableStream<S> implements StreamSink<S> {
   /// Native JavaScript Writable wrapped by this stream.
   ///

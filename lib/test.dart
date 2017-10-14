@@ -1,11 +1,13 @@
+// Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
+
+/// Testing utilities for Dart applications with node_interop.
 library node_interop.test;
 
 import 'dart:convert';
 
 import 'fs.dart';
 import 'node_interop.dart';
-
-export 'node_interop.dart';
 
 /// Creates arbitrary file in the same directory with the compiled test file.
 ///

@@ -10,6 +10,7 @@
   * [Node Interop](#node-interop)
   * [FS](#fs)
   * [HTTP](#http)
+  * [Async](#async)
 
 ## What is this?
 
@@ -171,7 +172,7 @@ classes._
 
 > `import 'package:node_interop/http.dart'`.
 
-Implements Dart-style HTTP client using [http](https://pub.dartlang.org/packages/file)
+Implements Dart-style HTTP client using [http](https://pub.dartlang.org/packages/http)
 package interface.
 
 There are several benefits to use this client over plain JS bindings:
@@ -181,6 +182,21 @@ There are several benefits to use this client over plain JS bindings:
 - Replaces callbacks with Dart Futures which enables async/await.
 - Encapsulates JS interop logic like `allowInterop`.
 - Provides very Dart-like experience.
+
+_Future releases of this library will also provide implementation
+of ("dart:io" compatible) `HttpServer` powered by Node IO system._
+
+### Async
+
+Contains Dart wrappers around Node's built-in `Readable` and
+`Writable` streams. Following classes are provided:
+
+- `ReadableStream<T> implements Stream<T>`.
+- `WritableStream<T> implements StreamSink<T>`.
+- `NodeIOSink extends WritableStream<List<int>> implements IOSink`.
+
+Most of the higher level abstractions in FS and HTTP libraries use
+these classes under the hood.
 
 ## Features and bugs
 
