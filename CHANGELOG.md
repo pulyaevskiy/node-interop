@@ -2,11 +2,15 @@
 
 ## 0.1.0-beta.3
 
-- Added new `async.dart` library with basic implementations of
-  `ReadableStream`, `WritableStream` and `NodeIOSink`.
-- Added implementations of server side `HttpRequest` and `HttpResponse`
-  to `http.dart`, as well as `HttpHeaders`.
 - More updates to bindings.
+- Added new `async.dart` library with basic implementations of
+  `ReadableStream<T>`, `WritableStream<T>` and `NodeIOSink`.
+- Added implementations of server side `HttpRequest` and `HttpResponse`
+  to `http.dart`, as well some other objects like `HttpHeaders`.
+- Added `dartifyError(JsError error)` to the main library which converts
+  from JS `Error` instances in to Dart's equivalent.
+- Implemented more methods in `File`: `openRead`, `openWrite`, `readAsBytes`.
+- Deprecated `createJSFile` in `test.dart` library. Use `createFile` instead.
 
 ## 0.1.0-beta.2
 

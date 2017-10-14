@@ -37,30 +37,26 @@ var headers = {
 };
 
 exports.request = new NodeHttpRequestStub(headers);
-exports.minimal = {
-  'user-agent': 'curl/7.22.0'
-};
 ''';
 
 @JS()
 abstract class HttpFixtures {
   external dynamic get request;
-  external dynamic get minimal;
 }
 
 void main() {
-  createJSFile('fixtures.js', fixturesJS);
+  createFile('fixtures.js', fixturesJS);
 
   group('HttpRequest', () {
     HttpFixtures fixtures = node.require('./fixtures.js');
     var request = new HttpRequest(fixtures.request, null);
 
-    test('headers', () async {
+    test('headers', () {
       expect(request.headers, isNotNull);
       expect(request.headers, same(request.headers));
     });
 
-    test('cookies', () async {
+    test('cookies', () {
       expect(request.cookies, isList);
       expect(request.cookies, isNotEmpty);
       expect(request.cookies.first, new isInstanceOf<Cookie>());

@@ -5,11 +5,12 @@
 import 'package:node_interop/fs.dart';
 import 'package:test/test.dart';
 import 'package:node_interop/src/bindings/process.dart';
+import 'package:node_interop/test.dart';
 
 void main() {
-  group('NodeFileSystem', () {
-    var fs = new NodeFileSystem();
+  var fs = new NodeFileSystem();
 
+  group('NodeFileSystem', () {
     test('stat', () {
       var stat = fs.statSync(fs.currentDirectory.path);
       expect(stat.accessed, new isInstanceOf<DateTime>());
@@ -32,6 +33,23 @@ void main() {
       expect(fs.currentDirectory.existsSync(), isTrue);
       expect(fs.currentDirectory.exists(), completion(isTrue));
       expect(fs.currentDirectory.isAbsolute, isTrue);
+    });
+  });
+
+  group('File', () {
+    test('existsSync', () async {
+      var path = createFile('existsSync.txt', "existsSync");
+      var file = fs.file(path);
+      expect(file.existsSync(), isTrue);
+    });
+
+    test('readAsBytes', () async {
+      var path = createFile(
+          'readAsBytes.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
+      var file = fs.file(path);
+      expect(file.existsSync(), isTrue);
+      var data = await file.readAsBytes();
+      expect(data, [1, 2, 3, 4, 5]);
     });
   });
 }

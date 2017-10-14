@@ -45,7 +45,7 @@ abstract class HeadersFixture {
 }
 
 void main() {
-  createJSFile('headers.js', headersJS);
+  createFile('headers.js', headersJS);
 
   group('RequestHttpHeaders', () {
     HeadersFixture jsHeaders = node.require('./headers.js');

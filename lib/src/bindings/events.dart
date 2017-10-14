@@ -9,6 +9,7 @@ import 'package:js/js.dart';
 /// Node's built-in EventEmitter interface.
 @JS()
 abstract class EventEmitter {
+  external void emit(String eventName, [args]);
   external void on(String eventName, listener);
   external void removeAllListeners([String eventName]);
 }

@@ -7,10 +7,12 @@ import 'node_interop.dart';
 
 export 'node_interop.dart';
 
-/// Creates JavaScript file in the same directory with compiled test file.
+/// Creates arbitrary file in the same directory with the compiled test file.
 ///
 /// This is useful for creating native Node modules for testing interactions
 /// between Dart and JS.
+///
+/// Returns absolute path to the created file.
 ///
 /// Example test case:
 ///
@@ -33,14 +35,14 @@ export 'node_interop.dart';
 ///     }
 ///
 ///     void main() {
-///       createJSFile('fixture.js', fixtureJS);
+///       createFile('fixture.js', fixtureJS);
 ///
 ///       test('simple PI', function() {
 ///         Fixture fixture = require('./fixture.js');
 ///         expect(fixture.simplePI, 3.1415);
 ///       });
 ///     }
-void createJSFile(String name, String contents) {
+String createFile(String name, String contents) {
   var fs = new NodeFileSystem();
   var segments = node.platform.script.pathSegments.toList();
   segments
@@ -49,7 +51,11 @@ void createJSFile(String name, String contents) {
   var jsFilepath = fs.path.separator + fs.path.joinAll(segments);
   var file = fs.file(jsFilepath);
   file.writeAsStringSync(contents);
+  return jsFilepath;
 }
+
+@Deprecated('Use createFile() instead.')
+void createJSFile(String name, String contents) => createFile(name, contents);
 
 /// Installs specified NodeJS [modules] in the same directory with compiled
 /// test file. Should normally be used as a very first command in the `main()`

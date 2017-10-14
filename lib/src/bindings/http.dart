@@ -116,7 +116,7 @@ abstract class RequestOptions {
 abstract class ClientRequest extends EventEmitter {
   external void abort();
   external bool get aborted;
-  external JsObject get connection; // TODO: Add net.Socket bindings
+  external Socket get connection;
   external void end([dynamic data, String encoding, callback]);
   external void flushHeaders();
   external String getHeader(String name);
@@ -125,9 +125,8 @@ abstract class ClientRequest extends EventEmitter {
   external void setNoDelay(bool noDelay);
   external void setSocketKeepAlive([bool enable, num initialDelay]);
   external void setTimeout(num msecs, [callback]);
-  external JsObject get socket; // TODO: Add net.Socket bindings
-  external void write(chunk,
-      [String encoding, callback]); // TODO: Add Buffer bindings
+  external Socket get socket;
+  external void write(chunk, [String encoding, callback]);
 }
 
 @JS()

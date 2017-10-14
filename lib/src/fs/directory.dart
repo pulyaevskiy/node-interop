@@ -32,11 +32,11 @@ class _Directory extends _FileSystemEntity implements Directory {
       return new Future.error(new UnsupportedError(
           'Recursive delete is not supported by Node API'));
     var completer = new Completer<FileSystemEntity>();
-    void callback(error) {
+    void callback([JsError error]) {
       if (error == null) {
         completer.complete(this);
       }
-      completer.completeError(error);
+      completer.completeError(dartifyError(error));
     }
 
     var jsCallback = js.allowInterop(callback);
@@ -56,9 +56,9 @@ class _Directory extends _FileSystemEntity implements Directory {
       {bool recursive: false, bool followLinks: true}) {
     var controller = new StreamController<FileSystemEntity>();
 
-    void callback(err, files) {
+    void callback(JsError err, files) {
       if (err != null) {
-        controller.addError(err);
+        controller.addError(dartifyError(err));
         controller.close();
       } else {
         for (var file in files) {
@@ -117,11 +117,11 @@ class _Directory extends _FileSystemEntity implements Directory {
     if (recursive)
       throw new UnsupportedError('Recursive create is not supported in Node.');
     var completer = new Completer();
-    void callback(err) {
+    void callback(JsError err) {
       if (err == null) {
         completer.complete(new _Directory(path));
       } else {
-        completer.completeError(err);
+        completer.completeError(dartifyError(err));
       }
     }
 

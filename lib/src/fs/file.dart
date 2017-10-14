@@ -2,6 +2,18 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 part of node_interop.fs;
 
+class _ReadStream extends ReadableStream<List<int>> {
+  _ReadStream(ReadStream nativeStream)
+      : super(nativeStream, convert: (chunk) => new List.unmodifiable(chunk));
+}
+
+// Note: for some reason analyzer complains if this class does not implement
+// [IOSink] explicitly.
+class _WriteStream extends NodeIOSink implements IOSink {
+  _WriteStream(WriteStream nativeStream, Encoding encoding)
+      : super(nativeStream, encoding: encoding);
+}
+
 class _File extends _FileSystemEntity implements File {
   @override
   final String path;
@@ -56,7 +68,7 @@ class _File extends _FileSystemEntity implements File {
   @override
   bool existsSync() {
     var stat = _FileStat.statSync(path);
-    return stat.type == FileSystemEntityType.DIRECTORY;
+    return stat.type == FileSystemEntityType.FILE;
   }
 
   @override
@@ -85,8 +97,11 @@ class _File extends _FileSystemEntity implements File {
 
   @override
   Stream<List<int>> openRead([int start, int end]) {
-    // TODO: implement openRead
-    throw new UnimplementedError();
+    var options = new ReadStreamOptions();
+    if (start != null) options.start = start;
+    if (end != null) options.end = end;
+    var nativeStream = _nodeFS.createReadStream(path, options);
+    return new _ReadStream(nativeStream);
   }
 
   @override
@@ -95,15 +110,16 @@ class _File extends _FileSystemEntity implements File {
 
   @override
   IOSink openWrite({FileMode mode: FileMode.WRITE, Encoding encoding: UTF8}) {
-    // TODO: implement openWrite
-    throw new UnimplementedError();
+    assert(mode == FileMode.WRITE || mode == FileMode.APPEND);
+    var flags = (mode == FileMode.APPEND) ? 'a+' : 'w';
+    var options = new WriteStreamOptions(flags: flags);
+    var stream = _nodeFS.createWriteStream(path, options);
+    return new _WriteStream(stream, encoding);
   }
 
   @override
-  Future<List<int>> readAsBytes() {
-    // TODO: implement readAsBytes
-    throw new UnimplementedError();
-  }
+  Future<List<int>> readAsBytes() => openRead().fold(new List<int>(),
+      (List<int> previous, List<int> element) => previous..addAll(element));
 
   @override
   List<int> readAsBytesSync() {

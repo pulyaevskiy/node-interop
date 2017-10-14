@@ -84,3 +84,48 @@ abstract class Console {
 abstract class Buffer {
   external static from(Iterable<int> bytes);
 }
+
+@JS('Error')
+abstract class JsError {
+  external String get code;
+  external String get message;
+  external String get stack;
+}
+
+@JS('AssertionError')
+abstract class JsAssertionError extends JsError {}
+
+@JS('RangeError')
+abstract class JsRangeError extends JsError {}
+
+@JS('ReferenceError')
+abstract class JsReferenceError extends JsError {}
+
+@JS('SyntaxError')
+abstract class JsSyntaxError extends JsError {}
+
+@JS('TypeError')
+abstract class JsTypeError extends JsError {}
+
+@JS('SystemError')
+abstract class JsSystemError extends JsError {
+  static const String EACCES = 'EACCES';
+  static const String EADDRINUSE = 'EADDRINUSE';
+  static const String ECONNREFUSED = 'ECONNREFUSED';
+  static const String ECONNRESET = 'ECONNRESET';
+  static const String EEXIST = 'EEXIST';
+  static const String EISDIR = 'EISDIR';
+  static const String EMFILE = 'EMFILE';
+  static const String ENOENT = 'ENOENT';
+  static const String ENOTDIR = 'ENOTDIR';
+  static const String ENOTEMPTY = 'ENOTEMPTY';
+  static const String EPERM = 'EPERM';
+  static const String EPIPE = 'EPIPE';
+  static const String ETIMEDOUT = 'ETIMEDOUT';
+
+  external dynamic get errno;
+  external String get syscall;
+  external String get path;
+  external String get address;
+  external num get port;
+}

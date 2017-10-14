@@ -5,6 +5,7 @@ library node_interop.bindings.fs;
 
 import 'package:js/js.dart';
 import 'globals.dart';
+import 'stream.dart';
 
 /// Main entry point to Node's "fs" module.
 ///
@@ -32,6 +33,64 @@ abstract class FS {
   external void open(String path, String flags, void callback(err, fd));
   external int openSync(String path, String flags);
   external void writeFileSync(String file, String data, [options]);
+  external ReadStream createReadStream(dynamic path, [options]);
+  external WriteStream createWriteStream(dynamic path, [options]);
+}
+
+@JS()
+abstract class ReadStream extends Readable {
+  external num get bytesRead;
+  external dynamic get path;
+}
+
+@JS()
+@anonymous
+abstract class ReadStreamOptions {
+  external String get flags;
+  external String get encoding;
+  external int get fd;
+  external int get mode;
+  external bool get autoClose;
+  external int get start;
+  external set start(int value);
+  external int get end;
+  external set end(int value);
+
+  external factory ReadStreamOptions({
+    String flags,
+    String encoding,
+    int fd,
+    int mode,
+    bool autoClose,
+    int start,
+    int end,
+  });
+}
+
+@JS()
+abstract class WriteStream extends Writable {
+  external num get bytesWritten;
+  external dynamic get path;
+}
+
+@JS()
+@anonymous
+abstract class WriteStreamOptions {
+  external String get flags;
+  external String get encoding;
+  external int get fd;
+  external int get mode;
+  external bool get autoClose;
+  external int get start;
+
+  external factory WriteStreamOptions({
+    String flags,
+    String encoding,
+    int fd,
+    int mode,
+    bool autoClose,
+    int start,
+  });
 }
 
 @JS()

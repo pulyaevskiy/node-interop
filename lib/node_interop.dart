@@ -40,6 +40,7 @@ export 'src/bindings/os.dart';
 export 'src/bindings/process.dart';
 export 'src/bindings/stream.dart';
 export 'src/util.dart';
+export 'src/errors.dart';
 
 /// Node environment helper. Provides access to runtime platform information
 /// as well as convenience wrappers for `require` and `exports`.

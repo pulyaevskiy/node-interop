@@ -36,7 +36,7 @@ abstract class JsPromises {
 }
 
 void main() {
-  createJSFile('promises.js', promisesJS);
+  createFile('promises.js', promisesJS);
 
   test('jsPromiseToFuture', () async {
     final JsPromises js = require('./promises.js');

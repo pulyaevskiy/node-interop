@@ -28,7 +28,9 @@ import 'src/bindings/fs.dart';
 import 'src/bindings/globals.dart';
 import 'src/bindings/os.dart';
 import 'src/bindings/process.dart';
+import 'src/errors.dart';
 import 'src/platform.dart';
+import 'src/streams.dart';
 
 export 'package:file/file.dart'
     show

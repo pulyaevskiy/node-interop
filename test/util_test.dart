@@ -41,7 +41,7 @@ abstract class Fixtures {
 }
 
 void main() {
-  createJSFile('fixtures.js', fixturesJS);
+  createFile('fixtures.js', fixturesJS);
 
   group('dartify', () {
     test('it handles js primitives', () {

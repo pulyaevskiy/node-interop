@@ -7,6 +7,7 @@ import 'package:js/js.dart';
 
 import 'bindings/stream.dart' as js;
 import 'bindings/globals.dart';
+import 'errors.dart';
 
 /// [Stream] wrapper around Node's `Readable` stream.
 class ReadableStream<T> extends Stream<T> {
@@ -21,18 +22,17 @@ class ReadableStream<T> extends Stream<T> {
   ///
   /// The [convert] hook is called for each element of this stream before it's
   /// send to the listener. This allows implementations to convert raw
-  /// JavaScript data in to desired Dart representation, if needed.
-  ReadableStream(this.nativeStream, {T convert(dynamic data)}) : _convert = convert {
+  /// JavaScript data in to desired Dart representation. If no convert
+  /// function is provided then data is send to the listener unchanged.
+  ReadableStream(this.nativeStream, {T convert(dynamic data)})
+      : _convert = convert {
     _controller = new StreamController(
         onPause: _onPause, onResume: _onResume, onCancel: _onCancel);
     nativeStream.on('error', allowInterop(_errorHandler));
   }
 
-  void _errorHandler(error) {
-    _controller.addError(error); // TODO: dartify error
-    nativeStream.removeAllListeners('data');
-    nativeStream.removeAllListeners('end');
-    _controller.close();
+  void _errorHandler(JsError error) {
+    _controller.addError(dartifyError(error));
   }
 
   void _onPause() {
@@ -52,7 +52,7 @@ class ReadableStream<T> extends Stream<T> {
   @override
   StreamSubscription<T> listen(void onData(T event),
       {Function onError, void onDone(), bool cancelOnError}) {
-    nativeStream.on('data', allowInterop((T chunk) {
+    nativeStream.on('data', allowInterop((chunk) {
       var data = (_convert == null) ? chunk : _convert(chunk);
       _controller.add(data);
     }));
@@ -79,26 +79,28 @@ class WritableStream<S> implements StreamSink<S> {
   ///
   /// The [convert] hook is called for each element of this stream sink before
   /// it's added to the [nativeStream]. This allows implementations to convert
-  /// Dart objects in to values accepted by JavaScript streams, if needed.
+  /// Dart objects in to values accepted by JavaScript streams. If no convert
+  /// function is provided then data is sent to target unchanged.
   WritableStream(this.nativeStream, {dynamic convert(S data)})
       : _convert = convert {
     nativeStream.on('error', allowInterop(_errorHandler));
   }
 
-  void _errorHandler(error) {
+  void _errorHandler(JsError error) {
+    var dartError = dartifyError(error);
     if (_drainCompleter != null && !_drainCompleter.isCompleted) {
-      _drainCompleter.completeError(error); // TODO: dartify error
-      return;
-    }
-    if (_closeCompleter != null && !_closeCompleter.isCompleted) {
-      _closeCompleter.completeError(error);
+      _drainCompleter.completeError(dartError);
+    } else if (_closeCompleter != null && !_closeCompleter.isCompleted) {
+      _closeCompleter.completeError(dartError);
+    } else {
+      throw dartError;
     }
   }
 
   /// Writes [data] to nativeStream.
   void _write(S data) {
     var completer = new Completer();
-    void _flush([error]) {
+    void _flush([JsError error]) {
       if (!completer.isCompleted) completer.complete();
     }
 
@@ -129,7 +131,8 @@ class WritableStream<S> implements StreamSink<S> {
 
   @override
   void addError(Object error, [StackTrace stackTrace]) {
-    nativeStream.destroy(error); // TODO: jsify error
+    // TODO: not sure if this would be supported here...
+    throw new UnimplementedError();
   }
 
   @override
@@ -158,15 +161,19 @@ class WritableStream<S> implements StreamSink<S> {
 /// Writable stream of bytes, also accepts `String` values which are encoded
 /// with specified [Encoding].
 class NodeIOSink extends WritableStream<List<int>> implements IOSink {
-  NodeIOSink(js.Writable nativeStream)
-      : super(nativeStream, convert: (data) => Buffer.from(data));
+  Encoding _encoding;
+
+  NodeIOSink(js.Writable nativeStream, {Encoding encoding: UTF8})
+      : super(nativeStream, convert: (data) => Buffer.from(data)) {
+    _encoding = encoding;
+  }
 
   @override
-  Encoding get encoding => Encoding.getByName('utf-8');
+  Encoding get encoding => _encoding;
 
   @override
   set encoding(Encoding value) {
-    throw new UnimplementedError();
+    _encoding = value;
   }
 
   @override

@@ -32,7 +32,7 @@ class InternetAddress implements io.InternetAddress {
   set type(io.InternetAddressType value) =>
       throw new UnsupportedError('Setting address type is not supported.');
 
-  InternetAddress(this.address, this._host) {
+  InternetAddress(this.address, [this._host]) {
     if (_net.isIP(address) == 0)
       throw new ArgumentError('${address} is not valid.');
   }
