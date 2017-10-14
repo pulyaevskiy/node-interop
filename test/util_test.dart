@@ -6,6 +6,7 @@
 library node_interop.util_test;
 
 import 'package:js/js.dart';
+import 'package:node_interop/node_interop.dart';
 import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 
