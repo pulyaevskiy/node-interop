@@ -7,4 +7,4 @@ before_install:
   - node --version
 script:
   - pub run test --reporter expanded
-  - pub run test --platform node --reporter expanded
+  - pub run test -p node -r expanded -j 1
