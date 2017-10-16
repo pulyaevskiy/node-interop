@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-beta.4
+
+- Made `Promise<T>` a generic type. Also added definition of `Thenable`.
+
 ## 0.1.0-beta.3
 
 - More updates to bindings.
