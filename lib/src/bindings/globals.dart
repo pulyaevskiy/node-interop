@@ -13,13 +13,13 @@ external List<String> jsObjectKeys(jsObject);
 
 @JS()
 abstract class Thenable<T> {
-  external Thenable<S> then<S>(S onFulfilled(T value), S onRejected(error));
+  external Thenable<S> then<S>(S onFulfilled(T value), [S onRejected(error)]);
 }
 
 @JS()
 abstract class Promise<T> extends Thenable<T> {
   external factory Promise(executor(resolve(T value), reject(error)));
-  external Promise<S> then<S>(S onFulfilled(T value), S onRejected(error));
+  external Promise<S> then<S>(S onFulfilled(T value), [S onRejected(error)]);
 }
 
 /// Requires (imports) a module specified by [id].

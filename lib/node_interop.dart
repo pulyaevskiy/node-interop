@@ -44,7 +44,7 @@ export 'src/errors.dart';
 
 /// Node environment helper. Provides access to runtime platform information
 /// as well as convenience wrappers for `require` and `exports`.
-const node = const Node._();
+const Node node = const Node._();
 
 class Node {
   const Node._();

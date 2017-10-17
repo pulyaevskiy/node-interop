@@ -3,6 +3,8 @@
 ## 0.1.0-beta.4
 
 - Made `Promise<T>` a generic type. Also added definition of `Thenable`.
+- `onRejected` in `Promise.then` is now optional.
+- Added explicit type to `node` variable.
 
 ## 0.1.0-beta.3
 

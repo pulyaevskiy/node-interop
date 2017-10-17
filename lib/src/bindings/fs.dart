@@ -33,8 +33,10 @@ abstract class FS {
   external void open(String path, String flags, void callback(err, fd));
   external int openSync(String path, String flags);
   external void writeFileSync(String file, String data, [options]);
-  external ReadStream createReadStream(dynamic path, [options]);
-  external WriteStream createWriteStream(dynamic path, [options]);
+  external ReadStream createReadStream(dynamic path,
+      [ReadStreamOptions options]);
+  external WriteStream createWriteStream(dynamic path,
+      [WriteStreamOptions options]);
 }
 
 @JS()
