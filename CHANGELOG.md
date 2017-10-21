@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-beta.5
+
+- Fixed: `HttpResponse.close()` failed when trying to finalize headers.
+
 ## 0.1.0-beta.4
 
 - Made `Promise<T>` a generic type. Also added definition of `Thenable`.

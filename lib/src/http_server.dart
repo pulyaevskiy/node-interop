@@ -283,7 +283,8 @@ class HttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   Future close() {
-    _headers.finalize();
+    ResponseHttpHeaders responseHeaders = headers;
+    responseHeaders.finalize();
     return super.close();
   }
 

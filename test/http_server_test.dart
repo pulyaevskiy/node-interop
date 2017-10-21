@@ -20,6 +20,15 @@ function NodeHttpRequestStub(headers) {
 }
 NodeHttpRequestStub.prototype.on = function(name, callback) {};
 
+function NodeHttpResponseStub() {
+}
+
+NodeHttpResponseStub.prototype.on = function(name, callback) {};
+
+NodeHttpResponseStub.prototype.end = function(callback) {
+  callback();
+};
+
 function NetSocketStub() {};
 NetSocketStub.prototype.address = function() {
   return {port: 80, family: 'IPv4', address: '127.0.0.1'};
@@ -37,19 +46,21 @@ var headers = {
 };
 
 exports.request = new NodeHttpRequestStub(headers);
+exports.response = new NodeHttpResponseStub();
 ''';
 
 @JS()
 abstract class HttpFixtures {
   external dynamic get request;
+  external dynamic get response;
 }
 
 void main() {
   createFile('fixtures.js', fixturesJS);
+  HttpFixtures fixtures = node.require('./fixtures.js');
 
   group('HttpRequest', () {
-    HttpFixtures fixtures = node.require('./fixtures.js');
-    var request = new HttpRequest(fixtures.request, null);
+    var request = new HttpRequest(fixtures.request, fixtures.response);
 
     test('headers', () {
       expect(request.headers, isNotNull);
@@ -60,6 +71,14 @@ void main() {
       expect(request.cookies, isList);
       expect(request.cookies, isNotEmpty);
       expect(request.cookies.first, new isInstanceOf<Cookie>());
+    });
+  });
+
+  group('HttpResponse', () {
+    var request = new HttpRequest(fixtures.request, fixtures.response);
+
+    test('close()', () {
+      expect(request.response.close(), completes);
     });
   });
 }

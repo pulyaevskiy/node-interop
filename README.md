@@ -47,8 +47,8 @@ different APIs.
 
 ## Status
 
-This is a early preview, alpha version which is far from being feature complete.
-Breaking changes are likely to occur.
+This is a early preview, alpha version which is far from being feature
+complete. Breaking changes are likely to occur.
 
 Make sure to checkout [CHANGELOG.md](https://github.com/pulyaevskiy/node-interop/blob/master/CHANGELOG.md)
 after every release, all notable changes and upgrade instructions will
