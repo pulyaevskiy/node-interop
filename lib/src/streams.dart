@@ -14,21 +14,22 @@ class ReadableStream<T> extends Stream<T> {
   /// Native `Readable` instance wrapped by this stream.
   ///
   /// It is not recommended to interact with this object directly.
-  final js.Readable nativeStream;
+  final js.Readable nativeInstance;
   final Function _convert;
   StreamController<T> _controller;
 
-  /// Creates new [ReadableStream] which wraps [nativeStream].
+  /// Creates new [ReadableStream] which wraps [nativeInstance] of `Readable`
+  /// type.
   ///
   /// The [convert] hook is called for each element of this stream before it's
   /// send to the listener. This allows implementations to convert raw
   /// JavaScript data in to desired Dart representation. If no convert
   /// function is provided then data is send to the listener unchanged.
-  ReadableStream(this.nativeStream, {T convert(dynamic data)})
+  ReadableStream(this.nativeInstance, {T convert(dynamic data)})
       : _convert = convert {
     _controller = new StreamController(
         onPause: _onPause, onResume: _onResume, onCancel: _onCancel);
-    nativeStream.on('error', allowInterop(_errorHandler));
+    nativeInstance.on('error', allowInterop(_errorHandler));
   }
 
   void _errorHandler(JsError error) {
@@ -36,27 +37,27 @@ class ReadableStream<T> extends Stream<T> {
   }
 
   void _onPause() {
-    nativeStream.pause();
+    nativeInstance.pause();
   }
 
   void _onResume() {
-    nativeStream.resume();
+    nativeInstance.resume();
   }
 
   void _onCancel() {
-    nativeStream.removeAllListeners('data');
-    nativeStream.removeAllListeners('end');
+    nativeInstance.removeAllListeners('data');
+    nativeInstance.removeAllListeners('end');
     _controller.close();
   }
 
   @override
   StreamSubscription<T> listen(void onData(T event),
       {Function onError, void onDone(), bool cancelOnError}) {
-    nativeStream.on('data', allowInterop((chunk) {
+    nativeInstance.on('data', allowInterop((chunk) {
       var data = (_convert == null) ? chunk : _convert(chunk);
       _controller.add(data);
     }));
-    nativeStream.on('end', allowInterop(() {
+    nativeInstance.on('end', allowInterop(() {
       _controller.close();
     }));
 
@@ -70,20 +71,21 @@ class WritableStream<S> implements StreamSink<S> {
   /// Native JavaScript Writable wrapped by this stream.
   ///
   /// It is not recommended to interact with this object directly.
-  final js.Writable nativeStream;
+  final js.Writable nativeInstance;
   final Function _convert;
 
   Completer _drainCompleter;
 
-  /// Creates new [WritableStream] which wraps [nativeStream].
+  /// Creates new [WritableStream] which wraps [nativeInstance] of `Writable`
+  /// type.
   ///
   /// The [convert] hook is called for each element of this stream sink before
-  /// it's added to the [nativeStream]. This allows implementations to convert
+  /// it's added to the [nativeInstance]. This allows implementations to convert
   /// Dart objects in to values accepted by JavaScript streams. If no convert
   /// function is provided then data is sent to target unchanged.
-  WritableStream(this.nativeStream, {dynamic convert(S data)})
+  WritableStream(this.nativeInstance, {dynamic convert(S data)})
       : _convert = convert {
-    nativeStream.on('error', allowInterop(_errorHandler));
+    nativeInstance.on('error', allowInterop(_errorHandler));
   }
 
   void _errorHandler(JsError error) {
@@ -105,7 +107,7 @@ class WritableStream<S> implements StreamSink<S> {
     }
 
     var chunk = (_convert == null) ? data : _convert(data);
-    var isFlushed = nativeStream.write(chunk, allowInterop(_flush));
+    var isFlushed = nativeInstance.write(chunk, allowInterop(_flush));
     if (!isFlushed) {
       // Keep track of the latest unflushed chunk of data.
       _drainCompleter = completer;
@@ -148,7 +150,7 @@ class WritableStream<S> implements StreamSink<S> {
       if (!_closeCompleter.isCompleted) _closeCompleter.complete();
     }
 
-    nativeStream.end(allowInterop(end));
+    nativeInstance.end(allowInterop(end));
     return _closeCompleter.future;
   }
 

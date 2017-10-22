@@ -138,14 +138,14 @@ class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
   HttpRequest(nodeHTTP.IncomingMessage nativeRequest, this._nativeResponse)
       : super(nativeRequest, convert: (chunk) => new List.unmodifiable(chunk));
 
-  nodeHTTP.IncomingMessage get nativeStream => super.nativeStream;
+  nodeHTTP.IncomingMessage get nativeInstance => super.nativeInstance;
 
   @override
   io.X509Certificate get certificate => throw new UnimplementedError();
 
   @override
   io.HttpConnectionInfo get connectionInfo {
-    var socket = nativeStream.socket;
+    var socket = nativeInstance.socket;
     var address = new InternetAddress(socket.remoteAddress, null);
     return new _HttpConnectionInfo(
         socket.localPort, address, socket.remotePort);
@@ -171,22 +171,22 @@ class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
 
   @override
   io.HttpHeaders get headers =>
-      _headers ??= new RequestHttpHeaders(nativeStream);
+      _headers ??= new RequestHttpHeaders(nativeInstance);
   io.HttpHeaders _headers;
 
   @override
-  String get method => nativeStream.method;
+  String get method => nativeInstance.method;
 
   @override
   bool get persistentConnection => headers.persistentConnection;
 
   @override
-  String get protocolVersion => nativeStream.httpVersion;
+  String get protocolVersion => nativeInstance.httpVersion;
 
   @override
   Uri get requestedUri {
     if (_requestedUri == null) {
-      var socket = nativeStream.socket;
+      var socket = nativeInstance.socket;
 
       var proto = headers['x-forwarded-proto'];
       var scheme;
@@ -225,13 +225,13 @@ class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
       'Sessions are not supported by Node HTTP server.');
 
   @override
-  Uri get uri => Uri.parse(nativeStream.url);
+  Uri get uri => Uri.parse(nativeInstance.url);
 }
 
 class HttpResponse extends NodeIOSink implements io.HttpResponse {
   HttpResponse(nodeHTTP.ServerResponse nativeResponse) : super(nativeResponse);
 
-  nodeHTTP.ServerResponse get nativeStream => super.nativeStream;
+  nodeHTTP.ServerResponse get nativeInstance => super.nativeInstance;
 
   @override
   bool get bufferOutput => throw new UnimplementedError();
@@ -266,19 +266,19 @@ class HttpResponse extends NodeIOSink implements io.HttpResponse {
   }
 
   @override
-  String get reasonPhrase => nativeStream.statusMessage;
+  String get reasonPhrase => nativeInstance.statusMessage;
   set reasonPhrase(String phrase) {
-    if (nativeStream.headersSent) throw new StateError('Headers already sent.');
-    nativeStream.statusMessage = phrase;
+    if (nativeInstance.headersSent) throw new StateError('Headers already sent.');
+    nativeInstance.statusMessage = phrase;
   }
 
   @override
-  int get statusCode => nativeStream.statusCode;
+  int get statusCode => nativeInstance.statusCode;
 
   @override
   set statusCode(int code) {
-    if (nativeStream.headersSent) throw new StateError('Headers already sent.');
-    nativeStream.statusCode = code;
+    if (nativeInstance.headersSent) throw new StateError('Headers already sent.');
+    nativeInstance.statusCode = code;
   }
 
   @override
@@ -290,7 +290,7 @@ class HttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   io.HttpConnectionInfo get connectionInfo {
-    var socket = nativeStream.socket;
+    var socket = nativeInstance.socket;
     var address = new InternetAddress(socket.remoteAddress, null);
     return new _HttpConnectionInfo(
         socket.localPort, address, socket.remotePort);
@@ -318,7 +318,7 @@ class HttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   io.HttpHeaders get headers =>
-      _headers ??= new ResponseHttpHeaders(nativeStream);
+      _headers ??= new ResponseHttpHeaders(nativeInstance);
   ResponseHttpHeaders _headers;
 
   @override

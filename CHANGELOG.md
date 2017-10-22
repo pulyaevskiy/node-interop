@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-beta.6
+
+- **Breaking:**
+  - renamed `ReadableStream.nativeStream` to `ReadableStream.nativeInstance`
+  - renamed `WritableStream.nativeStream` to `WritableStream.nativeInstance`
+- **New**:
+  - Added `jsonStringify` and `jsonParse` which bind to native
+    `JSON.stringify` and `JSON.parse` respectively.
+
 ## 0.1.0-beta.5
 
 - Fixed: `HttpResponse.close()` failed when trying to finalize headers.

@@ -5,12 +5,6 @@ library node_interop.bindings.globals;
 
 import 'package:js/js.dart';
 
-/// Returns a list of keys in [jsObject].
-///
-/// This function binds to JavaScript `Object.keys()`.
-@JS('Object.keys')
-external List<String> jsObjectKeys(jsObject);
-
 @JS()
 abstract class Thenable<T> {
   external Thenable<S> then<S>(S onFulfilled(T value), [S onRejected(error)]);
