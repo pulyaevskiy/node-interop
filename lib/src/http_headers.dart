@@ -3,6 +3,7 @@
 import 'dart:io' as io;
 
 import 'package:js/js_util.dart';
+import 'package:node_interop/node_interop.dart';
 import 'package:node_interop/src/bindings/http.dart';
 
 /// List of HTTP header names which can only have single value.
@@ -261,9 +262,17 @@ abstract class HttpHeaders implements io.HttpHeaders {
     }
   }
 
+  // Get the list of header kys
+  Iterable<String> _getHeaderNames() {
+    return jsObjectKeys(nativeHeaders);
+  }
+
   @override
   void forEach(void f(String name, List<String> values)) {
-    var names = nativeResponse.getHeaderNames();
+    // Alex fix
+    // The following crashes, use jsObjectKeys instead...
+    // var names = nativeResponse.getHeaderNames();
+    var names = jsObjectKeys(nativeHeaders);
     names.forEach((name) {
       f(name, this[name]);
     });
