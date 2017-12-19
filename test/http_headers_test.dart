@@ -102,5 +102,17 @@ void main() {
         headers.value('set-cookie');
       }, throwsA(new isInstanceOf<HttpException>()));
     });
+
+    test('forEach', () {
+      Map map = {};
+      headers.forEach((key, value) {
+        map[key] = value;
+      });
+      expect(map['content-type'], [headers.contentType.toString()]);
+    });
+
+    test('getHeader', () {
+      expect(headers.getHeader('content-type'), headers.contentType.toString());
+    });
   });
 }
