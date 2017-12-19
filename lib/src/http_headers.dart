@@ -262,17 +262,14 @@ abstract class HttpHeaders implements io.HttpHeaders {
     }
   }
 
-  // Get the list of header kys
+  // Get the list of header keys
   Iterable<String> _getHeaderNames() {
     return jsObjectKeys(nativeHeaders);
   }
 
   @override
   void forEach(void f(String name, List<String> values)) {
-    // Alex fix
-    // The following crashes, use jsObjectKeys instead...
-    // var names = nativeResponse.getHeaderNames();
-    var names = jsObjectKeys(nativeHeaders);
+    var names = _getHeaderNames();
     names.forEach((name) {
       f(name, this[name]);
     });
