@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-beta.7
+
+- Fix HttpHeaders.forEach crash when called on HttpRequest.headers [#6]
+
 ## 0.1.0-beta.6
 
 - **Breaking:**
