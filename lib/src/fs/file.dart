@@ -25,14 +25,24 @@ class _File extends _FileSystemEntity implements File {
 
   @override
   Future<File> copy(String newPath) {
-    // TODO: implement copy
-    throw new UnimplementedError();
+    final Completer<File> completer = new Completer<File>();
+    void callback(err) {
+      if (err != null) {
+        completer.completeError(dartifyError(err));
+      } else {
+        completer.complete(new _File(newPath));
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    _nodeFS.copyFile(_absolutePath, newPath, 0, jsCallback);
+    return completer.future;
   }
 
   @override
   File copySync(String newPath) {
-    // TODO: implement copySync
-    throw new UnimplementedError();
+    _nodeFS.copyFileSync(_absolutePath, newPath, 0);
+    return new _File(newPath);
   }
 
   @override

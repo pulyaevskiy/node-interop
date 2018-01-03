@@ -33,6 +33,8 @@ abstract class FS {
   external void open(String path, String flags, void callback(err, fd));
   external int openSync(String path, String flags);
   external void writeFileSync(String file, String data, [options]);
+  external void copyFile(dynamic src, dynamic dest, num flags, void callback(err));
+  external void copyFileSync(dynamic src, dynamic dest, num flags);
   external ReadStream createReadStream(dynamic path,
       [ReadStreamOptions options]);
   external WriteStream createWriteStream(dynamic path,

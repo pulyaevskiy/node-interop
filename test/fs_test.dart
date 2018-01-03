@@ -51,5 +51,27 @@ void main() {
       var data = await file.readAsBytes();
       expect(data, [1, 2, 3, 4, 5]);
     });
+
+    test('copy', () async {
+      var path =
+          createFile('copy.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
+      var file = fs.file(path);
+      final copyPath = path.replaceFirst('copy.txt', 'copy_copy.txt');
+      final result = await file.copy(copyPath);
+      expect(result, new isInstanceOf<File>());
+      expect(result.path, copyPath);
+      expect(result.existsSync(), isTrue);
+    });
+
+    test('copySync', () async {
+      var path = createFile(
+          'copy_sync.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
+      var file = fs.file(path);
+      final copyPath = path.replaceFirst('copy_sync.txt', 'copy_sync_copy.txt');
+      final result = await file.copy(copyPath);
+      expect(result, new isInstanceOf<File>());
+      expect(result.path, copyPath);
+      expect(result.existsSync(), isTrue);
+    });
   });
 }
