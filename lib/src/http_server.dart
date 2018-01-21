@@ -68,13 +68,14 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
 
   void _jsRequestHandler(
       nodeHTTP.IncomingMessage request, nodeHTTP.ServerResponse response) {
-    if (!_controller.isPaused) {
+    if (_controller.isPaused) {
       // Reject any incoming request before listening started or subscription
       // is paused.
       response.statusCode = io.HttpStatus.SERVICE_UNAVAILABLE;
       response.end();
+      return;
     }
-    _controller.add(new HttpRequest(request, response));
+    _controller.add(new NodeHttpRequest(request, response));
   }
 
   Future<HttpServer> _bind() {
@@ -86,7 +87,7 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
       _listenCompleter = null;
     }
 
-    _server.listen(port, address.address, null, allowInterop(listeningHandler));
+    _server.listen(port, address, null, allowInterop(listeningHandler));
     return _listenCompleter.future;
   }
 
@@ -96,13 +97,13 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
   }
 
   @override
-  bool autoCompress;
+  bool autoCompress; // TODO: Implement autoCompress
 
   @override
-  Duration idleTimeout;
+  Duration idleTimeout; // TODO: Implement autoCompress
 
   @override
-  String serverHeader;
+  String serverHeader; // TODO: Implement autoCompress
 
   @override
   Future close({bool force: false}) {
@@ -132,10 +133,10 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
 
 /// Server side HTTP request object which delegates IO operations to
 /// Node's native representations.
-class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
+class NodeHttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
   final nodeHTTP.ServerResponse _nativeResponse;
 
-  HttpRequest(nodeHTTP.IncomingMessage nativeRequest, this._nativeResponse)
+  NodeHttpRequest(nodeHTTP.IncomingMessage nativeRequest, this._nativeResponse)
       : super(nativeRequest, convert: (chunk) => new List.unmodifiable(chunk));
 
   nodeHTTP.IncomingMessage get nativeInstance => super.nativeInstance;
@@ -217,7 +218,7 @@ class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
 
   @override
   io.HttpResponse get response =>
-      _response ??= new HttpResponse(_nativeResponse);
+      _response ??= new NodeHttpResponse(_nativeResponse);
   io.HttpResponse _response; // ignore: close_sinks
 
   @override
@@ -228,8 +229,8 @@ class HttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
   Uri get uri => Uri.parse(nativeInstance.url);
 }
 
-class HttpResponse extends NodeIOSink implements io.HttpResponse {
-  HttpResponse(nodeHTTP.ServerResponse nativeResponse) : super(nativeResponse);
+class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
+  NodeHttpResponse(nodeHTTP.ServerResponse nativeResponse) : super(nativeResponse);
 
   nodeHTTP.ServerResponse get nativeInstance => super.nativeInstance;
 

@@ -2,20 +2,17 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 import 'dart:convert';
 
-import 'package:js/js.dart';
-import 'package:node_interop/http.dart';
-import 'package:node_interop/node_interop.dart';
+import 'package:node_interop/io.dart';
 
 // Example HTTP server using "dart:io" wrappers (not finished yet).
 main() async {
-  HTTP http = node.require('http');
-  var server = http.createServer(allowInterop((req, res) {
-    var request = new HttpRequest(req, res);
-    print('Request: ${request.requestedUri}');
+  const int port = 8080;
+  final HttpServer server = await HttpServer.bind('127.0.0.1', port);
+  print('Server started on port $port.');
+  server.listen((HttpRequest request) {
+    print('${request.method} ${request.uri}');
     request.response.headers.contentType = ContentType.JSON;
-    request.response.write(JSON.encode({"dart": "OK"}));
+    request.response.write(JSON.encode({'requestedUri': '${request.uri}'}));
     request.response.close();
-  }));
-
-  server.listen(8080);
+  });
 }

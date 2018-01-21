@@ -60,7 +60,7 @@ void main() {
   HttpFixtures fixtures = node.require('./fixtures.js');
 
   group('HttpRequest', () {
-    var request = new HttpRequest(fixtures.request, fixtures.response);
+    var request = new NodeHttpRequest(fixtures.request, fixtures.response);
 
     test('headers', () {
       expect(request.headers, isNotNull);
@@ -75,7 +75,7 @@ void main() {
   });
 
   group('HttpResponse', () {
-    var request = new HttpRequest(fixtures.request, fixtures.response);
+    var request = new NodeHttpRequest(fixtures.request, fixtures.response);
 
     test('close()', () {
       expect(request.response.close(), completes);
