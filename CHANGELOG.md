@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-beta.8
+
+- Introduced new `io.dart` library designed to follow `dart:io` contract.
+
 ## 0.1.0-beta.7
 
 - Fix HttpHeaders.forEach crash when called on HttpRequest.headers [#6]
