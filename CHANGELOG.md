@@ -1,8 +1,17 @@
 # Changelog
 
+## 0.1.0-beta.8+1
+
+- Updated changelog.
+
 ## 0.1.0-beta.8
 
 - Introduced new `io.dart` library designed to follow `dart:io` contract.
+- Breaking: renamed `HttpRequest` exposed by `http.dart` to
+    `NodeHttpRequest`. This is a server-side request object which will
+    eventually be hidden from this library. It is recommended to import
+    new `io.dart` which exposes both `HttpRequest` and `NodeHttpRequest`
+    objects.
 
 ## 0.1.0-beta.7
 
