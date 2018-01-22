@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:node_interop/io.dart';
 
-// Example HTTP server using "dart:io" wrappers (not finished yet).
+// Example HTTP server using API interface from "dart:io" and actual IO system
+// from Node.
 main() async {
   const int port = 8080;
   final HttpServer server = await HttpServer.bind('127.0.0.1', port);

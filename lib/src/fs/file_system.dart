@@ -71,10 +71,7 @@ class NodeFileSystem implements FileSystem {
   }
 
   @override
-  bool get isWatchSupported {
-    throw new UnsupportedError(
-        'Testing for watch operations is not supported by Node API');
-  }
+  bool get isWatchSupported => false;
 
   @override
   Link link(path) {

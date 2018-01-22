@@ -8,6 +8,7 @@ import 'package:js/js.dart';
 import 'bindings/dns.dart';
 import 'bindings/globals.dart';
 import 'bindings/net.dart';
+import 'errors.dart';
 
 export 'dart:io' show InternetAddressType;
 
@@ -43,7 +44,7 @@ class InternetAddress implements io.InternetAddress {
 
     void handleLookup(error, List<DNSAddress> addresses) {
       if (error != null) {
-        completer.completeError(error);
+        completer.completeError(dartifyError(error));
       } else {
         var list = addresses
             .map((item) => new InternetAddress(item.address, host))
@@ -59,7 +60,6 @@ class InternetAddress implements io.InternetAddress {
   @override
   bool get isLinkLocal => throw new UnimplementedError();
 
-  // TODO: implement isLoopback
   @override
   bool get isLoopback => throw new UnimplementedError();
 

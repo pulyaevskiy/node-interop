@@ -30,17 +30,17 @@ class _HttpConnectionInfo implements io.HttpConnectionInfo {
   _HttpConnectionInfo(this.localPort, this.remoteAddress, this.remotePort);
 }
 
-class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
+class NodeHttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
   @override
   final InternetAddress address;
   @override
   final int port;
 
   nodeHTTP.HttpServer _server;
-  Completer<HttpServer> _listenCompleter;
+  Completer<NodeHttpServer> _listenCompleter;
   StreamController<io.HttpRequest> _controller;
 
-  HttpServer._(this.address, this.port) {
+  NodeHttpServer._(this.address, this.port) {
     _controller = new StreamController<io.HttpRequest>(
       onListen: _onListen,
       onPause: _onPause,
@@ -78,21 +78,25 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
     _controller.add(new NodeHttpRequest(request, response));
   }
 
-  Future<HttpServer> _bind() {
+  Future<NodeHttpServer> _bind() {
     assert(_server.listening == false && _listenCompleter == null);
 
-    _listenCompleter = new Completer<HttpServer>();
+    _listenCompleter = new Completer<NodeHttpServer>();
     void listeningHandler() {
       _listenCompleter.complete(this);
       _listenCompleter = null;
     }
 
-    _server.listen(port, address, null, allowInterop(listeningHandler));
+    _server.listen(port, address.address, null, allowInterop(listeningHandler));
     return _listenCompleter.future;
   }
 
-  static Future<HttpServer> bind(address, int port) {
-    var server = new HttpServer._(address, port);
+  static Future<NodeHttpServer> bind(address, int port) async {
+    if (address is String) {
+      List<InternetAddress> list = await InternetAddress.lookup(address);
+      address = list.first;
+    }
+    var server = new NodeHttpServer._(address, port);
     return server._bind();
   }
 
@@ -133,7 +137,8 @@ class HttpServer extends Stream<io.HttpRequest> implements io.HttpServer {
 
 /// Server side HTTP request object which delegates IO operations to
 /// Node's native representations.
-class NodeHttpRequest extends ReadableStream<List<int>> implements io.HttpRequest {
+class NodeHttpRequest extends ReadableStream<List<int>>
+    implements io.HttpRequest {
   final nodeHTTP.ServerResponse _nativeResponse;
 
   NodeHttpRequest(nodeHTTP.IncomingMessage nativeRequest, this._nativeResponse)
@@ -230,7 +235,8 @@ class NodeHttpRequest extends ReadableStream<List<int>> implements io.HttpReques
 }
 
 class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
-  NodeHttpResponse(nodeHTTP.ServerResponse nativeResponse) : super(nativeResponse);
+  NodeHttpResponse(nodeHTTP.ServerResponse nativeResponse)
+      : super(nativeResponse);
 
   nodeHTTP.ServerResponse get nativeInstance => super.nativeInstance;
 
@@ -269,7 +275,8 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   @override
   String get reasonPhrase => nativeInstance.statusMessage;
   set reasonPhrase(String phrase) {
-    if (nativeInstance.headersSent) throw new StateError('Headers already sent.');
+    if (nativeInstance.headersSent)
+      throw new StateError('Headers already sent.');
     nativeInstance.statusMessage = phrase;
   }
 
@@ -278,7 +285,8 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   set statusCode(int code) {
-    if (nativeInstance.headersSent) throw new StateError('Headers already sent.');
+    if (nativeInstance.headersSent)
+      throw new StateError('Headers already sent.');
     nativeInstance.statusCode = code;
   }
 
