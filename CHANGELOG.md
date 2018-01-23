@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-beta.9
+
+- Added library-level `get` function to `http.dart`.
+
 ## 0.1.0-beta.8+1
 
 - Updated changelog.
