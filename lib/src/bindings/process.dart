@@ -14,6 +14,9 @@ abstract class Process {
   external String get execPath;
   external String get argv0;
   external dynamic get env;
+  external int get exitCode;
+  external set exitCode(int value);
+  void exit([int code]);
 }
 
 @JS()
