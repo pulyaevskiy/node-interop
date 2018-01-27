@@ -18,6 +18,8 @@ OS get os => require('os');
 abstract class OS {
   external List<CPU> cpus();
   external String tmpdir();
+  external String platform();
+  external String hostname();
 }
 
 @JS()
