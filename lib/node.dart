@@ -34,6 +34,7 @@ abstract class Process implements EventEmitter {
   external String cwd();
   external void chdir(String directory);
   external List<String> get execArgv;
+  external List<String> get argv;
   external String get execPath;
   external String get argv0;
   external dynamic get env;
