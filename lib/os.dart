@@ -20,6 +20,7 @@ abstract class OS {
   external String tmpdir();
   external String platform();
   external String hostname();
+  external String release();
 }
 
 @JS()
