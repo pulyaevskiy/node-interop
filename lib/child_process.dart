@@ -1,20 +1,28 @@
+// Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
+
+/// Node "child_process" module bindings.
+///
+/// Use top-level [childProcess] object to access this module functionality.
 @JS()
-library node_interop.bindings.child_process;
+library node_interop.child_process;
 
 import 'package:js/js.dart';
 
+import 'node.dart';
 import 'events.dart';
 
-/// Main entry point to Node's "child_process" module.
-///
-/// Usage:
-///
-///     ChildProcessModule child = require("child_process");
-///     child.execSync("npm install");
+ChildProcessModule get childProcess => require('child_process');
+
 @JS()
+@anonymous
 abstract class ChildProcessModule {
+  external ChildProcess exec(String command,
+      [ExecOptions options, ExecCallback callback]);
   external ChildProcess execSync(String command, [ExecOptions options]);
 }
+
+typedef void ExecCallback(JsError error, stdout, stderr);
 
 @JS()
 abstract class ChildProcess extends EventEmitter {}

@@ -6,12 +6,15 @@
 library node_interop.http_server_test;
 
 import 'package:js/js.dart';
-import 'package:node_interop/node_interop.dart';
-import 'package:node_interop/src/http_server.dart';
+import 'package:node_interop/node_interop.dart' as node;
+import 'package:node_interop/src/http_server.dart' as http_server;
 import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 
-final HTTP nodeHTTP = require('http');
+@JS()
+external dynamic require(id);
+
+final node.HTTP nodeHTTP = require('http');
 
 const fixturesJS = '''
 function NodeHttpRequestStub(headers) {
@@ -60,7 +63,8 @@ void main() {
   HttpFixtures fixtures = node.require('./fixtures.js');
 
   group('HttpRequest', () {
-    var request = new NodeHttpRequest(fixtures.request, fixtures.response);
+    var request =
+        new http_server.NodeHttpRequest(fixtures.request, fixtures.response);
 
     test('headers', () {
       expect(request.headers, isNotNull);
@@ -70,12 +74,13 @@ void main() {
     test('cookies', () {
       expect(request.cookies, isList);
       expect(request.cookies, isNotEmpty);
-      expect(request.cookies.first, new isInstanceOf<Cookie>());
+      expect(request.cookies.first, new isInstanceOf<http_server.Cookie>());
     });
   });
 
   group('HttpResponse', () {
-    var request = new NodeHttpRequest(fixtures.request, fixtures.response);
+    var request =
+        new http_server.NodeHttpRequest(fixtures.request, fixtures.response);
 
     test('close()', () {
       expect(request.response.close(), completes);

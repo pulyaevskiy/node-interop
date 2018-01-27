@@ -1,11 +1,17 @@
-// Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
+
 @JS()
-library node_interop.bindings.dns;
+library node_interop.dns;
 
 import 'package:js/js.dart';
+import 'node.dart';
+
+DNS get dns => require('dns');
 
 /// Main entry point to Node's "dns" module functionality.
+///
+/// Instead of using this class directly consider [dns] object.
 ///
 /// Usage:
 ///
@@ -16,6 +22,7 @@ import 'package:js/js.dart';
 ///     }
 ///     dns.lookup('google.com', options, allowInterop(lookupHandler));
 @JS()
+@anonymous
 abstract class DNS {
   /// Resolves a hostname (e.g. 'nodejs.org') into the first found IPv4 or
   /// IPv6 record.
@@ -27,8 +34,8 @@ abstract class DNS {
   ///
   /// See also:
   ///   - [https://nodejs.org/api/dns.html#dns_dns_lookup_hostname_options_callback](https://nodejs.org/api/dns.html#dns_dns_lookup_hostname_options_callback)
-  external lookup(String hostname, DNSLookupOptions options,
-      Function callback);
+  external void lookup(
+      String hostname, DNSLookupOptions options, Function callback);
 }
 
 @JS()

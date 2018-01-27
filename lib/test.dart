@@ -2,12 +2,17 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 /// Testing utilities for Dart applications with node_interop.
+@JS()
 library node_interop.test;
 
 import 'dart:convert';
 
-import 'fs.dart';
+import 'package:js/js.dart';
+
 import 'node_interop.dart';
+
+// @JS()
+// external dynamic require(id);
 
 /// Creates arbitrary file in the same directory with the compiled test file.
 ///
@@ -82,6 +87,6 @@ void installNodeModules(Map<String, String> modules) {
   };
   file.writeAsStringSync(JSON.encode(packages));
 
-  ChildProcessModule childProcess = require('child_process');
-  childProcess.execSync('npm install', new ExecOptions(cwd: cwd));
+  // ChildProcessModule childProcess = require('child_process');
+  // childProcess.execSync('npm install', new ExecOptions(cwd: cwd));
 }

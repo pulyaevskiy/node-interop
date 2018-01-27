@@ -2,23 +2,29 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 @TestOn('node')
+@JS()
+library http_test;
+
 import 'dart:async';
 import 'dart:js';
 
 import 'package:js/js.dart';
-import 'package:node_interop/node_interop.dart';
-import 'package:node_interop/http.dart';
+import 'package:node_interop/node_interop.dart' as node;
+import 'package:node_interop/http.dart' as http;
 import 'package:test/test.dart';
 
-final HTTP nodeHTTP = require('http');
+@JS()
+external dynamic require(id);
+
+final node.HTTP nodeHTTP = require('http');
 
 void main() {
   group('HTTP client', () {
-    HttpServer server;
+    var server;
 
     setUpAll(() {
-      server = nodeHTTP
-          .createServer(allowInterop((IncomingMessage req, ServerResponse res) {
+      server = nodeHTTP.createServer(
+          allowInterop((node.IncomingMessage req, node.ServerResponse res) {
         List<int> body = [];
         req.on('data', allowInterop((Iterable<int> chunk) {
           body.addAll(chunk);
@@ -50,7 +56,7 @@ void main() {
     });
 
     test('make get request', () async {
-      var client = new NodeClient();
+      var client = new http.NodeClient();
       var response = await client.get('http://localhost:8181/test');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -60,7 +66,7 @@ void main() {
     });
 
     test('make post request with a body', () async {
-      var client = new NodeClient();
+      var client = new http.NodeClient();
       var response =
           await client.post('http://localhost:8181/test', body: 'hello');
       expect(response.statusCode, 200);

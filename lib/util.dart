@@ -9,12 +9,12 @@ import 'dart:js';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
-import 'bindings/globals.dart';
+import 'node.dart';
 
 /// Returns Dart representation from JS Object.
 ///
 /// Basic types (num, bool, String) are returned as-is. JS arrays
-/// are converted in to `List` instances. JS objects are converted in to
+/// are converted into `List` instances. JS objects are converted into
 /// `Map` instances. Both arrays and objects are traversed recursively
 /// converting nested values.
 ///
@@ -31,7 +31,7 @@ dynamic dartify(Object jsObject) {
     return jsObject.map(dartify).toList();
   }
 
-  var keys = jsObjectKeys(jsObject);
+  var keys = objectKeys(jsObject);
   var result = new Map();
   for (var key in keys) {
     result[key] = dartify(util.getProperty(jsObject, key));
@@ -64,20 +64,6 @@ bool _isBasicType(value) {
   return false;
 }
 
-/// Converts JsObject into a Dart `Map`.
-///
-/// This helper doesn't "fix" nested objects, like other lists or maps.
-@deprecated
-Map<String, dynamic> jsObjectToMap(object) {
-  if (object == null) return null;
-  var result = new Map<String, dynamic>();
-  var keys = jsObjectKeys(object);
-  keys.forEach((key) {
-    result[key] = util.getProperty(object, key);
-  });
-  return result;
-}
-
 /// Creates Dart `Future` which completes when [promise] is resolved or
 /// rejected.
 ///
@@ -102,12 +88,6 @@ Promise<T> futureToJsPromise<T>(Future<T> future) {
     future.then(resolve, onError: reject);
   }));
 }
-
-/// Returns a list of keys in [jsObject].
-///
-/// This function binds to JavaScript `Object.keys()`.
-@JS('Object.keys')
-external List<String> jsObjectKeys(jsObject);
 
 /// Converts a JavaScript value to a JSON string. This functions binds to
 /// native `JSON.stringify()`.

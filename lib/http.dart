@@ -1,144 +1,198 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// HTTP client implementation for Node.
+/// Node HTTP module bindings.
 ///
-/// See [NodeClient] for details.
+/// Use top-level [http] object to access this module functionality.
+/// To create HTTP agent use [createHttpAgent].
+@JS()
 library node_interop.http;
 
-import 'dart:async';
-
+import 'dart:js';
 import 'dart:js_util';
-import 'package:http/http.dart' as http;
+
 import 'package:js/js.dart';
 
-import 'node_interop.dart';
-import 'src/util.dart';
+import 'events.dart';
+import 'net.dart';
+import 'node.dart';
+import 'stream.dart';
 
-export 'src/http_server.dart' hide NodeHttpServer;
+HTTP get http => require('http');
 
-final HTTP _nodeHTTP = require('http');
-final HTTPS _nodeHTTPS = require('https');
-
-Future<http.Response> get(url, {Map<String, String> headers}) =>
-    _withClient((client) => client.get(url, headers: headers));
-
-Future<T> _withClient<T>(Future<T> fn(http.Client client)) async {
-  var client = new NodeClient();
-  try {
-    return await fn(client);
-  } finally {
-    client.close();
-  }
+/// Convenience method for creating instances of "http" module's Agent class.
+///
+/// This is equivalent of Node's `new http.Agent([options])`.
+HttpAgent createHttpAgent([HttpAgentOptions options]) {
+  var args = (options == null) ? [] : [options];
+  return callConstructor(http.Agent, args);
 }
 
-/// HTTP client which uses Node IO (via 'http' module).
+/// Listener on HTTP requests of [HttpServer].
 ///
-/// Make sure to call [close] when work with this client is done.
-class NodeClient extends http.BaseClient {
-  /// Keep sockets around even when there are no outstanding requests, so they
-  /// can be used for future requests without having to reestablish a TCP
-  /// connection. Defaults to `true`.
-  final bool keepAlive;
+/// See also:
+///   - [HTTP.createServer]
+typedef void HttpRequestListener(
+    IncomingMessage request, ServerResponse response);
 
-  /// When using the keepAlive option, specifies the initial delay for TCP
-  /// Keep-Alive packets. Ignored when the keepAlive option is false.
-  /// Defaults to 1000.
-  final int keepAliveMsecs;
+/// Main entry point to Node's "http" module functionality.
+///
+/// Usage:
+///
+///     HTTP http = require('http');
+///     http.get("http://example.com");
+///
+/// See also:
+/// - [createHttpAgent]
+@JS()
+@anonymous
+abstract class HTTP {
+  /// Returns a new instance of [HttpServer].
+  ///
+  /// The [requestListener] is a function which is automatically added to the
+  /// "request" event.
+  external HttpServer createServer([HttpRequestListener requestListener]);
+  external ClientRequest request(RequestOptions options,
+      [callback(IncomingMessage response)]);
 
-  NodeClient({
-    this.keepAlive = true,
-    this.keepAliveMsecs = 1000,
+  /// Makes GET request. The only difference between this method and
+  /// [request] is that it sets the method to GET and calls req.end()
+  /// automatically.
+  external ClientRequest get(dynamic urlOrOptions,
+      [callback(IncomingMessage response)]);
+
+  external HttpAgent get globalAgent;
+  external dynamic get Agent;
+}
+
+@JS()
+@anonymous
+abstract class HttpAgent {
+  external factory HttpAgent({
+    bool keepAlive,
+    num keepAliveMsecs,
+    num maxSockets,
+    num maxFreeSockets,
   });
+  external void destroy();
+}
 
-  /// Native JavaScript connection agent used by this client for insecure
-  /// requests.
-  HttpAgent get httpAgent =>
-      _httpAgent ??= createHttpAgent(new HttpAgentOptions(
-        keepAlive: keepAlive,
-        keepAliveMsecs: keepAliveMsecs,
-      ));
-  HttpAgent _httpAgent;
+@JS()
+@anonymous
+abstract class HttpAgentOptions {
+  external bool get keepAlive;
+  external num get keepAliveMsecs;
+  external num get maxSockets;
+  external num get maxFreeSockets;
+  external factory HttpAgentOptions({
+    bool keepAlive,
+    num keepAliveMsecs,
+    num maxSockets,
+    num maxFreeSockets,
+  });
+}
 
-  /// Native JavaScript connection agent used by this client for secure
-  /// requests.
-  HttpAgent get httpsAgent =>
-      _httpsAgent ??= createHttpsAgent(new HttpAgentOptions(
-        keepAlive: keepAlive,
-        keepAliveMsecs: keepAliveMsecs,
-      ));
-  HttpAgent _httpsAgent;
+@JS()
+@anonymous
+abstract class RequestOptions {
+  external String get protocol;
+  @Deprecated('Use "hostname" instead.')
+  external String get host;
+  external String get hostname;
+  external num get family;
+  external num get port;
+  external String get localAddress;
+  external String get socketPath;
+  external String get method;
+  external String get path;
+  external dynamic get headers;
+  external String get auth;
+  external dynamic get agent;
+  external num get timeout;
 
-  dynamic _jsifyHeaders(Map<String, dynamic> headers) {
-    var object = newObject();
-    for (var key in headers.keys) {
-      setProperty(object, key, headers[key]);
-    }
-    return object;
-  }
+  external factory RequestOptions({
+    String protocol,
+    String host,
+    String hostname,
+    num family,
+    num port,
+    String localAddress,
+    String socketPath,
+    String method,
+    String path,
+    dynamic headers,
+    String auth,
+    dynamic agent,
+    num timeout,
+  });
+}
 
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    var url = request.url;
-    var usedAgent = (url.scheme == 'http') ? httpAgent : httpsAgent;
-    var sendRequest =
-        (url.scheme == 'http') ? _nodeHTTP.request : _nodeHTTPS.request;
+@JS()
+abstract class ClientRequest extends EventEmitter {
+  external void abort();
+  external bool get aborted;
+  external Socket get connection;
+  external void end([dynamic data, String encoding, callback]);
+  external void flushHeaders();
+  external String getHeader(String name);
+  external void removeHeader(String name);
+  external void setHeader(String name, dynamic value);
+  external void setNoDelay(bool noDelay);
+  external void setSocketKeepAlive([bool enable, num initialDelay]);
+  external void setTimeout(num msecs, [callback]);
+  external Socket get socket;
+  external void write(chunk, [String encoding, callback]);
+}
 
-    var pathWithQuery =
-        url.hasQuery ? [url.path, '?', url.query].join() : url.path;
-    var options = new RequestOptions(
-        protocol: "${url.scheme}:",
-        hostname: url.host,
-        port: url.port,
-        method: request.method,
-        path: pathWithQuery,
-        headers: _jsifyHeaders(request.headers),
-        agent: usedAgent);
-    var completer = new Completer<http.StreamedResponse>();
+@JS()
+abstract class HttpServer extends EventEmitter {
+  external void close([callback]);
+  external void listen(handleOrPathOrPort,
+      [callbackOrHostname, backlog, callback]);
+  external bool get listening;
+  external num get maxHeadersCount;
+  external void setTimeout([msecs, callback]);
+  external num get timeout;
+  external num get keepAliveTimeout;
+}
 
-    void handleResponse(IncomingMessage response) {
-      Map<String, dynamic> headers = dartify(response.headers);
-      var controller = new StreamController<List<int>>();
-      completer.complete(new http.StreamedResponse(
-        controller.stream,
-        response.statusCode,
-        request: request,
-        headers: headers,
-        reasonPhrase: response.statusMessage,
-      ));
+@JS()
+@anonymous
+abstract class ServerResponse extends Writable {
+  external void addTrailers(headers);
+  external Socket get connection;
+  external bool get finished;
+  external String getHeader(String name);
+  external JsArray<String> getHeaderNames();
+  external JsObject getHeaders();
+  external bool hasHeader(String name);
+  external bool get headersSent;
+  external void removeHeader(String name);
+  external bool get sendDate;
+  external void setHeader(String name, dynamic value);
+  external void setTimeout(num msecs, [callback]);
+  external Socket get socket;
+  external num get statusCode;
+  external void set statusCode(num value);
+  external String get statusMessage;
+  external void set statusMessage(String value);
+  external void writeContinue();
+  external void writeHead(num statusCode, [String statusMessage, headers]);
+}
 
-      response.on('data', allowInterop((Iterable<int> buffer) {
-        // buffer is an instance of Node's Buffer.
-        controller.add(new List.unmodifiable(buffer));
-      }));
-      response.on('end', allowInterop(() {
-        controller.close();
-      }));
-    }
-
-    var nodeRequest = sendRequest(options, allowInterop(handleResponse));
-    nodeRequest.on('error', allowInterop((e) {
-      completer.completeError(e.message);
-    }));
-    http.ByteStream body = request.finalize();
-    // TODO: Support StreamedRequest by consuming body asynchronously.
-    body
-        .toList()
-        .then((List<List<int>> chunks) {
-          chunks.forEach((List<int> chunk) {
-            var buffer = Buffer.from(chunk);
-            nodeRequest.write(buffer);
-          });
-        })
-        .catchError(completer.completeError)
-        .whenComplete(() => nodeRequest.end());
-
-    return completer.future;
-  }
-
-  @override
-  void close() {
-    httpAgent.destroy();
-    httpsAgent.destroy();
-  }
+@JS()
+@anonymous
+abstract class IncomingMessage extends Readable {
+  external void destroy([error]);
+  external JsObject get headers;
+  external String get httpVersion;
+  external String get method;
+  external JsArray<String> get rawHeaders;
+  external JsArray<String> get rawTrailers;
+  external void setTimeout(num msecs, callback);
+  external Socket get socket;
+  external num get statusCode;
+  external String get statusMessage;
+  external JsObject get trailers;
+  external String get url;
 }

@@ -1,24 +1,14 @@
 name: node_interop
-description: Interop library for writing NodeJS apps and modules in Dart.
-version: 0.1.0-beta.9
+description: Node bindings and utils for Dart.
+version: 1.0.0-dev.1.0
 homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 
 environment:
-  sdk: '>=1.20.1 <2.0.0'
+  sdk: '>=2.0.0-dev.19.0 <2.0.0'
 
 dependencies:
   js: ^0.6.1
-  file: ^2.3.2
-  platform: ^2.0.0
-  glob: ^1.1.3
-  barback: ^0.15.2
-  node_preamble: ^1.4.0
-  http: ^0.11.3
 
 dev_dependencies:
   test: ^0.12.24
-
-transformers:
-  - $dart2js
-  - node_interop

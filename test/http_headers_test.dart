@@ -13,6 +13,9 @@ import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 import 'package:node_interop/src/http_headers.dart';
 
+@JS()
+external dynamic require(id);
+
 final HTTP nodeHTTP = require('http');
 
 const headersJS = '''
