@@ -23,10 +23,3 @@ void main() {
     });
   });
 }
-
-@JS('Error')
-abstract class JsError {
-  external String get code;
-  external String get message;
-  external String get stack;
-}

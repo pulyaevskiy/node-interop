@@ -6,8 +6,8 @@
 library node_interop.util_test;
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart';
-import 'package:node_interop/node_interop.dart';
+import 'package:node_interop/node.dart';
+import 'package:node_interop/util.dart';
 import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 
@@ -31,6 +31,7 @@ exports.objectVal = new Apple();
 ''';
 
 @JS()
+@anonymous
 abstract class Fixtures {
   external dynamic get stringVal;
   external dynamic get numVal;
@@ -74,18 +75,6 @@ void main() {
     test('it handles objects with prototypes', () {
       final Fixtures js = require('./fixtures.js');
       expect(dartify(js.objectVal), {'color': 'red', 'origin': 'Japan'});
-    });
-  });
-  
-  group('JSON', () {
-    test('parse and stringify', () {
-      var text = '{"color": "red"}';
-      var obj = jsonParse(text);
-      expect(hasProperty(obj, 'color'), isTrue);
-      expect(getProperty(obj, 'color'), 'red');
-      setProperty(obj, 'icon', 'Icons.android');
-      var json = jsonStringify(obj);
-      expect(json, '{"color":"red","icon":"Icons.android"}');
     });
   });
 }

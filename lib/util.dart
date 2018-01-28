@@ -88,23 +88,3 @@ Promise<T> futureToJsPromise<T>(Future<T> future) {
     future.then(resolve, onError: reject);
   }));
 }
-
-/// Converts a JavaScript value to a JSON string. This functions binds to
-/// native `JSON.stringify()`.
-///
-/// Optionally replaces values if a [replacer] function is specified, or
-/// optionally including only the specified properties if a [replacer] array is
-/// specified.
-///
-/// The [space] parameter can be a `String` or `num` object that's used to
-/// insert white space into the output JSON string for readability purposes.
-@JS("JSON.stringify")
-external String jsonStringify(object, [replacer, space]);
-
-/// Parses a JSON [text], constructing the JavaScript value or object described
-/// by the string. This functions binds to native `JSON.parse()`.
-///
-/// An optional [reviver] function can be provided to perform a transformation
-/// on the resulting object before it is returned.
-@JS("JSON.parse")
-external dynamic jsonParse(String text, [reviver]);

@@ -9,15 +9,15 @@ import 'dart:convert';
 
 import 'package:js/js.dart';
 
-import 'node_interop.dart';
-
-// @JS()
-// external dynamic require(id);
+import 'child_process.dart';
+import 'fs.dart';
+import 'node.dart';
+import 'path.dart';
 
 /// Creates arbitrary file in the same directory with the compiled test file.
 ///
-/// This is useful for creating native Node modules for testing interactions
-/// between Dart and JS.
+/// This is useful for creating native Node modules (as well as any other
+/// fixtures) for testing interactions between Dart and JS.
 ///
 /// Returns absolute path to the created file.
 ///
@@ -50,19 +50,15 @@ import 'node_interop.dart';
 ///       });
 ///     }
 String createFile(String name, String contents) {
-  var fs = new NodeFileSystem();
-  var segments = node.platform.script.pathSegments.toList();
+  String script = process.argv[1];
+  var segments = script.split(path.sep);
   segments
     ..removeLast()
     ..add(name);
-  var jsFilepath = fs.path.separator + fs.path.joinAll(segments);
-  var file = fs.file(jsFilepath);
-  file.writeAsStringSync(contents);
+  var jsFilepath = path.sep + segments.join(path.sep);
+  fs.writeFileSync(jsFilepath, contents);
   return jsFilepath;
 }
-
-@Deprecated('Use createFile() instead.')
-void createJSFile(String name, String contents) => createFile(name, contents);
 
 /// Installs specified NodeJS [modules] in the same directory with compiled
 /// test file. Should normally be used as a very first command in the `main()`
@@ -71,22 +67,20 @@ void createJSFile(String name, String contents) => createFile(name, contents);
 /// This function creates 'package.json' with [modules] added to 'dependencies'
 /// section and runs `npm install`.
 void installNodeModules(Map<String, String> modules) {
-  var fs = new NodeFileSystem();
-  var segments = node.platform.script.pathSegments.toList();
-  var cwd = fs.path.dirname(node.platform.script.path);
+  String script = process.argv[1];
+  var segments = script.split(path.sep);
+
+  var cwd = path.dirname(script);
   segments
     ..removeLast()
     ..add('package.json');
-  var jsFilepath = fs.path.separator + fs.path.joinAll(segments);
-  var file = fs.file(jsFilepath);
+  var jsFilepath = path.sep + segments.join(path.sep);
   var packages = {
     "name": "test",
     "description": "Test",
     "dependencies": modules,
     "private": true
   };
-  file.writeAsStringSync(JSON.encode(packages));
-
-  // ChildProcessModule childProcess = require('child_process');
-  // childProcess.execSync('npm install', new ExecOptions(cwd: cwd));
+  fs.writeFileSync(jsFilepath, JSON.encode(packages));
+  childProcess.execSync('npm install', new ExecOptions(cwd: cwd));
 }
