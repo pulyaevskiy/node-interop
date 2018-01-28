@@ -13,5 +13,5 @@ import 'package:js/js.dart';
 @JS()
 abstract class Buffer {
   /// Creates a new Buffer from data.
-  external static from(data, [arg1, arg2]);
+  external static Buffer from(data, [arg1, arg2]);
 }
