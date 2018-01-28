@@ -9,8 +9,8 @@ import 'dart:async';
 
 import 'package:js/js.dart';
 import 'package:node_interop/node.dart';
-import 'package:node_interop/util.dart';
 import 'package:node_interop/test.dart';
+import 'package:node_interop/util.dart';
 import 'package:test/test.dart';
 
 const promisesJS = '''
@@ -40,19 +40,19 @@ abstract class JsPromises {
 void main() {
   createFile('promises.js', promisesJS);
 
-  test('jsPromiseToFuture', () async {
+  test('promiseToFuture', () async {
     final JsPromises js = require('./promises.js');
     Promise promise = js.createPromise('Futures are better than Promises');
-    Future future = jsPromiseToFuture(promise);
+    Future future = promiseToFuture(promise);
     expect(future, completion('Futures are better than Promises'));
   });
 
-  test('futureToJsPromise', () {
+  test('futureToPromise', () {
     final JsPromises js = require('./promises.js');
     var future = new Future.value('Yes');
-    var promise = futureToJsPromise(future);
+    var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
-    expect(jsPromiseToFuture(promise2), completion('YesYesYes'));
+    expect(promiseToFuture(promise2), completion('YesYesYes'));
   });
 
   test('create promise in Dart', () {
@@ -61,21 +61,21 @@ void main() {
       resolve('Yas');
     }));
     var promise2 = js.receivePromise(promise);
-    expect(jsPromiseToFuture(promise2), completion('YasYasYas'));
+    expect(promiseToFuture(promise2), completion('YasYasYas'));
   });
 
   test('reject a Promise', () {
     var promise = new Promise(allowInterop((resolve, reject) {
       reject('No');
     }));
-    expect(jsPromiseToFuture(promise), throwsA('No'));
+    expect(promiseToFuture(promise), throwsA('No'));
   });
 
   test('reject a Future', () {
     final JsPromises js = require('./promises.js');
     var future = new Future.error('No');
-    var promise = futureToJsPromise(future);
+    var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
-    expect(jsPromiseToFuture(promise2), throwsA('NoNoNo'));
+    expect(promiseToFuture(promise2), throwsA('NoNoNo'));
   });
 }

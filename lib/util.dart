@@ -1,5 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
+
+/// Utitily functions for Dart <> JS interoperability.
 @JS()
 library node_interop.util;
 
@@ -68,8 +70,8 @@ bool _isBasicType(value) {
 /// rejected.
 ///
 /// See also:
-///   - [futureToJsPromise]
-Future<T> jsPromiseToFuture<T>(Promise<T> promise) {
+///   - [futureToPromise]
+Future<T> promiseToFuture<T>(Promise<T> promise) {
   var completer = new Completer();
   promise.then(allowInterop((value) {
     completer.complete(value);
@@ -82,8 +84,8 @@ Future<T> jsPromiseToFuture<T>(Promise<T> promise) {
 /// Creates JS `Promise` which is resolved when [future] completes.
 ///
 /// See also:
-/// - [jsPromiseToFuture]
-Promise<T> futureToJsPromise<T>(Future<T> future) {
+/// - [promiseToFuture]
+Promise<T> futureToPromise<T>(Future<T> future) {
   return new Promise(allowInterop((Function resolve, Function reject) {
     future.then(resolve, onError: reject);
   }));
