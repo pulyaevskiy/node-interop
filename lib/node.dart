@@ -6,6 +6,7 @@
 library node_interop.node;
 
 import 'package:js/js.dart';
+import 'package:js/js_util.dart';
 
 import 'console.dart';
 import 'events.dart';
@@ -15,9 +16,26 @@ import 'module.dart';
 export 'buffer.dart';
 export 'js.dart';
 
-// Even though this binding is here it is not actually a global.
-// TODO: is there a way to not declare this binding?
+/// Loads module with specified [id].
+///
+/// Note that this is not actually a global variable and when compiled to
+/// JavaScript proxies all calls to the `require` function of main application
+/// module.
 external dynamic require(String id);
+
+/// Reference to the main module's `exports` object.
+///
+/// Note that this is not actually a global variable and currently only
+/// works for the application's main module, meaning it should only be used
+/// from inside the `main` function of a Dart application.
+///
+/// Consider using [setExport] to register exports inside your `main` function.
+external dynamic get exports;
+
+/// Registers property with [key] and [value] in the module [exports] object.
+void setExport(String key, Object value) {
+  setProperty(exports, key, value);
+}
 
 external Console get console;
 external Process get process;
