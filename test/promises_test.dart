@@ -8,7 +8,8 @@ library promises_test;
 import 'dart:async';
 
 import 'package:js/js.dart';
-import 'package:node_interop/node_interop.dart';
+import 'package:node_interop/node.dart';
+import 'package:node_interop/util.dart';
 import 'package:node_interop/test.dart';
 import 'package:test/test.dart';
 
