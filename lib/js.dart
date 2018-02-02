@@ -20,6 +20,7 @@ abstract class Promise<T> extends Thenable<T> {
 
 @JS()
 abstract class Date {
+  external factory Date(dynamic value);
   external int getTime();
   external String toISOString();
 }
