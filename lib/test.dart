@@ -5,11 +5,8 @@
 @JS()
 library node_interop.test;
 
-import 'dart:convert';
-
 import 'package:js/js.dart';
 
-import 'child_process.dart';
 import 'fs.dart';
 import 'node.dart';
 import 'path.dart';
@@ -58,29 +55,4 @@ String createFile(String name, String contents) {
   var jsFilepath = path.sep + segments.join(path.sep);
   fs.writeFileSync(jsFilepath, contents);
   return jsFilepath;
-}
-
-/// Installs specified NodeJS [modules] in the same directory with compiled
-/// test file. Should normally be used as a very first command in the `main()`
-/// function of a test file.
-///
-/// This function creates 'package.json' with [modules] added to 'dependencies'
-/// section and runs `npm install`.
-void installNodeModules(Map<String, String> modules) {
-  String script = process.argv[1];
-  var segments = script.split(path.sep);
-
-  var cwd = path.dirname(script);
-  segments
-    ..removeLast()
-    ..add('package.json');
-  var jsFilepath = path.sep + segments.join(path.sep);
-  var packages = {
-    "name": "test",
-    "description": "Test",
-    "dependencies": modules,
-    "private": true
-  };
-  fs.writeFileSync(jsFilepath, JSON.encode(packages));
-  childProcess.execSync('npm install', new ExecOptions(cwd: cwd));
 }

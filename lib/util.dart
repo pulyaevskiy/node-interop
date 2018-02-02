@@ -25,8 +25,6 @@ export 'package:js/js_util.dart' hide jsify;
 /// See also:
 /// - [jsify]
 dynamic dartify(Object jsObject) {
-  assert(jsObject is! Function, "Can not dartify a function.");
-
   if (_isBasicType(jsObject)) {
     return jsObject;
   }

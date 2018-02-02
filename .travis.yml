@@ -1,12 +1,17 @@
-sudo: false
-
 language: dart
+
 dart:
+- stable
 - dev
 
 before_install:
   - nvm install node
   - node --version
-script:
-  - pub run test --reporter expanded
-  - pub run test -p node -r expanded -j 1
+
+before_script:
+  - npm install
+
+dart_task:
+- test: --platform node --reporter expanded -j 1
+- dartfmt
+- dartanalyzer: --fatal-warnings lib

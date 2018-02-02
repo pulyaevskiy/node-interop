@@ -16,6 +16,7 @@ function Apple() {
   this.color = "red";
   this.origin = "Japan";
 }
+Apple.isFruit = true;
 Apple.prototype.grow = function() {};
 
 exports.stringVal = "node";
@@ -24,9 +25,7 @@ exports.boolVal = true;
 exports.nullVal = null;
 exports.pojoVal = {"propKey": "propValue"};
 exports.arrayVal = [1, "two"];
-exports.funcVal = function () {
-  return true;
-};
+exports.funcVal = Apple;
 exports.objectVal = new Apple();
 ''';
 
@@ -65,11 +64,9 @@ void main() {
       expect(dartify(js.arrayVal), [1, "two"]);
     });
 
-    test('it does not handle functions', () {
+    test('it DOES handle JS functions with properties', () {
       final Fixtures js = require('./fixtures.js');
-      expect(() {
-        dartify(js.funcVal);
-      }, throwsA(new isInstanceOf<AssertionError>()));
+      expect(dartify(js.funcVal), {'isFruit': true});
     });
 
     test('it handles objects with prototypes', () {
