@@ -13,6 +13,8 @@ import 'package:js/js_util.dart' as util;
 
 import 'node.dart';
 
+export 'package:js/js_util.dart' hide jsify;
+
 /// Returns Dart representation from JS Object.
 ///
 /// Basic types (num, bool, String) are returned as-is. JS arrays
