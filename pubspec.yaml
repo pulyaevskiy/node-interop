@@ -12,3 +12,9 @@ dependencies:
 
 dev_dependencies:
   test: ^0.12.24
+  build_runner: ^0.7.8
+  build_web_compilers:
+    git:
+      url: git@github.com:pulyaevskiy/build.git
+      path: build_web_compilers
+      ref: node-support

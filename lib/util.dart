@@ -73,7 +73,7 @@ bool _isBasicType(value) {
 ///
 /// See also:
 ///   - [futureToPromise]
-Future<T> promiseToFuture<T>(Promise<T> promise) {
+Future<T> promiseToFuture<T>(Promise promise) {
   var completer = new Completer();
   promise.then(allowInterop((value) {
     completer.complete(value);
@@ -87,7 +87,7 @@ Future<T> promiseToFuture<T>(Promise<T> promise) {
 ///
 /// See also:
 /// - [promiseToFuture]
-Promise<T> futureToPromise<T>(Future<T> future) {
+Promise futureToPromise<T>(Future<T> future) {
   return new Promise(allowInterop((Function resolve, Function reject) {
     future.then(resolve, onError: reject);
   }));

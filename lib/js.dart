@@ -8,14 +8,9 @@ library node_interop.js;
 import 'package:js/js.dart';
 
 @JS()
-abstract class Thenable<T> {
-  external Thenable<S> then<S>(S onFulfilled(T value), [S onRejected(error)]);
-}
-
-@JS()
-abstract class Promise<T> extends Thenable<T> {
-  external factory Promise(executor(resolve(T value), reject(error)));
-  external Promise<S> then<S>(S onFulfilled(T value), [S onRejected(error)]);
+abstract class Promise {
+  external factory Promise(executor(resolve(value), reject(error)));
+  external Promise then(dynamic onFulfilled(value), [onRejected(error)]);
 }
 
 @JS()
