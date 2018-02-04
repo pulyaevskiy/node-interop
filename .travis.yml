@@ -4,13 +4,8 @@ dart:
 - dev
 
 before_install:
-  - nvm install node
-  - node --version
+- nvm install node
+- node --version
 
-before_script:
-  - npm install
-
-dart_task:
-- test: --platform node --reporter expanded -j 1
-- dartfmt
-- dartanalyzer: --fatal-warnings lib
+script:
+- ./tool/travis.sh node_interop
