@@ -24,13 +24,13 @@ export 'package:js/js_util.dart' hide jsify;
 ///
 /// See also:
 /// - [jsify]
-dynamic dartify(Object jsObject) {
+T dartify<T>(Object jsObject) {
   if (_isBasicType(jsObject)) {
-    return jsObject;
+    return jsObject as T;
   }
 
   if (jsObject is List) {
-    return jsObject.map(dartify).toList();
+    return jsObject.map(dartify).toList() as T;
   }
 
   var keys = objectKeys(jsObject);
@@ -39,7 +39,7 @@ dynamic dartify(Object jsObject) {
     result[key] = dartify(util.getProperty(jsObject, key));
   }
 
-  return result;
+  return result as T;
 }
 
 /// Returns the JS representation from Dart Object.
