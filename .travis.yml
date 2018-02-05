@@ -10,3 +10,4 @@ before_install:
 script:
 - ./tool/travis.sh node_interop
 - ./tool/travis.sh node_io
+- ./tool/travis.sh node_http
