@@ -3,6 +3,14 @@
 Write applications in Dart, run in NodeJS. This is an early preview,
 alpha open-source project.
 
+> Version 1.0.0 of this library is under active development with a lot of
+> new exciting stuff and breaking changes, including:
+> 
+> - Dependency on Dart >= 2.0.0-dev
+> - New build system using build_runner with support for both DDC and dart2js
+> 
+> Development branch for this version is `dart20`.
+
 * [What is this?](#what-is-this?)
 * [Examples](#examples)
 * [Status](#status)
