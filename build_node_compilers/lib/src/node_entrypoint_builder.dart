@@ -1,6 +1,5 @@
-// Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
+// Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
 
@@ -32,7 +31,7 @@ const _buildRootAppSummary = 'build_root_app_summary';
 const _compiler = 'compiler';
 const _dart2jsArgs = 'dart2js_args';
 
-/// A builder which compiles entrypoints for the web.
+/// A builder which compiles entrypoints for Node.
 ///
 /// Supports `dart2js` and `dartdevc`.
 class NodeEntrypointBuilder implements Builder {
@@ -50,7 +49,7 @@ class NodeEntrypointBuilder implements Builder {
 
   factory NodeEntrypointBuilder.fromOptions(BuilderOptions options) {
     validateOptions(
-        options.config, _supportedOptions, 'build_web_compilers|entrypoint');
+        options.config, _supportedOptions, 'build_node_compilers|entrypoint');
     var compilerOption = options.config[_compiler] as String ?? 'dartdevc';
     var buildRootAppSummary =
         options.config[_buildRootAppSummary] as bool ?? false;
@@ -93,6 +92,7 @@ class NodeEntrypointBuilder implements Builder {
   @override
   Future<Null> build(BuildStep buildStep) async {
     var dartEntrypointId = buildStep.inputId;
+    print(dartEntrypointId);
     var isAppEntrypoint = await _isAppEntryPoint(dartEntrypointId, buildStep);
     if (!isAppEntrypoint) return;
     if (webCompiler == WebCompiler.DartDevc) {
