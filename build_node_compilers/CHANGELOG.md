@@ -1,3 +1,3 @@
-# 0.0.1
+# 0.1.0
 
-- Initial version based on build_web_compilers
+- Initial version based on `build_web_compilers`.

@@ -1,5 +1,4 @@
 targets:
-  e2e_interop_test: # Replace this with your package name.
+  $default:
     sources:
       - "node/**"
-
