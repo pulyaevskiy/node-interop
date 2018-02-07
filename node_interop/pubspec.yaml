@@ -5,7 +5,7 @@ homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 
 environment:
-  sdk: '>=2.0.0-dev.20.0 <2.0.0'
+  sdk: '>=2.0.0-dev <2.0.0'
 
 dependencies:
   js: ^0.6.1

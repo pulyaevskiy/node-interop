@@ -4,8 +4,6 @@ set -e
 
 cd "$1"
 
-TEST_PLATFORM="$2"
-
 echo '> pub get ================================================================'
 pub get
 
@@ -14,8 +12,8 @@ if [ -f "package.json" ]; then
     npm install
 fi
 
-echo "> pub run test -p $TEST_PLATFORM -r expanded -j 1 =================================="
-pub run test -p $TEST_PLATFORM -r expanded -j 1
+echo "> pub run test -r expanded ==============================================="
+pub run test -r expanded
 
 echo '> dartfmt -n --set-exit-if-changed . ====================================='
 dartfmt -n --set-exit-if-changed .
