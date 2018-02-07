@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Hello world', () {
-    setUp(() {
+    tearDown(() {
       final buildDir = new Directory('build');
       if (buildDir.existsSync()) {
         buildDir.deleteSync(recursive: true);
