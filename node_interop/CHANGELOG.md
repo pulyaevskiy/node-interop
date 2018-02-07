@@ -1,14 +1,16 @@
-# Changelog
-
 ## 1.0.0-dev.1.0
 
-Two major changes in this version:
+### Breaking changes:
 
 - node_interop depends on Dart 2 SDK which allows us to leverage new 
   build_runner system and move away from Pub transformers.
 - node_interop no longer exports Dart-specific abstractions like an HTTP client
-  or FileSystem. These abstractions have been moved to a separate package:
-  node_io. This way node_interop only exposes JS bindings for Node APIs.
+  or FileSystem. These abstractions have been moved to separate packages:
+  `node_io` and `node_http`. This way node_interop only exposes JS bindings for 
+  Node APIs.
+- library structure is changed to map closer to built-in Node modules. There is
+  a separate file for each module which exposes that module's bindings, 
+  e.g. `fs.dart`, `http.dart`.
 
 ## 0.1.0-beta.9
 
