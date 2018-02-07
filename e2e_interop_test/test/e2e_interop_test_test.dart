@@ -1,6 +1,7 @@
 @TestOn('vm')
-import 'package:test/test.dart';
 import 'dart:io';
+
+import 'package:test/test.dart';
 
 void main() {
   group('Hello world', () {

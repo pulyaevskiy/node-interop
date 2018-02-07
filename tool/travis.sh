@@ -4,19 +4,21 @@ set -e
 
 cd "$1"
 
-echo 'pub get =============================================================='
+TEST_PLATFORM="$2"
+
+echo '> pub get ================================================================'
 pub get
 
 if [ -f "package.json" ]; then
-    echo 'npm install =============================================================='
+    echo '> npm install ============================================================'
     npm install
 fi
 
-echo 'pub run test -p node -r expanded -j 1 ===================================='
-pub run test -p node -r expanded -j 1
+echo "> pub run test -p $TEST_PLATFORM -r expanded -j 1 =================================="
+pub run test -p $TEST_PLATFORM -r expanded -j 1
 
-echo 'dartfmt -n --set-exit-if-changed . ======================================='
+echo '> dartfmt -n --set-exit-if-changed . ====================================='
 dartfmt -n --set-exit-if-changed .
 
-echo "dartanalyzer --fatal-infos --fatal-warnings . ============================"
+echo "> dartanalyzer --fatal-infos --fatal-warnings . =========================="
 dartanalyzer --fatal-infos --fatal-warnings .
