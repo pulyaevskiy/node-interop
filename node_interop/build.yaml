@@ -1,6 +1,5 @@
 targets:
-  node_interop:
+  $default:
     sources:
       - "example/**"
       - "lib/**"
-      - "test/**"

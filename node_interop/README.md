@@ -95,15 +95,6 @@ void main() {
 
 ## Status
 
-`1.0.0-dev` version is under active development and includes many changes:
-
-- Depends on Dart SDK >= 2.0.0-dev
-- Supports new `build_runner` system
-- Supports both DDC and dart2js
-- Removes all higher-level abstractions to separate libraries 
-  (node_io and node_http) so that this library only provides JS API bindings
-  and some utilities.
-
 While 1.0.0 is still in `dev` mode breaking changes are likely to occur.
 
 Make sure to checkout [CHANGELOG.md][changelog] after every release, all 
