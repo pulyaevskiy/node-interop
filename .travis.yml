@@ -8,6 +8,7 @@ before_install:
 - node --version
 
 script:
+- ./tool/travis.sh build_node_compilers
 - ./tool/travis.sh node_interop
 - ./tool/travis.sh node_io
 - ./tool/travis.sh node_http
