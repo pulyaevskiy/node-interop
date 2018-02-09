@@ -13,3 +13,7 @@ doc/api/
 
 # Intellij/WebStorm
 .idea/
+
+# Node
+package-lock.json
+node_modules/

@@ -1,0 +1,30 @@
+builders:
+  ddc:
+    target: "build_node_compilers"
+    import: "package:build_node_compilers/builders.dart"
+    builder_factories:
+      - devCompilerBuilder
+    build_extensions:
+      .dart:
+        - .node.ddc.js.errors
+        - .node.ddc.js
+        - .node.ddc.js.map
+    is_optional: True
+    auto_apply: all_packages
+    required_inputs: [".dart"]
+  entrypoint:
+    target: "build_node_compilers"
+    import: "package:build_node_compilers/builders.dart"
+    builder_factories: ["nodeEntrypointBuilder"]
+    build_extensions:
+      .dart:
+        - .dart.bootstrap.js
+        - .dart.js
+        - .dart.js.map
+    required_inputs:  [".dart", ".node.ddc.js", ".module"]
+    build_to: cache
+    auto_apply: root_package
+    defaults:
+      generate_for:
+        include: ["node/**", "example/**", "test/**_test.dart", "test/**.node_test.dart"]
+        exclude: ["test/**.vm_test.dart"]

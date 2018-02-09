@@ -1,0 +1,6 @@
+targets:
+  $default:
+    sources:
+      - "example/**"
+      - "lib/**"
+      - "test/**"

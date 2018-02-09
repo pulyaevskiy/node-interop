@@ -1,0 +1,16 @@
+name: e2e_interop_test
+description: End-to-end test for node interop and builders
+version: 0.0.1
+
+environment:
+  sdk: '>=2.0.0-dev <2.0.0'
+
+dependencies:
+  node_interop:
+    path: ../node_interop
+
+dev_dependencies:
+  test: ^0.12.0
+  build_runner:
+  build_node_compilers:
+    path: ../build_node_compilers
