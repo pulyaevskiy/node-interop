@@ -7,7 +7,7 @@
 - node_interop no longer exports Dart-specific abstractions like an HTTP client
   or FileSystem. These abstractions have been moved to separate packages:
   `node_io` and `node_http`. This way node_interop only exposes JS bindings for 
-  Node APIs.
+  Node.
 - library structure is changed to map closer to built-in Node modules. There is
   a separate file for each module which exposes that module's bindings, 
   e.g. `fs.dart`, `http.dart`.

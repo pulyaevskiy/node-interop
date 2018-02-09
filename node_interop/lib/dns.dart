@@ -6,6 +6,7 @@ library node_interop.dns;
 
 import 'package:js/js.dart';
 import 'node.dart';
+import 'util.dart';
 
 DNS get dns => require('dns');
 
@@ -23,7 +24,13 @@ DNS get dns => require('dns');
 ///     dns.lookup('google.com', options, allowInterop(lookupHandler));
 @JS()
 @anonymous
-abstract class DNS {
+abstract class DNS implements Resolver {
+  /// Constructor for DNS [Resolver] class.
+  ///
+  /// See also:
+  /// - [createDNSResolver] helper function.
+  external Function get Resolver;
+
   /// Resolves a hostname (e.g. 'nodejs.org') into the first found IPv4 or
   /// IPv6 record.
   ///
@@ -51,4 +58,15 @@ abstract class DNSLookupOptions {
 abstract class DNSAddress {
   external String get address;
   external num get family;
+}
+
+Resolver createDNSResolver() {
+  return callConstructor(dns.Resolver, null);
+}
+
+@JS()
+@anonymous
+abstract class Resolver {
+  external List<String> getServers();
+  external void setServers(List<String> servers);
 }

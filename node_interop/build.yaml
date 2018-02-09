@@ -3,3 +3,4 @@ targets:
     sources:
       - "example/**"
       - "lib/**"
+      - "test/**"

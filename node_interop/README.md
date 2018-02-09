@@ -52,7 +52,7 @@ import 'package:node_interop/os.dart';
 ```
 
 Note that after importing a module like above there is no need to also `require`
-it (the Node way). Each library file (like `os.dart`) exposes top-level
+it (the Node way). Each library file (like `os.dart`) exposes library-level
 property of the same name which gives you access to that module's functionality.
 This is just a convenience to not have to `import` *and* `require` modules at 
 the same time. Here is how `os.dart` implements it:
@@ -81,9 +81,9 @@ instance. They still have a dedicated Dart file in this library, but this is
 mostly for consistency and you shouldn't need to import it directly. The 
 `buffer` module is globally available in Node.
 
-Libraries with underscores in their name (like `child_process`) expose top-level
-property with underscores converted to camelCase to be compliant with Dart
-code style rules:
+Libraries with underscores in their name (like `child_process`) expose 
+library-level property with underscores converted to camelCase to be compliant 
+with Dart code style rules:
 
 ```dart
 import 'package:node_interop/child_process.dart';
