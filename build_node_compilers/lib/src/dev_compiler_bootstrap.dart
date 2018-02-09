@@ -195,23 +195,3 @@ dart.global.self = {
     location: { href: __filename }
 };
 ''';
-
-/// Code to initialize the dev tools formatter, stack trace mapper, and any
-/// other tools.
-///
-/// Posts a message to the window when done.
-// TODO: Is this needed for Node?
-final _initializeTools = '''
-  dart_sdk._debugger.registerDevtoolsFormatter();
-  if (window.\$dartStackTraceUtility && !window.\$dartStackTraceUtility.ready) {
-    window.\$dartStackTraceUtility.ready = true;
-    let dart = dart_sdk.dart;
-    window.\$dartStackTraceUtility.setSourceMapProvider(
-      function(url) {
-        var module = window.\$dartLoader.urlToModuleId.get(url);
-        if (!module) return null;
-        return dart.getSourceMap(module);
-      });
-  }
-  window.postMessage({ type: "DDC_STATE_CHANGE", state: "start" }, "*");
-''';
