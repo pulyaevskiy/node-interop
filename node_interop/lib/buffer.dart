@@ -65,6 +65,7 @@ abstract class Buffer {
   external static int get poolSize;
   external static set poolSize(int value);
 
-  external operator [](int index);
-  external operator []=(int index, int value);
+  // [] and []= operators are not supported by JS interop
+  // external operator [](int index);
+  // external operator []=(int index, int value);
 }
