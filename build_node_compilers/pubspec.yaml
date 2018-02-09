@@ -1,5 +1,5 @@
 name: build_node_compilers
-version: 0.0.1
+version: 0.1.0
 description: Builders wrapping DDC and dart2js compilers configured to output Node modules
 homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
@@ -13,7 +13,6 @@ dependencies:
   build: ^0.12.0
   build_config: ^0.2.1
   cli_util: ^0.1.2
-  json_annotation: ^0.2.2
   logging: ^0.11.2
   path: ^1.4.2
   scratch_space: ^0.0.1
