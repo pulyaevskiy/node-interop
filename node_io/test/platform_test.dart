@@ -17,8 +17,7 @@ void main() {
       expect(Platform.script, new isInstanceOf<Uri>());
       expect(Platform.script.isAbsolute, isTrue);
       expect(Platform.script.path, process.argv[1]);
-      expect(Platform.script.pathSegments.last,
-          'platform_test.dart.node_test.dart.js');
+      expect(Platform.script.pathSegments.last, contains('platform_test.dart'));
     });
 
     test('executable', () {

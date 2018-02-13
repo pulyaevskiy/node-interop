@@ -47,7 +47,7 @@ void main() {
 }
 
 Future<String> makePost(Uri url, String body) {
-  final completer = new Completer();
+  final completer = new Completer<String>();
   final options = new js.RequestOptions(
     method: 'POST',
     protocol: '${url.scheme}:',

@@ -17,6 +17,9 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
   @override
   bool get isAbsolute => nodePath.path.isAbsolute(path);
 
+  @override
+  String toString() => "$runtimeType: '$path'";
+
   static final RegExp _parentRegExp = Platform.isWindows
       ? new RegExp(r'[^/\\][/\\]+[^/\\]')
       : new RegExp(r'[^/]/+[^/]');

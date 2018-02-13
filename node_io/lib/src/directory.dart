@@ -27,9 +27,6 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  String toString() => "Directory: '$path'";
-
-  @override
   io.Directory get absolute => new Directory(nodePath.path.resolve(path));
 
   @override
@@ -78,7 +75,14 @@ class Directory extends FileSystemEntity implements io.Directory {
         controller.close();
       } else {
         for (var filePath in files) {
-          controller.add(new File(filePath));
+          final stat = FileStat.statSync(filePath);
+          if (stat.type == io.FileSystemEntityType.FILE) {
+            controller.add(new File(filePath));
+          } else if (stat.type == io.FileSystemEntityType.DIRECTORY) {
+            controller.add(new Directory(filePath));
+          } else {
+            throw new UnimplementedError('Link entities not implemented yet.');
+          }
         }
         controller.close();
       }
