@@ -23,8 +23,8 @@ targets:
   $default:
     sources:
       - "node/**"
-      - "test/**" # Include this if use want to compile tests.
-      - "example/**" # Include this if you have examples.
+      - "test/**" # Include this if you want to compile tests.
+      - "example/**" # Include this if you want to compile examples.
 ```
 
 To build your project run following:

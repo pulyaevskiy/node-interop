@@ -13,14 +13,16 @@ provided by `dart:io` (like `File`, `Directory` or `HttpServer`).
 
 A basic example of accessing file system:
 
-    import 'package:node_io/node_io.dart';
+```dart
+import 'package:node_io/node_io.dart';
 
-    void main() {
-      print(Directory.current);
-      print("Current directory exists: ${Directory.current.existsSync()}");
-      print('Current directory contents: ');
-      Directory.current.list().listen(print);
-    }
+void main() {
+  print(Directory.current);
+  print("Current directory exists: ${Directory.current.existsSync()}");
+  print('Current directory contents: ');
+  Directory.current.list().listen(print);
+}
+```
 
 ## Configuration and build
 
