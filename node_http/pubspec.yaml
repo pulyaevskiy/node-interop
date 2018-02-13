@@ -13,3 +13,5 @@ dependencies:
 
 dev_dependencies:
   test: ^0.12.0
+  build_runner: ^0.7.9
+  build_node_compilers: ^0.1.0

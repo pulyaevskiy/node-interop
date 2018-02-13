@@ -94,7 +94,7 @@ class NodeClient extends http.BaseClient {
     var completer = new Completer<http.StreamedResponse>();
 
     void handleResponse(_http.IncomingMessage response) {
-      Map<String, dynamic> headers = dartify(response.headers);
+      Map<String, String> headers = dartify(response.headers);
       var controller = new StreamController<List<int>>();
       completer.complete(new http.StreamedResponse(
         controller.stream,
@@ -115,20 +115,18 @@ class NodeClient extends http.BaseClient {
 
     var nodeRequest = sendRequest(options, allowInterop(handleResponse));
     nodeRequest.on('error', allowInterop((e) {
-      completer.completeError(e.message);
+      completer.completeError(e);
     }));
     http.ByteStream body = request.finalize();
     // TODO: Support StreamedRequest by consuming body asynchronously.
-    body
-        .toList()
-        .then((List<List<int>> chunks) {
-          chunks.forEach((List<int> chunk) {
-            var buffer = Buffer.from(chunk);
-            nodeRequest.write(buffer);
-          });
-        })
-        .catchError(completer.completeError)
-        .whenComplete(() => nodeRequest.end());
+    body.toList().then((List<List<int>> chunks) {
+      chunks.forEach((List<int> chunk) {
+        var buffer = Buffer.from(chunk);
+        nodeRequest.write(buffer);
+      });
+    }).catchError((error) {
+      completer.completeError(error);
+    }).whenComplete(() => nodeRequest.end());
 
     return completer.future;
   }
