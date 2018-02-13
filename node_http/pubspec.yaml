@@ -9,11 +9,7 @@ environment:
 
 dependencies:
   http: ^0.11.3
-  node_io:
-    git: 
-      url: https://github.com/pulyaevskiy/node-interop.git
-      ref: dart20
-      path: node_io
+  node_io: ^1.0.0-dev
 
 dev_dependencies:
   test: ^0.12.0
