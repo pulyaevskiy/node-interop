@@ -1,17 +1,17 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// HTTP client using Node I/O system.
+/// HTTP client using Node I/O system for Dart.
 ///
 /// See [NodeClient] for details.
 library node_http;
 
 import 'dart:async';
+import 'dart:js';
 
 import 'package:http/http.dart' as http;
-import 'package:js/js.dart';
-import 'package:node_interop/http.dart' as _http;
-import 'package:node_interop/https.dart' as _https;
+import 'package:node_interop/http.dart' as nodeHttp;
+import 'package:node_interop/https.dart' as nodeHttps;
 import 'package:node_interop/node.dart';
 import 'package:node_interop/util.dart';
 
@@ -58,32 +58,33 @@ class NodeClient extends http.BaseClient {
 
   /// Native JavaScript connection agent used by this client for insecure
   /// requests.
-  _http.HttpAgent get httpAgent =>
-      _httpAgent ??= _http.createHttpAgent(new _http.HttpAgentOptions(
+  nodeHttp.HttpAgent get httpAgent =>
+      _httpAgent ??= nodeHttp.createHttpAgent(new nodeHttp.HttpAgentOptions(
         keepAlive: keepAlive,
         keepAliveMsecs: keepAliveMsecs,
       ));
-  _http.HttpAgent _httpAgent;
+  nodeHttp.HttpAgent _httpAgent;
 
   /// Native JavaScript connection agent used by this client for secure
   /// requests.
-  _http.HttpAgent get httpsAgent =>
-      _httpsAgent ??= _https.createHttpsAgent(new _http.HttpAgentOptions(
+  nodeHttp.HttpAgent get httpsAgent =>
+      _httpsAgent ??= nodeHttps.createHttpsAgent(new nodeHttp.HttpAgentOptions(
         keepAlive: keepAlive,
         keepAliveMsecs: keepAliveMsecs,
       ));
-  _http.HttpAgent _httpsAgent;
+  nodeHttp.HttpAgent _httpsAgent;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
     var url = request.url;
     var usedAgent = (url.scheme == 'http') ? httpAgent : httpsAgent;
-    var sendRequest =
-        (url.scheme == 'http') ? _http.http.request : _https.https.request;
+    var sendRequest = (url.scheme == 'http')
+        ? nodeHttp.http.request
+        : nodeHttps.https.request;
 
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
-    var options = new _http.RequestOptions(
+    var options = new nodeHttp.RequestOptions(
         protocol: "${url.scheme}:",
         hostname: url.host,
         port: url.port,
@@ -93,7 +94,7 @@ class NodeClient extends http.BaseClient {
         agent: usedAgent);
     var completer = new Completer<http.StreamedResponse>();
 
-    void handleResponse(_http.IncomingMessage response) {
+    void handleResponse(nodeHttp.IncomingMessage response) {
       Map<String, String> headers = dartify(response.headers);
       var controller = new StreamController<List<int>>();
       completer.complete(new http.StreamedResponse(
