@@ -1,17 +1,17 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-@JS()
 @TestOn('node')
-library node_interop.http_headers_test;
+@JS()
+library node_io.http_headers_test;
 
 import 'dart:io';
 
 import 'package:js/js.dart';
-import 'package:node_io/node_io.dart';
-import 'package:node_interop/node.dart';
 import 'package:node_interop/http.dart';
+import 'package:node_interop/node.dart';
 import 'package:node_interop/test.dart';
+import 'package:node_io/node_io.dart';
 import 'package:test/test.dart';
 
 const headersJS = '''

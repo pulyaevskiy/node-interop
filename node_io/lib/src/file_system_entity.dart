@@ -3,9 +3,10 @@
 
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:js' as js;
+
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/path.dart' as nodePath;
-import 'package:js/js.dart' as js;
 
 import 'directory.dart';
 import 'platform.dart';

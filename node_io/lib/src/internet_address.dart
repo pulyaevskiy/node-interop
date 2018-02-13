@@ -2,8 +2,8 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:js';
 
-import 'package:js/js.dart';
 import 'package:node_interop/dns.dart';
 import 'package:node_interop/net.dart';
 

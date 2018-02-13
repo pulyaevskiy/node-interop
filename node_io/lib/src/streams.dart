@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:js/js.dart';
+import 'dart:js';
 
 import 'package:node_interop/node.dart';
 import 'package:node_interop/stream.dart';

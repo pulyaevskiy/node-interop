@@ -4,8 +4,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
+import 'dart:js' as js;
 
-import 'package:js/js.dart' as js;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/path.dart' as nodePath;
 

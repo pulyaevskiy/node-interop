@@ -1,14 +1,11 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-@JS()
 @TestOn('node')
-library node_interop.http_server_test;
-
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:js/js.dart';
+import 'dart:js';
 import 'package:node_io/node_io.dart';
 import 'package:node_interop/http.dart' as js;
 import 'package:test/test.dart';
