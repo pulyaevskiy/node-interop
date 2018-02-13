@@ -176,7 +176,7 @@ class NodeHttpRequest extends ReadableStream<List<int>>
   @override
   io.HttpConnectionInfo get connectionInfo {
     var socket = nativeInstance.socket;
-    var address = new InternetAddress(socket.remoteAddress, null);
+    var address = new InternetAddress(socket.remoteAddress);
     return new _HttpConnectionInfo(
         socket.localPort, address, socket.remotePort);
   }
@@ -323,7 +323,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   @override
   io.HttpConnectionInfo get connectionInfo {
     var socket = nativeInstance.socket;
-    var address = new InternetAddress(socket.remoteAddress, null);
+    var address = new InternetAddress(socket.remoteAddress);
     return new _HttpConnectionInfo(
         socket.localPort, address, socket.remotePort);
   }

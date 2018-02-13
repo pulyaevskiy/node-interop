@@ -1,16 +1,30 @@
+## 1.0.0-dev.1.0+1
+
+- Minor internal changes.
+
 ## 1.0.0-dev.1.0
 
 ### Breaking changes:
 
 - node_interop depends on Dart 2 SDK which allows us to leverage new 
   build_runner system and move away from Pub transformers.
+- Removed Pub transformer, which means you shouldn't need it in your
+  `pubspec.yaml` anymore. Build system is now based on `build` package. See docs
+  for more details.
 - node_interop no longer exports Dart-specific abstractions like an HTTP client
   or FileSystem. These abstractions have been moved to separate packages:
-  `node_io` and `node_http`. This way node_interop only exposes JS bindings for 
-  Node.
+  `node_io` and `node_http`. This way node_interop now only exposes JS bindings 
+  for Node and some utility functions.
 - library structure is changed to map closer to built-in Node modules. There is
   a separate file for each module which exposes that module's bindings, 
   e.g. `fs.dart`, `http.dart`.
+- `node` object has been removed. Can use `require` and `exports` functions 
+  directly. There is also new convenience function `setExport`.
+- `jsPromiseToFuture` renamed to `promiseToFuture`.
+- `futureToJsPromise` renamed to `futureToPromise`.
+- `jsObjectKeys` renamed to `objectKeys`.
+- `dartify` now allows converting JS `function` objects.
+- `JsPromise
 
 ## 0.1.0-beta.9
 

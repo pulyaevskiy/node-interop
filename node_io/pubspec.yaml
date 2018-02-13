@@ -8,16 +8,10 @@ environment:
   sdk: '>=2.0.0-dev <2.0.0'
 
 dependencies:
- node_interop:
-  git:
-    url: https://github.com/pulyaevskiy/node-interop.git
-    ref: dart20
-    path: node_interop
+ node_interop: ^1.0.0-dev
 
 dev_dependencies:
-  test: ^0.12.0
-  node_http:
-    git:
-      url: https://github.com/pulyaevskiy/node-interop.git
-      ref: dart20
-      path: node_http
+  test: ^0.12.24
+  build_runner: ^0.7.9
+  build_node_compilers: ^0.1.0
+  

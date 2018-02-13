@@ -3,7 +3,7 @@
 
 /// Node FS module bindings.
 ///
-/// Use top-level [fs] object to access functionality of this module.
+/// Use library-level [fs] object to access functionality of this module.
 @JS()
 library node_interop.fs;
 
@@ -12,7 +12,8 @@ import 'package:js/js.dart';
 import 'node.dart';
 import 'stream.dart';
 
-FS get fs => require('fs');
+FS get fs => _fs ??= require('fs');
+FS _fs;
 
 @JS()
 @anonymous
@@ -100,6 +101,7 @@ abstract class WriteStreamOptions {
 }
 
 @JS()
+@anonymous
 abstract class Stats {
   external bool isFile();
   external bool isDirectory();

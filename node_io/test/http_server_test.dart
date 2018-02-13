@@ -5,11 +5,12 @@
 @TestOn('node')
 library node_interop.http_server_test;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:js/js.dart';
 import 'package:node_io/node_io.dart';
-import 'package:node_http/node_http.dart';
+import 'package:node_interop/http.dart' as js;
 import 'package:test/test.dart';
 
 void main() {
@@ -38,10 +39,33 @@ void main() {
     });
 
     test('request with body', () async {
-      final client = new NodeClient(keepAlive: false);
-      var res =
-          await client.post('http://127.0.0.1:8181', body: '{"pi": 3.14}');
-      expect(res.body, '{"pi":3.14}');
+      String response =
+          await makePost(Uri.parse('http://127.0.0.1:8181'), '{"pi": 3.14}');
+      expect(response, '{"pi":3.14}');
     });
   });
+}
+
+Future<String> makePost(Uri url, String body) {
+  final completer = new Completer();
+  final options = new js.RequestOptions(
+    method: 'POST',
+    protocol: '${url.scheme}:',
+    hostname: url.host,
+    port: 8181,
+  );
+  final request = js.http.request(options, allowInterop((response) {
+    response.setEncoding('utf8');
+    StringBuffer body = new StringBuffer();
+    response.on('data', allowInterop((chunk) {
+      body.write(chunk);
+    }));
+    response.on('end', allowInterop(() {
+      completer.complete(body.toString());
+    }));
+  }));
+  request.write(body);
+  request.end();
+
+  return completer.future;
 }

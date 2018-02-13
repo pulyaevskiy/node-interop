@@ -1,9 +1,9 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// NodeJS Net module.
+/// Node.js Net module.
 ///
-/// Use top-level [net] object to access this module functionality.
+/// Use library-level [net] object to access this module functionality.
 @JS()
 library node_interop.net;
 
@@ -11,7 +11,8 @@ import 'package:js/js.dart';
 import 'events.dart';
 import 'node.dart';
 
-Net get net => require('net');
+Net get net => _net ??= require('net');
+Net _net;
 
 @JS()
 @anonymous

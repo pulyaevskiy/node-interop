@@ -1,7 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node HTTPS module bindings.
+/// Node.js HTTPS module bindings.
 ///
 /// Use top-level [https] object to access this module functionality.
 /// To create HTTPS agent use [createHttpsAgent].
@@ -24,7 +24,8 @@ export 'http.dart'
         IncomingMessage,
         ServerResponse;
 
-HTTPS get https => require('https');
+HTTPS get https => _https ??= require('https');
+HTTPS _https;
 
 /// Convenience method for creating instances of "https" module's Agent class.
 ///

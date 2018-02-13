@@ -17,7 +17,7 @@ export 'package:js/js_util.dart' hide jsify;
 
 /// Returns Dart representation from JS Object.
 ///
-/// Basic types (num, bool, String) are returned as-is. JS arrays
+/// Basic types (`num`, `bool`, `String`) are returned as-is. JS arrays
 /// are converted into `List` instances. JS objects are converted into
 /// `Map` instances. Both arrays and objects are traversed recursively
 /// converting nested values.

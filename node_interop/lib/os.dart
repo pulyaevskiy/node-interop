@@ -11,7 +11,8 @@ import 'package:js/js.dart';
 
 import 'node.dart';
 
-OS get os => require('os');
+OS get os => _os ??= require('os');
+OS _os;
 
 @JS()
 @anonymous

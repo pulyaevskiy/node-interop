@@ -18,7 +18,8 @@ import 'net.dart';
 import 'node.dart';
 import 'stream.dart';
 
-HTTP get http => require('http');
+HTTP get http => _http ??= require('http');
+HTTP _http;
 
 /// Convenience method for creating instances of "http" module's Agent class.
 ///

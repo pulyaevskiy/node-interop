@@ -11,7 +11,8 @@ import 'package:js/js.dart';
 
 import 'node.dart';
 
-Path get path => require('path');
+Path get path => _path ??= require('path');
+Path _path;
 
 @JS()
 @anonymous

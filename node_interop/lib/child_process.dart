@@ -13,7 +13,9 @@ import 'events.dart';
 import 'node.dart';
 import 'stream.dart';
 
-ChildProcessModule get childProcess => require('child_process');
+ChildProcessModule get childProcess =>
+    _childProcess ??= require('child_process');
+ChildProcessModule _childProcess;
 
 @JS()
 @anonymous

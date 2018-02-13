@@ -9,6 +9,9 @@ import 'package:node_interop/net.dart';
 
 export 'dart:io' show InternetAddressType;
 
+const _kLoopbackIPv4 = '127.0.0.1';
+const _kLoopbackIPv6 = '::1';
+
 class InternetAddress implements io.InternetAddress {
   final String _host;
 
@@ -27,10 +30,12 @@ class InternetAddress implements io.InternetAddress {
   set type(io.InternetAddressType value) =>
       throw new UnsupportedError('Setting address type is not supported.');
 
-  InternetAddress(this.address, [this._host]) {
+  InternetAddress._(this.address, [this._host]) {
     if (net.isIP(address) == 0)
       throw new ArgumentError('${address} is not valid.');
   }
+
+  factory InternetAddress(String address) => new InternetAddress._(address);
 
   static Future<List<io.InternetAddress>> lookup(String host) {
     Completer<List<io.InternetAddress>> completer = new Completer();
@@ -41,7 +46,7 @@ class InternetAddress implements io.InternetAddress {
         completer.completeError(error);
       } else {
         var list = addresses
-            .map((item) => new InternetAddress(item.address, host))
+            .map((item) => new InternetAddress._(item.address, host))
             .toList(growable: false);
         completer.complete(list);
       }
@@ -52,16 +57,35 @@ class InternetAddress implements io.InternetAddress {
   }
 
   @override
-  bool get isLinkLocal => throw new UnimplementedError();
+  bool get isLinkLocal {
+    if (type == io.InternetAddressType.IP_V4) {
+      List<int> raw = rawAddress;
+      return raw[0] == 169 && raw[1] == 254 && raw[3] >= 1 && raw[3] <= 254;
+    } else {
+      throw new UnimplementedError();
+    }
+  }
 
   @override
-  bool get isLoopback => throw new UnimplementedError();
+  bool get isLoopback =>
+      (type == io.InternetAddressType.IP_V4 && address == _kLoopbackIPv4) ||
+      (type == io.InternetAddressType.IP_V6 && address == _kLoopbackIPv6);
 
   @override
   bool get isMulticast => throw new UnimplementedError();
 
   @override
-  List<int> get rawAddress => throw new UnimplementedError();
+  List<int> get rawAddress {
+    if (_rawAddress != null) return new List.from(_rawAddress);
+    if (type == io.InternetAddressType.IP_V4) {
+      _rawAddress = address.split('.').map(int.parse).toList(growable: false);
+    } else {
+      throw new UnimplementedError();
+    }
+    return new List.from(_rawAddress);
+  }
+
+  List<int> _rawAddress;
 
   @override
   Future<io.InternetAddress> reverse() {
