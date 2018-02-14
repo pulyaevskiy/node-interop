@@ -13,6 +13,8 @@ const _kLoopbackIPv4 = '127.0.0.1';
 const _kLoopbackIPv6 = '::1';
 
 class InternetAddress implements io.InternetAddress {
+  static const int _IPV6_ADDR_LENGTH = 16;
+
   final String _host;
 
   @override
@@ -26,6 +28,8 @@ class InternetAddress implements io.InternetAddress {
       ? io.InternetAddressType.IP_V4
       : io.InternetAddressType.IP_V6;
 
+  // This probably shouldn't have been in the interface because dart:io
+  // version does not implement this setter.
   @override
   set type(io.InternetAddressType value) =>
       throw new UnsupportedError('Setting address type is not supported.');
@@ -58,21 +62,48 @@ class InternetAddress implements io.InternetAddress {
 
   @override
   bool get isLinkLocal {
-    if (type == io.InternetAddressType.IP_V4) {
-      List<int> raw = rawAddress;
-      return raw[0] == 169 && raw[1] == 254 && raw[3] >= 1 && raw[3] <= 254;
-    } else {
-      throw new UnimplementedError();
+    final List<int> raw = rawAddress;
+    // Copied from dart:io
+    switch (type) {
+      case io.InternetAddressType.IP_V4:
+        // Checking for 169.254.0.0/16.
+        return raw[0] == 169 && raw[1] == 254;
+      case io.InternetAddressType.IP_V6:
+        // Checking for fe80::/10.
+        return raw[0] == 0xFE && (raw[1] & 0xB0) == 0x80;
     }
+    throw new StateError('Unreachable');
   }
 
   @override
-  bool get isLoopback =>
-      (type == io.InternetAddressType.IP_V4 && address == _kLoopbackIPv4) ||
-      (type == io.InternetAddressType.IP_V6 && address == _kLoopbackIPv6);
+  bool get isLoopback {
+    final List<int> raw = rawAddress;
+    // Copied from dart:io
+    switch (type) {
+      case io.InternetAddressType.IP_V4:
+        return raw[0] == 127;
+      case io.InternetAddressType.IP_V6:
+        for (int i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
+          if (raw[i] != 0) return false;
+        }
+        return raw[_IPV6_ADDR_LENGTH - 1] == 1;
+    }
+    throw new StateError('Unreachable');
+  }
 
   @override
-  bool get isMulticast => throw new UnimplementedError();
+  bool get isMulticast {
+    // Copied from dart:io
+    switch (type) {
+      case io.InternetAddressType.IP_V4:
+        // Checking for 224.0.0.0 through 239.255.255.255.
+        return rawAddress[0] >= 224 && rawAddress[0] < 240;
+      case io.InternetAddressType.IP_V6:
+        // Checking for ff00::/8.
+        return rawAddress[0] == 0xFF;
+    }
+    throw new StateError('Unreachable');
+  }
 
   @override
   List<int> get rawAddress {
@@ -89,6 +120,7 @@ class InternetAddress implements io.InternetAddress {
 
   @override
   Future<io.InternetAddress> reverse() {
+    // dns.rever
     throw new UnimplementedError();
   }
 

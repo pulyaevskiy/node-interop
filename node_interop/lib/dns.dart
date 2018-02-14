@@ -17,12 +17,15 @@ DNS _dns;
 ///
 /// Usage:
 ///
-///     DNS dns = require('dns');
-///     var options = new DNSLookupOptions(all: true, verbatim: true);
-///     void lookupHandler(error, List<DNSAddress> addresses) {
-///       console.log(addresses);
+///     import 'package:node_interop/dns.dart';
+///
+///     void main() {
+///       var options = new DNSLookupOptions(all: true, verbatim: true);
+///       void lookupHandler(error, List<DNSAddress> addresses) {
+///         console.log(addresses);
+///       }
+///       dns.lookup('google.com', options, allowInterop(lookupHandler));
 ///     }
-///     dns.lookup('google.com', options, allowInterop(lookupHandler));
 @JS()
 @anonymous
 abstract class DNS implements Resolver {
@@ -65,9 +68,35 @@ Resolver createDNSResolver() {
   return callConstructor(dns.Resolver, null);
 }
 
+/// An independent resolver for DNS requests.
+///
+/// Note that creating a new resolver uses the default server settings.
+/// Setting the servers used for a resolver using [setServers] does not
+/// affect other resolvers.
 @JS()
 @anonymous
 abstract class Resolver {
+  external void resolve(
+      String hostname, String rrtype, callback(error, records));
+  external void resolve4(String hostname, optionsOrCallback,
+      [callback(error, addresses)]);
+  external void resolve6(String hostname, optionsOrCallback,
+      [callback(error, addresses)]);
+  external void resolveAny(String hostname, callback(error, List ret));
+  external void resolveCname(
+      String hostname, callback(error, List<String> ret));
+  external void resolveMx(String hostname, callback(error, List addresses));
+  external void resolveNaptr(String hostname, callback(error, List addresses));
+  external void resolveNs(
+      String hostname, callback(error, List<String> addresses));
+  external void resolvePtr(
+      String hostname, callback(error, List<String> addresses));
+  external void resolveSoa(String hostname, callback(error, address));
+  external void resolveSrv(String hostname, callback(error, List addresses));
+  external void resolveTxt(
+      String hostname, callback(error, List<List<String>> records));
+  external void reverse(String ip, callback(error, List<String> hostnames));
   external List<String> getServers();
   external void setServers(List<String> servers);
+  external void cancel();
 }

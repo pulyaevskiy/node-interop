@@ -1,3 +1,7 @@
+## 1.0.0-dev.2.0
+
+- Completed `dns` module function definitions (still missing data structures).
+
 ## 1.0.0-dev.1.0+1
 
 - Minor internal changes.
