@@ -106,7 +106,7 @@ If you found a bug, please don't hesitate to create an issue in the
 [changelog]: https://github.com/pulyaevskiy/node-interop/blob/master/node_interop/CHANGELOG.md
 [issue_tracker]: http://github.com/pulyaevskiy/node-interop/issues/new
 
-- [x] buffer (10%)
+- [x] buffer
 - [x] child_process
 - [ ] cluster
 - [x] console (50%)

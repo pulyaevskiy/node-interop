@@ -1,0 +1,34 @@
+// Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
+
+@TestOn('node')
+import 'package:node_interop/buffer.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('Buffer', () {
+    test('from array', () {
+      final buffer = Buffer.from([1, 2, 3]);
+      expect(buffer, new isInstanceOf<Buffer>());
+    });
+
+    test('keys()', () {
+      final buffer = Buffer.from([1, 2, 3]);
+      expect(new List.from(buffer.keys()), [0, 1, 2]);
+    });
+
+    test('values()', () {
+      final buffer = Buffer.from([1, 2, 3]);
+      expect(new List.from(buffer.values()), [1, 2, 3]);
+    });
+
+    test('entries()', () {
+      final buffer = Buffer.from([1, 2, 3]);
+      expect(new List.from(buffer.entries()), [
+        [0, 1],
+        [1, 2],
+        [2, 3]
+      ]);
+    });
+  });
+}

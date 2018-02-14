@@ -13,3 +13,6 @@ script:
 - ./tool/travis.sh node_io
 - ./tool/travis.sh node_http
 - ./tool/travis.sh e2e_interop_test
+- ./tool/ddc_test.sh node_interop
+- ./tool/ddc_test.sh node_io
+- ./tool/ddc_test.sh node_http
