@@ -59,6 +59,7 @@ abstract class Process implements EventEmitter {
 }
 
 @JS()
+@anonymous
 abstract class NodeJsError extends JsError {
   external String get code;
 }

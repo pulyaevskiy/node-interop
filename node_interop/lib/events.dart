@@ -7,8 +7,22 @@ library node_interop.events;
 import 'package:js/js.dart';
 
 @JS()
+@anonymous
 abstract class EventEmitter {
-  external void emit(String eventName, [arg1, arg2, arg3, arg4, arg5, arg6]);
-  external EventEmitter on(String eventName, Function listener);
-  external void removeAllListeners(String eventName);
+  external static int get defaultMaxListeners;
+  external static set defaultMaxListeners(int value);
+  external void addListener(eventName, Function listener);
+  external void emit(eventName, [arg1, arg2, arg3, arg4, arg5, arg6]);
+  external List eventNames();
+  external int getMaxListeners();
+  external int listenerCount(eventName);
+  external List<Function> listeners(eventName);
+  external EventEmitter on(eventName, Function listener);
+  external EventEmitter once(eventName, Function listener);
+  external EventEmitter prependListener(eventName, Function listener);
+  external EventEmitter prependOnceListener(eventName, Function listener);
+  external EventEmitter removeAllListeners(eventName);
+  external EventEmitter removeListener(eventName, Function listener);
+  external void setMaxListeners(int value);
+  external List<Function> rawListeners(eventName);
 }
