@@ -10,17 +10,18 @@ void main() {
     test('from array', () {
       final buffer = Buffer.from([1, 2, 3]);
       expect(buffer, new isInstanceOf<Buffer>());
+      expect(buffer, [1, 2, 3]);
     });
 
     test('keys()', () {
       final buffer = Buffer.from([1, 2, 3]);
       expect(new List.from(buffer.keys()), [0, 1, 2]);
-    });
+    }, skip: 'Broken in dart2js');
 
     test('values()', () {
       final buffer = Buffer.from([1, 2, 3]);
       expect(new List.from(buffer.values()), [1, 2, 3]);
-    });
+    }, skip: 'Broken in dart2js');
 
     test('entries()', () {
       final buffer = Buffer.from([1, 2, 3]);
@@ -29,6 +30,6 @@ void main() {
         [1, 2],
         [2, 3]
       ]);
-    });
+    }, skip: 'Broken in dart2js');
   });
 }
