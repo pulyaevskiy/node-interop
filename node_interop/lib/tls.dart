@@ -10,6 +10,7 @@ import 'package:js/js.dart';
 import 'net.dart';
 
 @JS()
+@anonymous
 abstract class TlsServer extends NetServer {}
 
 @JS()

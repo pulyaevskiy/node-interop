@@ -23,6 +23,7 @@ abstract class Net {
 }
 
 @JS()
+@anonymous
 abstract class Socket extends EventEmitter {
   external NetAddress address();
   external String get remoteAddress;
@@ -34,6 +35,7 @@ abstract class Socket extends EventEmitter {
 }
 
 @JS()
+@anonymous
 abstract class NetAddress {
   external int get port;
   external String get family;
@@ -41,4 +43,5 @@ abstract class NetAddress {
 }
 
 @JS()
+@anonymous
 abstract class NetServer {}

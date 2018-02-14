@@ -106,6 +106,34 @@ If you found a bug, please don't hesitate to create an issue in the
 [changelog]: https://github.com/pulyaevskiy/node-interop/blob/master/node_interop/CHANGELOG.md
 [issue_tracker]: http://github.com/pulyaevskiy/node-interop/issues/new
 
+- [x] buffer (10%)
+- [x] child_process
+- [ ] cluster
+- [x] console (50%)
+- [x] dns
+- [ ] domain
+- [x] events
+- [x] fs (50%)
+- [x] http
+- [x] https
+- [x] net (30%)
+- [x] os (10%)
+- [x] path
+- [ ] process
+- [ ] querystring
+- [ ] readline
+- [x] stream (50%)
+- [ ] string_decoder
+- [ ] timers
+- [ ] tls
+- [ ] tty
+- [ ] dgram
+- [ ] url
+- [ ] util
+- [ ] v8
+- [ ] vm
+- [ ] zlib
+
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][issue_tracker].
