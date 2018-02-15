@@ -1,7 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node "child_process" module bindings.
+/// Node.js "child_process" module bindings.
 ///
 /// Use top-level [childProcess] object to access this module functionality.
 @JS()
@@ -62,7 +62,7 @@ abstract class ChildProcessModule {
 }
 
 typedef ExecCallback = void Function(
-    JsError error, dynamic stdout, dynamic stderr);
+    NodeJsError error, dynamic stdout, dynamic stderr);
 
 @JS()
 abstract class ChildProcess extends EventEmitter {

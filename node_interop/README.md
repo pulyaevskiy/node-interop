@@ -109,7 +109,7 @@ If you found a bug, please don't hesitate to create an issue in the
 - [x] buffer
 - [x] child_process
 - [ ] cluster
-- [x] console (50%)
+- [x] console
 - [x] dns
 - [ ] domain
 - [x] events

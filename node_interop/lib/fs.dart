@@ -45,7 +45,7 @@ abstract class FS {
 }
 
 @JS()
-abstract class ReadStream extends Readable {
+abstract class ReadStream implements Readable {
   external num get bytesRead;
   external dynamic get path;
 }
@@ -75,7 +75,8 @@ abstract class ReadStreamOptions {
 }
 
 @JS()
-abstract class WriteStream extends Writable {
+@anonymous
+abstract class WriteStream implements Writable {
   external num get bytesWritten;
   external dynamic get path;
 }

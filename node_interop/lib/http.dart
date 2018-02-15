@@ -129,7 +129,7 @@ abstract class RequestOptions {
 }
 
 @JS()
-abstract class ClientRequest extends EventEmitter {
+abstract class ClientRequest implements EventEmitter {
   external void abort();
   external bool get aborted;
   external Socket get connection;
@@ -146,7 +146,7 @@ abstract class ClientRequest extends EventEmitter {
 }
 
 @JS()
-abstract class HttpServer extends EventEmitter {
+abstract class HttpServer implements EventEmitter {
   external void close([callback]);
   external void listen(handleOrPathOrPort,
       [callbackOrHostname, backlog, callback]);
@@ -159,7 +159,7 @@ abstract class HttpServer extends EventEmitter {
 
 @JS()
 @anonymous
-abstract class ServerResponse extends Writable {
+abstract class ServerResponse implements Writable {
   external void addTrailers(headers);
   external Socket get connection;
   external bool get finished;
@@ -183,7 +183,7 @@ abstract class ServerResponse extends Writable {
 
 @JS()
 @anonymous
-abstract class IncomingMessage extends Readable {
+abstract class IncomingMessage implements Readable {
   external void destroy([error]);
   external JsObject get headers;
   external String get httpVersion;
