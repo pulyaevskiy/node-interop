@@ -93,6 +93,42 @@ void main() {
 }
 ```
 
+## Note on creating native Node.js objects
+
+Most of the objects in Node.js are not global therefore they are declared as
+`@anonymous` in this library. Unfortunately this prevents us from instantiating
+new instances by simply using `new Something()`.
+
+As a workaround for this problem each module provides a `createX()` library
+function. For instance, `stream` module provides `createReadable` and
+`createWritable` for creating custom `Readable` and `Writable` streams:
+
+```dart
+
+import 'dart:js_util'; // provides callConstructor()
+
+/// The "stream" module's object as returned from [require] call.
+StreamModule get stream => _stream ??= require('stream');
+StreamModule _stream;
+
+@JS()
+@anonymous
+abstract class StreamModule {
+  /// Reference to constructor function of [Writable].
+  dynamic get Writable;
+
+  /// Reference to constructor function of [Readable].
+  dynamic get Readable;
+}
+
+/// Creates custom [Writable] stream with provided [options].
+///
+/// This is the same as `callConstructor(stream.Writable, [options]);`.
+Writable createWritable(WritableOptions options) {
+  return callConstructor(stream.Writable, [options]);
+}
+```
+
 ## Status
 
 While 1.0.0 is still in `dev` mode breaking changes are likely to occur.
@@ -122,7 +158,7 @@ If you found a bug, please don't hesitate to create an issue in the
 - [ ] process
 - [ ] querystring
 - [ ] readline
-- [x] stream (50%)
+- [x] stream
 - [ ] string_decoder
 - [ ] timers
 - [ ] tls
