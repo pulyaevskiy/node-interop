@@ -149,7 +149,7 @@ If you found a bug, please don't hesitate to create an issue in the
 - [x] dns
 - [ ] domain
 - [x] events
-- [x] fs (50%)
+- [x] fs
 - [x] http
 - [x] https
 - [x] net (30%)
