@@ -1,15 +1,17 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node.js Net module.
+/// Node.js "net" module.
 ///
 /// Use library-level [net] object to access this module functionality.
 @JS()
 library node_interop.net;
 
 import 'package:js/js.dart';
+
 import 'events.dart';
 import 'node.dart';
+import 'stream.dart';
 
 Net get net => _net ??= require('net');
 Net _net;
@@ -17,6 +19,13 @@ Net _net;
 @JS()
 @anonymous
 abstract class Net {
+  /// Alias to [createConnection].
+  external Socket connect(arg1, [arg2, arg3]);
+
+  /// See official documentation for possible signatures:
+  /// - https://nodejs.org/api/net.html#net_net_createconnection
+  external Socket createConnection(arg1, [arg2, arg3]);
+  external Socket createServer([options, void connectionListener()]);
   external num isIP(String input);
   external bool isIPv4(String input);
   external bool isIPv6(String input);
@@ -24,14 +33,34 @@ abstract class Net {
 
 @JS()
 @anonymous
-abstract class Socket extends EventEmitter {
+abstract class Socket implements Duplex, EventEmitter {
   external NetAddress address();
-  external String get remoteAddress;
-  external String get remoteFamily;
-  external int get remotePort;
+  external int get bufferSize;
+  external int get bytesRead;
+  external int get bytesWritten;
+
+  /// See official documentation on possible signatures:
+  /// - https://nodejs.org/api/net.html#net_socket_connect
+  external Socket connect(arg1, [arg2, arg3]);
+  external bool get connecting;
+  external Socket destroy([exception]);
+  external bool get destroyed;
+  external Socket end([data, encoding, unused]);
   external String get localAddress;
   external String get localFamily;
   external int get localPort;
+  external Socket pause();
+  external Socket ref();
+  external String get remoteAddress;
+  external String get remoteFamily;
+  external int get remotePort;
+  external Socket resume();
+  external Socket setEncoding([encoding]);
+  external Socket setKeepAlive([bool enable, initialDelay]);
+  external Socket setNoDelay([bool noDelay]);
+  external Socket setTimeout(timeout, [void callback()]);
+  external Socket unref();
+  external bool write(chunk, [encodingOrCallback, callback]);
 }
 
 @JS()
@@ -44,4 +73,16 @@ abstract class NetAddress {
 
 @JS()
 @anonymous
-abstract class NetServer {}
+abstract class NetServer implements EventEmitter {
+  external NetAddress address();
+  external NetServer close([void callback()]);
+  external void getConnections([void callback(error, int count)]);
+
+  /// See oficial documentation on possible signatures:
+  /// - https://nodejs.org/api/net.html#net_server_listen
+  external void listen([arg1, arg2, arg3, arg4]);
+  external bool get listening;
+  external int get maxConnections;
+  external NetServer ref();
+  external NetServer unref();
+}

@@ -1,9 +1,9 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node.js HTTPS module bindings.
+/// Node.js "https" module bindings.
 ///
-/// Use top-level [https] object to access this module functionality.
+/// Use library-level [https] object to access this module functionality.
 /// To create HTTPS agent use [createHttpsAgent].
 @JS()
 library node_interop.https;
@@ -44,8 +44,6 @@ abstract class HTTPS {
   /// 'request' event.
   external HttpsServer createServer(
       [TlsServerOptions options, HttpRequestListener requestListener]);
-  external ClientRequest request(RequestOptions options,
-      [callback(IncomingMessage response)]);
 
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
@@ -53,10 +51,35 @@ abstract class HTTPS {
   external ClientRequest get(dynamic urlOrOptions,
       [callback(IncomingMessage response)]);
 
+  /// Makes a request to a secure web server.
+  external ClientRequest request(RequestOptions options,
+      [callback(IncomingMessage response)]);
+
+  /// Global instance of [HttpsAgent] for all HTTPS client requests.
   external HttpAgent get globalAgent;
-  external dynamic get Agent;
+
+  /// Reference to constructor function of [HttpsAgent] class.
+  ///
+  /// See also:
+  /// - [createHttpsAgent].
+  external Function get Agent;
 }
 
 @JS()
 @anonymous
-abstract class HttpsServer extends TlsServer implements HttpServer {}
+abstract class HttpsAgent implements HttpAgent {}
+
+@JS()
+@anonymous
+abstract class HttpsServer implements TlsServer, HttpServer {
+  @override
+  external HttpsServer close([void callback()]);
+  @override
+  external void listen([arg1, arg2, arg3, arg4]);
+  @override
+  external void setTimeout([num msecs, void callback()]);
+  @override
+  external num get timeout;
+  @override
+  external num get keepAliveTimeout;
+}

@@ -1,19 +1,17 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node HTTP module bindings.
+/// Node.js "http" module bindings.
 ///
 /// Use top-level [http] object to access this module functionality.
-/// To create HTTP agent use [createHttpAgent].
+/// To create an HTTP agent see [createHttpAgent].
 @JS()
 library node_interop.http;
 
-import 'dart:js';
 import 'dart:js_util';
 
 import 'package:js/js.dart';
 
-import 'events.dart';
 import 'net.dart';
 import 'node.dart';
 import 'stream.dart';
@@ -48,13 +46,18 @@ typedef void HttpRequestListener(
 @JS()
 @anonymous
 abstract class HTTP {
+  /// A list of the HTTP methods that are supported by the parser.
+  external List<String> get METHODS;
+
+  /// A collection of all the standard HTTP response status codes, and the short
+  /// description of each. For example, `http.STATUS_CODES[404] === 'Not Found'`.
+  external dynamic get STATUS_CODES;
+
   /// Returns a new instance of [HttpServer].
   ///
   /// The [requestListener] is a function which is automatically added to the
   /// "request" event.
   external HttpServer createServer([HttpRequestListener requestListener]);
-  external ClientRequest request(RequestOptions options,
-      [callback(IncomingMessage response)]);
 
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
@@ -62,20 +65,33 @@ abstract class HTTP {
   external ClientRequest get(dynamic urlOrOptions,
       [callback(IncomingMessage response)]);
 
+  /// Global instance of Agent which is used as the default for all HTTP client
+  /// requests.
   external HttpAgent get globalAgent;
-  external dynamic get Agent;
+
+  external ClientRequest request(RequestOptions options,
+      [callback(IncomingMessage response)]);
+
+  /// Reference to constructor function of [HttpAgent] class.
+  ///
+  /// See also:
+  /// - [createHttpAgent].
+  external Function get Agent;
 }
 
 @JS()
 @anonymous
 abstract class HttpAgent {
-  external factory HttpAgent({
-    bool keepAlive,
-    num keepAliveMsecs,
-    num maxSockets,
-    num maxFreeSockets,
-  });
+  external Socket createConnection(options, [void callback(error, stream)]);
+  external void keepSocketAlive(Socket socket);
+  external void reuseSocket(Socket socket, ClientRequest request);
   external void destroy();
+  external dynamic get freeSockets;
+  external String getName(options);
+  external num get maxFreeSockets;
+  external num get maxSockets;
+  external dynamic get requests;
+  external dynamic get sockets;
 }
 
 @JS()
@@ -129,30 +145,33 @@ abstract class RequestOptions {
 }
 
 @JS()
-abstract class ClientRequest implements EventEmitter {
+abstract class ClientRequest implements Writable {
   external void abort();
-  external bool get aborted;
+  external int get aborted;
   external Socket get connection;
-  external void end([dynamic data, String encoding, callback]);
+  @override
+  external void end([data, encodingOrCallback, void callback()]);
   external void flushHeaders();
   external String getHeader(String name);
   external void removeHeader(String name);
   external void setHeader(String name, dynamic value);
   external void setNoDelay(bool noDelay);
   external void setSocketKeepAlive([bool enable, num initialDelay]);
-  external void setTimeout(num msecs, [callback]);
+  external void setTimeout(num msecs, [void callback()]);
   external Socket get socket;
-  external void write(chunk, [String encoding, callback]);
+  @override
+  external ClientRequest write(chunk, [encodingOrCallback, void callback()]);
 }
 
 @JS()
-abstract class HttpServer implements EventEmitter {
-  external void close([callback]);
-  external void listen(handleOrPathOrPort,
-      [callbackOrHostname, backlog, callback]);
+abstract class HttpServer implements NetServer {
+  @override
+  external HttpServer close([void callback()]);
+  @override
+  external void listen([arg1, arg2, arg3, arg4]);
   external bool get listening;
   external num get maxHeadersCount;
-  external void setTimeout([msecs, callback]);
+  external void setTimeout([num msecs, void callback()]);
   external num get timeout;
   external num get keepAliveTimeout;
 }
@@ -162,10 +181,12 @@ abstract class HttpServer implements EventEmitter {
 abstract class ServerResponse implements Writable {
   external void addTrailers(headers);
   external Socket get connection;
+  @override
+  external void end([data, encodingOrCallback, void callback()]);
   external bool get finished;
   external String getHeader(String name);
-  external JsArray<String> getHeaderNames();
-  external JsObject getHeaders();
+  external List<String> getHeaderNames();
+  external dynamic getHeaders();
   external bool hasHeader(String name);
   external bool get headersSent;
   external void removeHeader(String name);
@@ -177,6 +198,8 @@ abstract class ServerResponse implements Writable {
   external void set statusCode(num value);
   external String get statusMessage;
   external void set statusMessage(String value);
+  @override
+  external bool write(chunk, [encodingOrCallback, void callback()]);
   external void writeContinue();
   external void writeHead(num statusCode, [String statusMessage, headers]);
 }
@@ -185,15 +208,15 @@ abstract class ServerResponse implements Writable {
 @anonymous
 abstract class IncomingMessage implements Readable {
   external void destroy([error]);
-  external JsObject get headers;
+  external dynamic get headers;
   external String get httpVersion;
   external String get method;
-  external JsArray<String> get rawHeaders;
-  external JsArray<String> get rawTrailers;
-  external void setTimeout(num msecs, callback);
+  external List<String> get rawHeaders;
+  external List<String> get rawTrailers;
+  external void setTimeout(num msecs, void callback());
   external Socket get socket;
   external num get statusCode;
   external String get statusMessage;
-  external JsObject get trailers;
+  external dynamic get trailers;
   external String get url;
 }
