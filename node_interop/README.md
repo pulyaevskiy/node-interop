@@ -153,7 +153,7 @@ If you found a bug, please don't hesitate to create an issue in the
 - [x] http
 - [x] https
 - [x] net
-- [x] os (10%)
+- [x] os
 - [x] path
 - [ ] process
 - [ ] querystring
