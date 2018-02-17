@@ -161,7 +161,7 @@ If you found a bug, please don't hesitate to create an issue in the
 - [x] stream
 - [ ] string_decoder
 - [x] timers
-- [ ] tls
+- [x] tls
 - [ ] tty
 - [ ] dgram
 - [ ] url

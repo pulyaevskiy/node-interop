@@ -43,7 +43,7 @@ abstract class HTTPS {
   /// The requestListener is a function which is automatically added to the
   /// 'request' event.
   external HttpsServer createServer(
-      [TlsServerOptions options, HttpRequestListener requestListener]);
+      [TLSServerOptions options, HttpRequestListener requestListener]);
 
   /// Makes GET request. The only difference between this method and
   /// [request] is that it sets the method to GET and calls req.end()
@@ -71,8 +71,7 @@ abstract class HttpsAgent implements HttpAgent {}
 
 @JS()
 @anonymous
-abstract class HttpsServer implements TlsServer, HttpServer {
-  @override
+abstract class HttpsServer implements TLSServer, HttpServer {
   external HttpsServer close([void callback()]);
   @override
   external void listen([arg1, arg2, arg3, arg4]);
