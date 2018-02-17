@@ -155,12 +155,12 @@ If you found a bug, please don't hesitate to create an issue in the
 - [x] net
 - [x] os
 - [x] path
-- [ ] process
-- [ ] querystring
+- [x] process
+- [x] querystring
 - [ ] readline
 - [x] stream
 - [ ] string_decoder
-- [ ] timers
+- [x] timers
 - [ ] tls
 - [ ] tty
 - [ ] dgram

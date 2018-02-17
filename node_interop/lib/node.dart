@@ -9,12 +9,13 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 import 'console.dart';
-import 'events.dart';
 import 'js.dart';
-import 'module.dart';
+import 'process.dart';
 
 export 'buffer.dart';
 export 'js.dart';
+export 'process.dart';
+export 'timers.dart';
 
 /// Loads module with specified [id].
 ///
@@ -39,24 +40,6 @@ void setExport(String key, Object value) {
 
 external Console get console;
 external Process get process;
-
-@JS()
-@anonymous
-abstract class Process implements EventEmitter {
-  external void exit([int code = 0]);
-  external int get exitCode;
-  external set exitCode(int code);
-  external int get pid;
-  external String get platform;
-  external Module get mainModule;
-  external String cwd();
-  external void chdir(String directory);
-  external List<String> get execArgv;
-  external List<String> get argv;
-  external String get execPath;
-  external String get argv0;
-  external dynamic get env;
-}
 
 @JS()
 @anonymous
