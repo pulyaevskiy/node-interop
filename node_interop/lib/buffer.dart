@@ -1,7 +1,7 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node.js buffer module.
+/// Node.js "buffer" module bindings.
 ///
 /// Normally there should be no need to import this module directly as
 /// [Buffer] class is available globally.

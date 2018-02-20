@@ -1,7 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node globals bindings.
+/// Node.js globals bindings.
 @JS()
 library node_interop.node;
 
@@ -10,6 +10,7 @@ import 'package:js/js_util.dart';
 
 import 'console.dart';
 import 'js.dart';
+import 'module.dart';
 import 'process.dart';
 
 export 'buffer.dart';
@@ -39,6 +40,13 @@ void setExport(String key, Object value) {
 }
 
 external Console get console;
+
+/// Reference to the main module's [Module] object.
+///
+/// Note that this is not actually a global variable and currently only
+/// works for the application's main module, meaning it should only be used
+/// from inside the `main` function of a Dart application.
+external Module get module;
 external Process get process;
 
 @JS()

@@ -1,3 +1,10 @@
+## 1.0.0-dev.3.0
+
+- Added or completed bindings for following Node.js modules: `dns`, `events`,
+  `fs`, `http`, `https`, `module`, `net`, `os`, `path`, `process`, 
+  `querystring`, `stream`, `timers`, `tls`.
+- Added more examples and tests.
+
 ## 1.0.0-dev.2.0
 
 - Completed `dns` module function definitions (still missing data structures).

@@ -1,7 +1,7 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Bindings for global JavaScript objects not specific to Node itself.
+/// Bindings for global JavaScript objects not specific to Node.js.
 @JS()
 library node_interop.js;
 
