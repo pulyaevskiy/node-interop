@@ -1,6 +1,7 @@
 ## 1.0.0-dev.4.0
 
 - Fixed: strong mode issue in `promiseToFuture` utility function.
+- Fixed: signature of `fs.realpathSync`.
 
 ## 1.0.0-dev.3.0
 

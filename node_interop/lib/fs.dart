@@ -80,7 +80,7 @@ abstract class FS {
   external void realpath(path,
       [optionsOrCallback, void callback(error, resolvedPath)]);
   // TODO: realpath.native(path[, options], callback)
-  external void realpathSync(path, [options]);
+  external String realpathSync(path, [options]);
   // TODO: realpathSync.native(path[, options])
   external void rename(oldPath, newPath, void callback(error));
   external void renameSync(oldPath, newPath);
