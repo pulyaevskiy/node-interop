@@ -1,3 +1,7 @@
+## 1.0.0-dev.4.0
+
+- Fixed: strong mode issue in `promiseToFuture` utility function.
+
 ## 1.0.0-dev.3.0
 
 - Added or completed bindings for following Node.js modules: `dns`, `events`,

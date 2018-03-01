@@ -44,7 +44,7 @@ void main() {
   test('promiseToFuture', () async {
     final JsPromises js = require('./promises.js');
     Promise promise = js.createPromise('Futures are better than Promises');
-    Future future = promiseToFuture(promise);
+    Future<String> future = promiseToFuture(promise);
     expect(future, completion('Futures are better than Promises'));
   });
 
