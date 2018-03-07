@@ -1,3 +1,9 @@
+## 1.0.0-dev.5.0
+
+- Fixed: strong mode issue in `dartify` utility function when converting plain
+  JS objects to Dart `Map`. Returned map is now of type `Map<String, dynamic>`
+  instead of `Map`.
+
 ## 1.0.0-dev.4.0
 
 - Fixed: strong mode issue in `promiseToFuture` utility function.

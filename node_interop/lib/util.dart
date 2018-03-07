@@ -34,7 +34,7 @@ T dartify<T>(Object jsObject) {
   }
 
   var keys = objectKeys(jsObject);
-  var result = new Map();
+  var result = new Map<String, dynamic>();
   for (var key in keys) {
     result[key] = dartify(util.getProperty(jsObject, key));
   }

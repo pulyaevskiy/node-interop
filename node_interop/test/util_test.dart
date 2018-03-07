@@ -56,7 +56,8 @@ void main() {
 
     test('it handles POJOs', () {
       final Fixtures js = require('./fixtures.js');
-      expect(dartify(js.pojoVal), {"propKey": "propValue"});
+      Map<String, dynamic> result = dartify(js.pojoVal);
+      expect(result, {"propKey": "propValue"});
     });
 
     test('it handles arrays', () {
