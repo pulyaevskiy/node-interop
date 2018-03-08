@@ -1,3 +1,7 @@
+## 1.0.0-dev.6.0
+
+- Added: binding for JS `undefined` value in `node_interop/js.dart`.
+
 ## 1.0.0-dev.5.0
 
 - Fixed: strong mode issue in `dartify` utility function when converting plain
