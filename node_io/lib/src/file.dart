@@ -130,7 +130,7 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   io.IOSink openWrite(
-      {io.FileMode mode: io.FileMode.WRITE, Encoding encoding: UTF8}) {
+      {io.FileMode mode: io.FileMode.WRITE, Encoding encoding: utf8}) {
     assert(mode == io.FileMode.WRITE || mode == io.FileMode.APPEND);
     var flags = (mode == io.FileMode.APPEND) ? 'a+' : 'w';
     var options = new WriteStreamOptions(flags: flags);
@@ -149,25 +149,25 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<List<String>> readAsLines({Encoding encoding: UTF8}) {
+  Future<List<String>> readAsLines({Encoding encoding: utf8}) {
     // TODO: implement readAsLines
     throw new UnimplementedError();
   }
 
   @override
-  List<String> readAsLinesSync({Encoding encoding: UTF8}) {
+  List<String> readAsLinesSync({Encoding encoding: utf8}) {
     // TODO: implement readAsLinesSync
     throw new UnimplementedError();
   }
 
   @override
-  Future<String> readAsString({Encoding encoding: UTF8}) {
+  Future<String> readAsString({Encoding encoding: utf8}) {
     // TODO: implement readAsString
     throw new UnimplementedError();
   }
 
   @override
-  String readAsStringSync({Encoding encoding: UTF8}) {
+  String readAsStringSync({Encoding encoding: utf8}) {
     // TODO: implement readAsStringSync
     throw new UnimplementedError();
   }
@@ -225,7 +225,7 @@ class File extends FileSystemEntity implements io.File {
   @override
   Future<io.File> writeAsString(String contents,
       {io.FileMode mode: io.FileMode.WRITE,
-      Encoding encoding: UTF8,
+      Encoding encoding: utf8,
       bool flush: false}) {
     // TODO: implement writeAsString
     throw new UnimplementedError();
@@ -234,7 +234,7 @@ class File extends FileSystemEntity implements io.File {
   @override
   void writeAsStringSync(String contents,
       {io.FileMode mode: io.FileMode.WRITE,
-      Encoding encoding: UTF8,
+      Encoding encoding: utf8,
       bool flush: false}) {
     fs.writeFileSync(_absolutePath, contents);
   }
@@ -452,13 +452,13 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> writeString(String string,
-      {Encoding encoding: UTF8}) {
+      {Encoding encoding: utf8}) {
     // TODO: implement writeString
     throw new UnimplementedError();
   }
 
   @override
-  void writeStringSync(String string, {Encoding encoding: UTF8}) {
+  void writeStringSync(String string, {Encoding encoding: utf8}) {
     // TODO: implement writeStringSync
     throw new UnimplementedError();
   }
