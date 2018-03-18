@@ -28,7 +28,6 @@ class InternetAddress implements io.InternetAddress {
 
   // This probably shouldn't have been in the interface because dart:io
   // version does not implement this setter.
-  @override
   set type(io.InternetAddressType value) =>
       throw new UnsupportedError('Setting address type is not allowed.');
 

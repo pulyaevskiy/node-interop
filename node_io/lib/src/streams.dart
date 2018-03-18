@@ -168,7 +168,7 @@ class WritableStream<S> implements StreamSink<S> {
 class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   Encoding _encoding;
 
-  NodeIOSink(Writable nativeStream, {Encoding encoding: UTF8})
+  NodeIOSink(Writable nativeStream, {Encoding encoding: utf8})
       : super(nativeStream, convert: (data) => Buffer.from(data)) {
     _encoding = encoding;
   }

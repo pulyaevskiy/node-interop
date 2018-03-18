@@ -17,13 +17,13 @@ void main() {
     setUpAll(() async {
       server = await HttpServer.bind('127.0.0.1', 8181);
       server.listen((request) async {
-        String body = await request.map(UTF8.decode).join();
+        String body = await request.map(utf8.decode).join();
         request.response.headers.contentType = ContentType.TEXT;
         request.response.headers.set('X-Foo', 'bar');
         request.response.statusCode = 200;
         if (body != null && body.isNotEmpty) {
-          final json = JSON.decode(body);
-          request.response.write(JSON.encode(json));
+          final jsonData = json.decode(body);
+          request.response.write(json.encode(jsonData));
         } else {
           request.response.write('ok');
         }
