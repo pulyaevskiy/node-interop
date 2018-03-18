@@ -27,6 +27,7 @@ Future<Null> bootstrapDart2Js(
   var args = dart2JsArgs.toList()
     ..addAll([
       '-ppackages',
+      '--use-old-frontend',
       '-o${jsOutputId.path}',
       dartEntrypointId.path,
     ]);
