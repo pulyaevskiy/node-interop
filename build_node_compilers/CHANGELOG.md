@@ -1,3 +1,7 @@
+# 0.1.2
+
+- Upgraded dependencies to match with latest version of build_web_compilers.
+
 # 0.1.1
 
 - Create `.packages` file and use the new frontend with `dart2js`.
