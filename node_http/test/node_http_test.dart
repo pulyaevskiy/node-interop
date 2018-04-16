@@ -20,6 +20,8 @@ void main() {
         String body = await request.map(utf8.decode).join();
         request.response.headers.contentType = ContentType.TEXT;
         request.response.headers.set('X-Foo', 'bar');
+        request.response.headers.set(
+            'set-cookie', ['JSESSIONID=verylongid; Path=/somepath; HttpOnly']);
         request.response.statusCode = 200;
         if (body != null && body.isNotEmpty) {
           request.response.write(body);
@@ -41,6 +43,8 @@ void main() {
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('ok'));
       expect(response.headers, contains('content-type'));
+      expect(response.headers['set-cookie'],
+          'JSESSIONID=verylongid; Path=/somepath; HttpOnly');
       client.close();
     });
 

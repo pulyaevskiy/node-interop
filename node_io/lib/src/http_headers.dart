@@ -1,10 +1,11 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 import 'dart:io' as io;
-import 'dart:js_util';
+import 'dart:js_util' as js_util;
 
 import 'package:node_interop/http.dart';
 import 'package:node_interop/js.dart';
+import 'package:node_interop/util.dart';
 
 /// List of HTTP header names which can only have single value.
 const _singleValueHttpHeaders = const [
@@ -63,7 +64,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
     _mutable = false;
   }
 
-  dynamic getHeader(String name) => getProperty(nativeHeaders, name);
+  dynamic getHeader(String name) => js_util.getProperty(nativeHeaders, name);
 
   @override
   bool get chunkedTransferEncoding =>
@@ -295,6 +296,6 @@ abstract class HttpHeaders implements io.HttpHeaders {
   @override
   void set(String name, Object value) {
     _checkMutable();
-    nativeResponse.setHeader(name, value.toString());
+    nativeResponse.setHeader(name, jsify(value));
   }
 }
