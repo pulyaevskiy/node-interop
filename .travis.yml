@@ -9,10 +9,7 @@ before_install:
 
 script:
 - ./tool/travis.sh build_node_compilers
-- ./tool/travis.sh node_interop
-- ./tool/travis.sh node_io
-- ./tool/travis.sh node_http
+- ./tool/travis.sh node_interop node
+- ./tool/travis.sh node_io node
+- ./tool/travis.sh node_http node
 - ./tool/travis.sh e2e_interop_test
-- ./tool/ddc_test.sh node_interop
-- ./tool/ddc_test.sh node_io
-- ./tool/ddc_test.sh node_http
