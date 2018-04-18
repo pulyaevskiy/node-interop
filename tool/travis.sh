@@ -15,10 +15,13 @@ fi
 
 if [ "$2" == "node" ]; then
     echo "> pub run build_runner test (dartdevc) ============================="
-    pub run build_runner test --output=build/
+    pub run build_runner test --output=build/ -- -r expanded
+
+    rm -rf .dart_tool/build/
+    rm -rf build/
 
     echo "> pub run build_runner test (dart2js) ============================="
-    pub run build_runner test --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/
+    pub run build_runner test --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/ -- -r expanded
 else
     echo "> pub run test -r expanded ==============================================="
     pub run test -r expanded
