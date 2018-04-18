@@ -4,6 +4,7 @@ set -e
 
 cd "$1"
 
+echo "> entered package $1"
 echo '> pub get ================================================================'
 pub get
 
@@ -13,17 +14,11 @@ if [ -f "package.json" ]; then
 fi
 
 if [ "$2" == "node" ]; then
-    echo "> pub run build_runner build (dartdevc) ============================="
-    pub run build_runner build --output=build/
+    echo "> pub run build_runner test (dartdevc) ============================="
+    pub run build_runner test --output=build/
 
-    echo "> pub run test -r expanded ==============================================="
-    pub run test -r expanded --precompiled build/
-
-    echo "> pub run build_runner build (dart2js) ============================="
-    pub run build_runner build --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/
-
-    echo "> pub run test -r expanded ==============================================="
-    pub run test -r expanded --precompiled build/
+    echo "> pub run build_runner test (dart2js) ============================="
+    pub run build_runner test --define="build_node_compilers|entrypoint=compiler=dart2js" --output=build/
 else
     echo "> pub run test -r expanded ==============================================="
     pub run test -r expanded
