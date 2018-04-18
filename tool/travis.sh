@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -13,7 +13,7 @@ if [ -f "package.json" ]; then
     npm install
 fi
 
-if [ "$2" == "node" ]; then
+if [ "$2" = "node" ]; then
     echo "> pub run build_runner test (dartdevc) ============================="
     pub run build_runner test --output=build/ --low-resources-mode --verbose -- -r expanded
 
