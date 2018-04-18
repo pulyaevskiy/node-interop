@@ -6,7 +6,7 @@ library http_test;
 
 import 'dart:convert';
 
-import 'package:node_http/node_http.dart';
+import 'package:node_http/node_http.dart' as http;
 import 'package:node_io/node_io.dart';
 import 'package:test/test.dart';
 
@@ -37,7 +37,7 @@ void main() {
     });
 
     test('make get request', () async {
-      var client = new NodeClient();
+      var client = new http.NodeClient();
       var response = await client.get('http://127.0.0.1:8181/test');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -49,13 +49,23 @@ void main() {
     });
 
     test('make post request with a body', () async {
-      var client = new NodeClient();
+      var client = new http.NodeClient();
       var response =
           await client.post('http://127.0.0.1:8181/test', body: 'hello');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('hello'));
       client.close();
+    });
+
+    test('make get request with library-level get method', () async {
+      var response = await http.get('http://127.0.0.1:8181/test');
+      expect(response.statusCode, 200);
+      expect(response.contentLength, greaterThan(0));
+      expect(response.body, equals('ok'));
+      expect(response.headers, contains('content-type'));
+      expect(response.headers['set-cookie'],
+          'JSESSIONID=verylongid; Path=/somepath; HttpOnly');
     });
   });
 }
