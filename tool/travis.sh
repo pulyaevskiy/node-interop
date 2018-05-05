@@ -24,6 +24,9 @@ else
     pub run test -r expanded
 fi
 
+# Remove built sources to prevent from analyzing with dartfmt
+rm -rf build/
+
 echo "> dartfmt -n --set-exit-if-changed . ====================================="
 dartfmt -n --set-exit-if-changed .
 
