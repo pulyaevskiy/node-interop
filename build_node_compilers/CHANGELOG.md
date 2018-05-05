@@ -1,3 +1,7 @@
+# 0.1.3
+
+- Remove extra dependencies in build_node_compilers (#22)
+
 # 0.1.2
 
 - Upgraded dependencies to match with latest version of build_web_compilers.
