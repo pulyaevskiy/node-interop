@@ -58,7 +58,7 @@ void main() {
     test('lookup successful', () async {
       var list = await InternetAddress.lookup('google.com');
       expect(list, isNotEmpty);
-      expect(list.first.type, equals(InternetAddressType.IP_V4));
+      expect(list.first.type, equals(InternetAddressType.IPv4));
     });
 
     test('reverse successful', () async {

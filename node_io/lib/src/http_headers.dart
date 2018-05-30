@@ -97,7 +97,6 @@ abstract class HttpHeaders implements io.HttpHeaders {
   void _removeHeader(String name);
   Iterable<String> _getHeaderNames();
 
-  @deprecated
   dynamic getHeader(String name) => _getHeader(name);
 
   @override

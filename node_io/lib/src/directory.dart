@@ -32,11 +32,11 @@ class Directory extends FileSystemEntity implements io.Directory {
   @override
   Future<bool> exists() => FileStat
       .stat(path)
-      .then((stat) => stat.type == io.FileSystemEntityType.DIRECTORY);
+      .then((stat) => stat.type == io.FileSystemEntityType.directory);
 
   @override
   bool existsSync() =>
-      FileStat.statSync(path).type == io.FileSystemEntityType.DIRECTORY;
+      FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
   Future<io.Directory> delete({bool recursive: false}) {
@@ -76,9 +76,9 @@ class Directory extends FileSystemEntity implements io.Directory {
       } else {
         for (var filePath in files) {
           final stat = FileStat.statSync(filePath);
-          if (stat.type == io.FileSystemEntityType.FILE) {
+          if (stat.type == io.FileSystemEntityType.file) {
             controller.add(new File(filePath));
-          } else if (stat.type == io.FileSystemEntityType.DIRECTORY) {
+          } else if (stat.type == io.FileSystemEntityType.directory) {
             controller.add(new Directory(filePath));
           } else {
             throw new UnimplementedError('Link entities not implemented yet.');

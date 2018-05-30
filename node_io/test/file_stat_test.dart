@@ -14,7 +14,7 @@ void main() {
       expect(stat.accessed, new isInstanceOf<DateTime>());
       expect(stat.changed, new isInstanceOf<DateTime>());
       expect(stat.modified, new isInstanceOf<DateTime>());
-      expect(stat.type, FileSystemEntityType.DIRECTORY);
+      expect(stat.type, FileSystemEntityType.directory);
       expect(stat.size, isNotNull);
       expect(stat.mode, isNotNull);
     });

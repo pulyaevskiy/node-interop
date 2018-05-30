@@ -23,8 +23,8 @@ class InternetAddress implements io.InternetAddress {
 
   @override
   io.InternetAddressType get type => net.isIPv4(address)
-      ? io.InternetAddressType.IP_V4
-      : io.InternetAddressType.IP_V6;
+      ? io.InternetAddressType.IPv4
+      : io.InternetAddressType.IPv6;
 
   // This probably shouldn't have been in the interface because dart:io
   // version does not implement this setter.
@@ -62,10 +62,10 @@ class InternetAddress implements io.InternetAddress {
   bool get isLinkLocal {
     // Copied from dart:io
     switch (type) {
-      case io.InternetAddressType.IP_V4:
+      case io.InternetAddressType.IPv4:
         // Checking for 169.254.0.0/16.
         return _inAddr[0] == 169 && _inAddr[1] == 254;
-      case io.InternetAddressType.IP_V6:
+      case io.InternetAddressType.IPv6:
         // Checking for fe80::/10.
         return _inAddr[0] == 0xFE && (_inAddr[1] & 0xB0) == 0x80;
     }
@@ -76,9 +76,9 @@ class InternetAddress implements io.InternetAddress {
   bool get isLoopback {
     // Copied from dart:io
     switch (type) {
-      case io.InternetAddressType.IP_V4:
+      case io.InternetAddressType.IPv4:
         return _inAddr[0] == 127;
-      case io.InternetAddressType.IP_V6:
+      case io.InternetAddressType.IPv6:
         for (int i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
           if (_inAddr[i] != 0) return false;
         }
@@ -91,10 +91,10 @@ class InternetAddress implements io.InternetAddress {
   bool get isMulticast {
     // Copied from dart:io
     switch (type) {
-      case io.InternetAddressType.IP_V4:
+      case io.InternetAddressType.IPv4:
         // Checking for 224.0.0.0 through 239.255.255.255.
         return _inAddr[0] >= 224 && _inAddr[0] < 240;
-      case io.InternetAddressType.IP_V6:
+      case io.InternetAddressType.IPv6:
         // Checking for ff00::/8.
         return _inAddr[0] == 0xFF;
     }

@@ -115,18 +115,18 @@ class FileStat implements io.FileStat {
       : changed = null,
         modified = null,
         accessed = null,
-        type = io.FileSystemEntityType.NOT_FOUND,
+        type = io.FileSystemEntityType.notFound,
         mode = 0,
         size = -1;
 
   factory FileStat._fromNodeStats(Stats stats) {
-    var type = io.FileSystemEntityType.NOT_FOUND;
+    var type = io.FileSystemEntityType.notFound;
     if (stats.isDirectory()) {
-      type = io.FileSystemEntityType.DIRECTORY;
+      type = io.FileSystemEntityType.directory;
     } else if (stats.isFile()) {
-      type = io.FileSystemEntityType.FILE;
+      type = io.FileSystemEntityType.file;
     } else if (stats.isSymbolicLink()) {
-      type = io.FileSystemEntityType.LINK;
+      type = io.FileSystemEntityType.link;
     }
     return new FileStat._internal(
       DateTime.parse(stats.ctime.toISOString()),
