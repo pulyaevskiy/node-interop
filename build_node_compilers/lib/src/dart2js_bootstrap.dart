@@ -54,7 +54,7 @@ void addNodePreamble(File output) {
   String contents = output.readAsStringSync();
   output
     ..writeAsStringSync(preamble)
-    ..writeAsStringSync(contents, mode: FileMode.APPEND);
+    ..writeAsStringSync(contents, mode: FileMode.append);
 }
 
 /// Creates a `.packages` file unique to this entrypoint at the root of the

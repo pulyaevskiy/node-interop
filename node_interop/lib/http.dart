@@ -184,7 +184,7 @@ abstract class ServerResponse implements Writable {
   @override
   external void end([data, encodingOrCallback, void callback()]);
   external bool get finished;
-  external String getHeader(String name);
+  external dynamic getHeader(String name);
   external List<String> getHeaderNames();
   external dynamic getHeaders();
   external bool hasHeader(String name);
