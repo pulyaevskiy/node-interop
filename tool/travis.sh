@@ -4,6 +4,8 @@ set -e
 
 cd "$1"
 
+ulimit -n
+
 echo "> entered package $1"
 echo '> pub get ================================================================'
 pub get
