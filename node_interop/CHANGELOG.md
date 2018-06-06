@@ -1,3 +1,8 @@
+## 1.0.0-dev.7.0
+
+- Fixed: Changed `ServerResponse.getHeader` return type from `String` to
+    `dynamic`.
+
 ## 1.0.0-dev.6.0
 
 - Added: binding for JS `undefined` value in `node_interop/js.dart`.
