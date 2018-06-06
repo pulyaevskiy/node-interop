@@ -82,13 +82,13 @@ class File extends FileSystemEntity implements io.File {
   @override
   Future<bool> exists() async {
     var stat = await FileStat.stat(path);
-    return stat.type == io.FileSystemEntityType.FILE;
+    return stat.type == io.FileSystemEntityType.file;
   }
 
   @override
   bool existsSync() {
     var stat = FileStat.statSync(path);
-    return stat.type == io.FileSystemEntityType.FILE;
+    return stat.type == io.FileSystemEntityType.file;
   }
 
   @override
@@ -112,7 +112,7 @@ class File extends FileSystemEntity implements io.File {
   int lengthSync() => FileStat.statSync(path).size;
 
   @override
-  Future<io.RandomAccessFile> open({io.FileMode mode: io.FileMode.READ}) =>
+  Future<io.RandomAccessFile> open({io.FileMode mode: io.FileMode.read}) =>
       _RandomAccessFile.open(path, mode);
 
   @override
@@ -125,14 +125,14 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  io.RandomAccessFile openSync({io.FileMode mode: io.FileMode.READ}) =>
+  io.RandomAccessFile openSync({io.FileMode mode: io.FileMode.read}) =>
       _RandomAccessFile.openSync(path, mode);
 
   @override
   io.IOSink openWrite(
-      {io.FileMode mode: io.FileMode.WRITE, Encoding encoding: utf8}) {
-    assert(mode == io.FileMode.WRITE || mode == io.FileMode.APPEND);
-    var flags = (mode == io.FileMode.APPEND) ? 'a+' : 'w';
+      {io.FileMode mode: io.FileMode.write, Encoding encoding: utf8}) {
+    assert(mode == io.FileMode.write || mode == io.FileMode.append);
+    var flags = (mode == io.FileMode.append) ? 'a+' : 'w';
     var options = new WriteStreamOptions(flags: flags);
     var stream = fs.createWriteStream(path, options);
     return new _WriteStream(stream, encoding);
@@ -210,21 +210,21 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<io.File> writeAsBytes(List<int> bytes,
-      {io.FileMode mode: io.FileMode.WRITE, bool flush: false}) {
+      {io.FileMode mode: io.FileMode.write, bool flush: false}) {
     // TODO: implement writeAsBytes
     throw new UnimplementedError();
   }
 
   @override
   void writeAsBytesSync(List<int> bytes,
-      {io.FileMode mode: io.FileMode.WRITE, bool flush: false}) {
+      {io.FileMode mode: io.FileMode.write, bool flush: false}) {
     // TODO: implement writeAsBytesSync
     throw new UnimplementedError();
   }
 
   @override
   Future<io.File> writeAsString(String contents,
-      {io.FileMode mode: io.FileMode.WRITE,
+      {io.FileMode mode: io.FileMode.write,
       Encoding encoding: utf8,
       bool flush: false}) {
     // TODO: implement writeAsString
@@ -233,7 +233,7 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   void writeAsStringSync(String contents,
-      {io.FileMode mode: io.FileMode.WRITE,
+      {io.FileMode mode: io.FileMode.write,
       Encoding encoding: utf8,
       bool flush: false}) {
     fs.writeFileSync(_absolutePath, contents);
@@ -271,15 +271,15 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   static String fileModeToJsFlags(io.FileMode mode) {
     switch (mode) {
-      case io.FileMode.READ:
+      case io.FileMode.read:
         return 'r';
-      case io.FileMode.WRITE:
+      case io.FileMode.write:
         return 'w+';
-      case io.FileMode.WRITE_ONLY:
+      case io.FileMode.writeOnly:
         return 'w';
-      case io.FileMode.APPEND:
+      case io.FileMode.append:
         return 'a+';
-      case io.FileMode.WRITE_ONLY_APPEND:
+      case io.FileMode.writeOnlyAppend:
         return 'a';
       default:
         throw new UnsupportedError('$mode is not supported');
@@ -329,14 +329,14 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> lock(
-      [io.FileLock mode = io.FileLock.EXCLUSIVE, int start = 0, int end = -1]) {
+      [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
     // TODO: implement lock
     throw new UnimplementedError();
   }
 
   @override
   void lockSync(
-      [io.FileLock mode = io.FileLock.EXCLUSIVE, int start = 0, int end = -1]) {
+      [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
     // TODO: implement lockSync
     throw new UnimplementedError();
   }

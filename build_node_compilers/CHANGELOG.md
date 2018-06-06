@@ -1,3 +1,7 @@
+# 0.1.4
+
+- Fixed deprecation warnings with latest Dart 2 dev SDK.
+
 # 0.1.3
 
 - Remove extra dependencies in build_node_compilers (#22)

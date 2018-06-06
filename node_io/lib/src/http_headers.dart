@@ -30,13 +30,43 @@ const _singleValueHttpHeaders = const [
 ];
 
 class ResponseHttpHeaders extends HttpHeaders {
-  @override
-  final ServerResponse nativeResponse;
+  ResponseHttpHeaders(this._nativeResponse);
 
-  ResponseHttpHeaders(this.nativeResponse);
+  final ServerResponse _nativeResponse;
+
+  bool _mutable = true;
+
+  /// Collection of header names set in native response object.
+  final Set<String> _headerNames = new Set<String>();
+
+  void finalize() {
+    _mutable = false;
+  }
+
+  void _checkMutable() {
+    if (_mutable == false)
+      throw new io.HttpException('HTTP headers are not mutable.');
+  }
 
   @override
-  get nativeHeaders => nativeResponse.getHeaders();
+  dynamic _getHeader(String name) => _nativeResponse.getHeader(name);
+
+  @override
+  Iterable<String> _getHeaderNames() => _headerNames;
+
+  @override
+  void _removeHeader(String name) {
+    _checkMutable();
+    _nativeResponse.removeHeader(name);
+    _headerNames.remove(name);
+  }
+
+  @override
+  void _setHeader(String name, value) {
+    _checkMutable();
+    _nativeResponse.setHeader(name, value);
+    _headerNames.add(name);
+  }
 }
 
 class RequestHttpHeaders extends HttpHeaders {
@@ -45,58 +75,59 @@ class RequestHttpHeaders extends HttpHeaders {
   RequestHttpHeaders(this._request);
 
   @override
-  get nativeHeaders => _request.headers;
+  dynamic _getHeader(String name) =>
+      js_util.getProperty(_request.headers, name);
+
+  @override
+  void _setHeader(String name, dynamic value) =>
+      throw new io.HttpException('HTTP headers are not mutable.');
+
+  @override
+  void _removeHeader(String name) =>
+      throw new io.HttpException('HTTP headers are not mutable.');
+
+  @override
+  Iterable<String> _getHeaderNames() => objectKeys(_request.headers);
 }
 
 /// Proxy to native JavaScript HTTP headers.
 abstract class HttpHeaders implements io.HttpHeaders {
-  bool _mutable = true;
+  dynamic _getHeader(String name);
+  void _setHeader(String name, value);
+  void _removeHeader(String name);
+  Iterable<String> _getHeaderNames();
 
-  dynamic get nativeHeaders;
-  ServerResponse get nativeResponse => null;
-
-  void _checkMutable() {
-    if (nativeResponse == null || _mutable == false)
-      throw new io.HttpException('HTTP headers are not mutable.');
-  }
-
-  void finalize() {
-    _mutable = false;
-  }
-
-  dynamic getHeader(String name) => js_util.getProperty(nativeHeaders, name);
+  dynamic getHeader(String name) => _getHeader(name);
 
   @override
   bool get chunkedTransferEncoding =>
-      getHeader(io.HttpHeaders.TRANSFER_ENCODING) == 'chunked';
+      _getHeader(io.HttpHeaders.TRANSFER_ENCODING) == 'chunked';
 
   @override
   void set chunkedTransferEncoding(bool chunked) {
-    _checkMutable();
     if (chunked) {
-      nativeResponse.setHeader(io.HttpHeaders.TRANSFER_ENCODING, value);
+      _setHeader(io.HttpHeaders.TRANSFER_ENCODING, 'chunked');
     } else {
-      nativeResponse.removeHeader(io.HttpHeaders.TRANSFER_ENCODING);
+      _removeHeader(io.HttpHeaders.TRANSFER_ENCODING);
     }
   }
 
   @override
   int get contentLength {
-    var value = getHeader(io.HttpHeaders.CONTENT_LENGTH);
+    var value = _getHeader(io.HttpHeaders.CONTENT_LENGTH);
     if (value != null) return int.parse(value);
     return 0;
   }
 
   @override
   set contentLength(int length) {
-    _checkMutable();
-    nativeResponse.setHeader(io.HttpHeaders.CONTENT_LENGTH, length);
+    _setHeader(io.HttpHeaders.CONTENT_LENGTH, length);
   }
 
   @override
   io.ContentType get contentType {
     if (_contentType != null) return _contentType;
-    String value = getHeader(io.HttpHeaders.CONTENT_TYPE);
+    String value = _getHeader(io.HttpHeaders.CONTENT_TYPE);
     if (value == null || value.isEmpty) return null;
     var types = value.split(',');
     _contentType = io.ContentType.parse(types.first);
@@ -107,13 +138,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set contentType(io.ContentType type) {
-    _checkMutable();
-    nativeResponse.setHeader(io.HttpHeaders.CONTENT_TYPE, type.toString());
+    _setHeader(io.HttpHeaders.CONTENT_TYPE, type.toString());
   }
 
   @override
   DateTime get date {
-    String value = getHeader(io.HttpHeaders.DATE);
+    String value = _getHeader(io.HttpHeaders.DATE);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -124,13 +154,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set date(DateTime date) {
-    _checkMutable();
-    nativeResponse.setHeader(io.HttpHeaders.DATE, io.HttpDate.format(date));
+    _setHeader(io.HttpHeaders.DATE, io.HttpDate.format(date));
   }
 
   @override
   DateTime get expires {
-    String value = getHeader(io.HttpHeaders.EXPIRES);
+    String value = _getHeader(io.HttpHeaders.EXPIRES);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -141,14 +170,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set expires(DateTime expires) {
-    _checkMutable();
-    nativeResponse.setHeader(
-        io.HttpHeaders.EXPIRES, io.HttpDate.format(expires));
+    _setHeader(io.HttpHeaders.EXPIRES, io.HttpDate.format(expires));
   }
 
   @override
   String get host {
-    String value = getHeader(io.HttpHeaders.HOST);
+    String value = _getHeader(io.HttpHeaders.HOST);
     if (value != null) {
       return value.split(':').first;
     }
@@ -157,18 +184,17 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set host(String host) {
-    _checkMutable();
     var hostAndPort = host;
     int _port = this.port;
     if (_port != null) {
       hostAndPort = "$host:$_port";
     }
-    nativeResponse.setHeader(io.HttpHeaders.HOST, hostAndPort);
+    _setHeader(io.HttpHeaders.HOST, hostAndPort);
   }
 
   @override
   int get port {
-    String value = getHeader(io.HttpHeaders.HOST);
+    String value = _getHeader(io.HttpHeaders.HOST);
     if (value != null) {
       var parts = value.split(':');
       if (parts.length == 2) return int.parse(parts.last);
@@ -178,17 +204,16 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set port(int value) {
-    _checkMutable();
     var hostAndPort = host;
     if (value != null) {
       hostAndPort = "$host:$value";
     }
-    nativeResponse.setHeader(io.HttpHeaders.HOST, hostAndPort);
+    _setHeader(io.HttpHeaders.HOST, hostAndPort);
   }
 
   @override
   DateTime get ifModifiedSince {
-    String value = getHeader(io.HttpHeaders.IF_MODIFIED_SINCE);
+    String value = _getHeader(io.HttpHeaders.IF_MODIFIED_SINCE);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -199,22 +224,20 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set ifModifiedSince(DateTime ifModifiedSince) {
-    _checkMutable();
-    nativeResponse.setHeader(
+    _setHeader(
         io.HttpHeaders.IF_MODIFIED_SINCE, io.HttpDate.format(ifModifiedSince));
   }
 
   @override
   bool get persistentConnection {
-    var connection = getHeader(io.HttpHeaders.CONNECTION);
+    var connection = _getHeader(io.HttpHeaders.CONNECTION);
     return (connection == 'keep-alive');
   }
 
   @override
   set persistentConnection(bool persistentConnection) {
-    _checkMutable();
     var value = persistentConnection ? 'keep-alive' : 'close';
-    nativeResponse.setHeader(io.HttpHeaders.CONNECTION, value);
+    _setHeader(io.HttpHeaders.CONNECTION, value);
   }
 
   bool _isMultiValue(String name) => !_singleValueHttpHeaders.contains(name);
@@ -222,12 +245,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
   @override
   List<String> operator [](String name) {
     name = name.toLowerCase();
-    var value = getHeader(name);
+    var value = _getHeader(name);
     if (value != null) {
       if (value is String) {
         return _isMultiValue(name) ? value.split(',') : [value];
       } else {
-        // NodeJS treats `set-cookie` differently from other headers and
+        // Node.js treats `set-cookie` differently from other headers and
         // composes all values in an array.
         return new List.unmodifiable(value);
       }
@@ -247,25 +270,18 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   void add(String name, Object value) {
-    _checkMutable();
     List<String> existingValues = this[name];
     var values = existingValues != null ? new List.from(existingValues) : [];
     values.add(value.toString());
-    nativeResponse.setHeader(name, values);
+    _setHeader(name, values);
   }
 
   @override
   void clear() {
-    _checkMutable();
-    var names = nativeResponse.getHeaderNames();
+    var names = _getHeaderNames();
     for (var name in names) {
-      nativeResponse.removeHeader(name);
+      _removeHeader(name);
     }
-  }
-
-  // Get the list of header keys
-  Iterable<String> _getHeaderNames() {
-    return objectKeys(nativeHeaders);
   }
 
   @override
@@ -283,19 +299,18 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   void remove(String name, Object value) {
+    // TODO: this could actually be implemented on our side now.
     throw new UnsupportedError(
         "Removing individual values not supported for Node.");
   }
 
   @override
   void removeAll(String name) {
-    _checkMutable();
-    nativeResponse.removeHeader(name);
+    _removeHeader(name);
   }
 
   @override
   void set(String name, Object value) {
-    _checkMutable();
-    nativeResponse.setHeader(name, jsify(value));
+    _setHeader(name, jsify(value));
   }
 }
