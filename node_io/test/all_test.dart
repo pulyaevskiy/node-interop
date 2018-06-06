@@ -19,5 +19,5 @@ void main() {
   http_headers.main();
   http_server.main();
   internet_address.main();
-  platform.main();
+  platform.main('all_test.dart');
 }

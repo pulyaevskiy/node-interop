@@ -5,7 +5,7 @@ import 'package:node_interop/node.dart';
 import 'package:node_io/node_io.dart';
 import 'package:test/test.dart';
 
-void main() {
+void main([String scriptName = 'platform_test.dart']) {
   group('Platform', () {
     test('environment', () {
       expect(Platform.environment, isMap);
@@ -17,7 +17,7 @@ void main() {
       expect(Platform.script, new isInstanceOf<Uri>());
       expect(Platform.script.isAbsolute, isTrue);
       expect(Platform.script.path, process.argv[1]);
-      expect(Platform.script.pathSegments.last, contains('platform_test.dart'));
+      expect(Platform.script.pathSegments.last, contains(scriptName));
     });
 
     test('executable', () {
