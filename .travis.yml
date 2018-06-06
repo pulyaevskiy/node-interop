@@ -6,6 +6,9 @@ dart:
 before_install:
 - nvm install node
 - node --version
+- ulimit -u
+- ulimit -n
+- ulimit -v
 
 script:
 - ./tool/travis.sh build_node_compilers
