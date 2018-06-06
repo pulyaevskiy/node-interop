@@ -84,7 +84,7 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
 
   @override
   Stream<io.FileSystemEvent> watch(
-      {int events: io.FileSystemEvent.ALL, bool recursive: false}) {
+      {int events: io.FileSystemEvent.all, bool recursive: false}) {
     throw new UnimplementedError();
   }
 }
