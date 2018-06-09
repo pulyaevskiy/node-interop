@@ -1,3 +1,7 @@
+# 0.1.5
+
+- Expand support for package:build_config to include version 0.3.x.
+
 # 0.1.4
 
 - Fixed deprecation warnings with latest Dart 2 dev SDK.
