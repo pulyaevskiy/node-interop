@@ -83,7 +83,7 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
     if (_controller.isPaused) {
       // Reject any incoming request before listening started or subscription
       // is paused.
-      response.statusCode = io.HttpStatus.SERVICE_UNAVAILABLE;
+      response.statusCode = io.HttpStatus.serviceUnavailable;
       response.end();
       return;
     }
@@ -188,7 +188,7 @@ class NodeHttpRequest extends ReadableStream<List<int>>
   List<io.Cookie> get cookies {
     if (_cookies != null) return _cookies;
     _cookies = new List<io.Cookie>();
-    List<String> values = headers[io.HttpHeaders.SET_COOKIE];
+    List<String> values = headers[io.HttpHeaders.setCookieHeader];
     if (values != null) {
       values.forEach((value) {
         _cookies.add(new io.Cookie.fromSetCookieValue(value));
@@ -332,7 +332,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   List<io.Cookie> get cookies {
     if (_cookies != null) return _cookies;
     _cookies = new List<io.Cookie>();
-    List<String> values = headers[io.HttpHeaders.SET_COOKIE];
+    List<String> values = headers[io.HttpHeaders.setCookieHeader];
     if (values != null) {
       values.forEach((value) {
         _cookies.add(new io.Cookie.fromSetCookieValue(value));
@@ -354,7 +354,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   ResponseHttpHeaders _headers;
 
   @override
-  Future redirect(Uri location, {int status: io.HttpStatus.MOVED_TEMPORARILY}) {
+  Future redirect(Uri location, {int status: io.HttpStatus.movedTemporarily}) {
     statusCode = status;
     headers.set("location", location);
     return close();

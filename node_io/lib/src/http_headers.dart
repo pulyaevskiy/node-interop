@@ -101,33 +101,33 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   bool get chunkedTransferEncoding =>
-      _getHeader(io.HttpHeaders.TRANSFER_ENCODING) == 'chunked';
+      _getHeader(io.HttpHeaders.transferEncodingHeader) == 'chunked';
 
   @override
   void set chunkedTransferEncoding(bool chunked) {
     if (chunked) {
-      _setHeader(io.HttpHeaders.TRANSFER_ENCODING, 'chunked');
+      _setHeader(io.HttpHeaders.transferEncodingHeader, 'chunked');
     } else {
-      _removeHeader(io.HttpHeaders.TRANSFER_ENCODING);
+      _removeHeader(io.HttpHeaders.transferEncodingHeader);
     }
   }
 
   @override
   int get contentLength {
-    var value = _getHeader(io.HttpHeaders.CONTENT_LENGTH);
+    var value = _getHeader(io.HttpHeaders.contentLengthHeader);
     if (value != null) return int.parse(value);
     return 0;
   }
 
   @override
   set contentLength(int length) {
-    _setHeader(io.HttpHeaders.CONTENT_LENGTH, length);
+    _setHeader(io.HttpHeaders.contentLengthHeader, length);
   }
 
   @override
   io.ContentType get contentType {
     if (_contentType != null) return _contentType;
-    String value = _getHeader(io.HttpHeaders.CONTENT_TYPE);
+    String value = _getHeader(io.HttpHeaders.contentTypeHeader);
     if (value == null || value.isEmpty) return null;
     var types = value.split(',');
     _contentType = io.ContentType.parse(types.first);
@@ -138,12 +138,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set contentType(io.ContentType type) {
-    _setHeader(io.HttpHeaders.CONTENT_TYPE, type.toString());
+    _setHeader(io.HttpHeaders.contentTypeHeader, type.toString());
   }
 
   @override
   DateTime get date {
-    String value = _getHeader(io.HttpHeaders.DATE);
+    String value = _getHeader(io.HttpHeaders.dateHeader);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -154,12 +154,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set date(DateTime date) {
-    _setHeader(io.HttpHeaders.DATE, io.HttpDate.format(date));
+    _setHeader(io.HttpHeaders.dateHeader, io.HttpDate.format(date));
   }
 
   @override
   DateTime get expires {
-    String value = _getHeader(io.HttpHeaders.EXPIRES);
+    String value = _getHeader(io.HttpHeaders.expiresHeader);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -170,12 +170,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set expires(DateTime expires) {
-    _setHeader(io.HttpHeaders.EXPIRES, io.HttpDate.format(expires));
+    _setHeader(io.HttpHeaders.expiresHeader, io.HttpDate.format(expires));
   }
 
   @override
   String get host {
-    String value = _getHeader(io.HttpHeaders.HOST);
+    String value = _getHeader(io.HttpHeaders.hostHeader);
     if (value != null) {
       return value.split(':').first;
     }
@@ -189,12 +189,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
     if (_port != null) {
       hostAndPort = "$host:$_port";
     }
-    _setHeader(io.HttpHeaders.HOST, hostAndPort);
+    _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
 
   @override
   int get port {
-    String value = _getHeader(io.HttpHeaders.HOST);
+    String value = _getHeader(io.HttpHeaders.hostHeader);
     if (value != null) {
       var parts = value.split(':');
       if (parts.length == 2) return int.parse(parts.last);
@@ -208,12 +208,12 @@ abstract class HttpHeaders implements io.HttpHeaders {
     if (value != null) {
       hostAndPort = "$host:$value";
     }
-    _setHeader(io.HttpHeaders.HOST, hostAndPort);
+    _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
 
   @override
   DateTime get ifModifiedSince {
-    String value = _getHeader(io.HttpHeaders.IF_MODIFIED_SINCE);
+    String value = _getHeader(io.HttpHeaders.ifModifiedSinceHeader);
     if (value == null || value.isEmpty) return null;
     try {
       return io.HttpDate.parse(value);
@@ -224,20 +224,20 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   set ifModifiedSince(DateTime ifModifiedSince) {
-    _setHeader(
-        io.HttpHeaders.IF_MODIFIED_SINCE, io.HttpDate.format(ifModifiedSince));
+    _setHeader(io.HttpHeaders.ifModifiedSinceHeader,
+        io.HttpDate.format(ifModifiedSince));
   }
 
   @override
   bool get persistentConnection {
-    var connection = _getHeader(io.HttpHeaders.CONNECTION);
+    var connection = _getHeader(io.HttpHeaders.connectionHeader);
     return (connection == 'keep-alive');
   }
 
   @override
   set persistentConnection(bool persistentConnection) {
     var value = persistentConnection ? 'keep-alive' : 'close';
-    _setHeader(io.HttpHeaders.CONNECTION, value);
+    _setHeader(io.HttpHeaders.connectionHeader, value);
   }
 
   bool _isMultiValue(String name) => !_singleValueHttpHeaders.contains(name);
