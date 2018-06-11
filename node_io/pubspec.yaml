@@ -1,6 +1,6 @@
 name: node_io
 description: Like dart:io but with Node.js.
-version: 1.0.0-dev.4.0
+version: 1.0.0-dev.5.0
 homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 

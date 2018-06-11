@@ -1,3 +1,7 @@
+## 1.0.0-dev.5.0
+
+- Fixed deprecation warnings with Dart 2 dev 61 SDK version.
+
 ## 1.0.0-dev.4.0
 
 - Breaking: `node_http` now exports only a subset of classes from `http`

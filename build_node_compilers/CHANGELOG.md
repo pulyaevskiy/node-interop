@@ -1,3 +1,8 @@
+# 0.1.6
+
+- Removed redundant `**_test.dart` glob from build config which was causing
+  issues when build_node_compilers used together with build_web_compilers.
+
 # 0.1.5
 
 - Expand support for package:build_config to include version 0.3.x.
