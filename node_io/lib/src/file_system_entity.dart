@@ -138,13 +138,13 @@ class FileStat implements io.FileStat {
     );
   }
 
-  static Future<io.FileStat> stat(String path) {
-    var completer = new Completer<io.FileStat>();
+  static Future<FileStat> stat(String path) {
+    var completer = new Completer<FileStat>();
     void callback(err, stats) {
       if (err == null) {
         completer.complete(new FileStat._fromNodeStats(stats));
       } else {
-        completer.completeError(err);
+        completer.complete(new FileStat._internalNotFound());
       }
     }
 
@@ -153,8 +153,13 @@ class FileStat implements io.FileStat {
     return completer.future;
   }
 
-  static io.FileStat statSync(String path) =>
-      new FileStat._fromNodeStats(fs.statSync(path));
+  static FileStat statSync(String path) {
+    try {
+      return new FileStat._fromNodeStats(fs.statSync(path));
+    } catch (_) {
+      return new FileStat._internalNotFound();
+    }
+  }
 
   @override
   String modeString() {

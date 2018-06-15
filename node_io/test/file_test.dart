@@ -6,6 +6,7 @@ library file_test;
 
 import 'package:node_interop/fs.dart';
 import 'package:node_io/node_io.dart';
+import 'package:path/path.dart';
 import 'package:test/test.dart';
 
 String createFile(String name, String contents) {
@@ -25,6 +26,36 @@ void main() {
       var path = createFile('existsSync.txt', "existsSync");
       var file = new File(path);
       expect(file.existsSync(), isTrue);
+    });
+
+    test('exists', () async {
+      expect(await new File(join(Directory.current.path, "__dummy__")).exists(),
+          isFalse);
+      expect(
+          await new File(join(Directory.current.path, "pubspec.yaml")).exists(),
+          isTrue);
+    });
+
+    test('stat', () async {
+      expect(
+          (await new File(join(Directory.current.path, "__dummy__")).stat())
+              .type,
+          FileSystemEntityType.notFound);
+      expect(
+          (await new File(join(Directory.current.path, "pubspec.yaml")).stat())
+              .type,
+          FileSystemEntityType.file);
+    });
+
+    test('statSync', () async {
+      expect(
+          new File(join(Directory.current.path, "__dummy__")).statSync().type,
+          FileSystemEntityType.notFound);
+      expect(
+          new File(join(Directory.current.path, "pubspec.yaml"))
+              .statSync()
+              .type,
+          FileSystemEntityType.file);
     });
 
     test('readAsBytes', () async {
