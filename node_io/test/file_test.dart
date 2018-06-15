@@ -88,5 +88,14 @@ void main() {
       expect(result.path, copyPath);
       expect(result.existsSync(), isTrue);
     });
+
+    test('delete', () async {
+      var path =
+          createFile('delete.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
+      var file = new File(path);
+      expect(await file.exists(), isTrue);
+      await file.delete();
+      expect(await file.exists(), isFalse);
+    });
   });
 }

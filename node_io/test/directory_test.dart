@@ -69,5 +69,17 @@ void main() {
           .toList();
       expect(_listContainsPath(list, "node_io.dart"), isTrue);
     });
+
+    test('create_delete', () async {
+      var dir = new Directory(join(Directory.current.path, "delete_dir"));
+      try {
+        await dir.delete();
+      } catch (_) {}
+      ;
+      await dir.create();
+      expect(await dir.exists(), isTrue);
+      await dir.delete();
+      expect(await dir.exists(), isFalse);
+    });
   });
 }

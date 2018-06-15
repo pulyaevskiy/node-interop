@@ -40,17 +40,18 @@ class Directory extends FileSystemEntity implements io.Directory {
       FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
-  Future<io.Directory> delete({bool recursive: false}) {
+  Future<Directory> delete({bool recursive: false}) {
     if (recursive)
       return new Future.error(new UnsupportedError(
           'Recursive delete is not supported by Node API'));
-    final completer = new Completer<io.FileSystemEntity>();
+    final completer = new Completer<Directory>();
 
     void callback([error]) {
       if (error == null) {
         completer.complete(this);
+      } else {
+        completer.completeError(error);
       }
-      completer.completeError(error);
     }
 
     final jsCallback = js.allowInterop(callback);
@@ -123,10 +124,10 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Future<io.Directory> create({bool recursive: false}) {
+  Future<Directory> create({bool recursive: false}) {
     if (recursive)
       throw new UnsupportedError('Recursive create is not supported in Node.');
-    final completer = new Completer();
+    final completer = new Completer<Directory>();
     void callback(err) {
       if (err == null) {
         completer.complete(new Directory(path));
