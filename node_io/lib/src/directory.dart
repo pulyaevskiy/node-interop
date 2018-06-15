@@ -8,6 +8,7 @@ import 'dart:js' as js;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/path.dart' as nodePath;
+import 'package:path/path.dart';
 
 import 'file.dart';
 import 'file_system_entity.dart';
@@ -65,8 +66,10 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Stream<io.FileSystemEntity> list(
+  Stream<FileSystemEntity> list(
       {bool recursive: false, bool followLinks: true}) {
+    if (recursive)
+      throw new UnsupportedError('Recursive list is not supported in Node.');
     final controller = new StreamController<FileSystemEntity>();
 
     void callback(err, files) {
@@ -75,13 +78,16 @@ class Directory extends FileSystemEntity implements io.Directory {
         controller.close();
       } else {
         for (var filePath in files) {
+          // Need to append the original path to build a proper path
+          filePath = join(path, filePath);
           final stat = FileStat.statSync(filePath);
           if (stat.type == io.FileSystemEntityType.file) {
             controller.add(new File(filePath));
           } else if (stat.type == io.FileSystemEntityType.directory) {
             controller.add(new Directory(filePath));
           } else {
-            throw new UnimplementedError('Link entities not implemented yet.');
+            // Yes not supported but no throw yet so it works for other cases
+            // throw new UnimplementedError('Link entities not implemented yet.');
           }
         }
         controller.close();

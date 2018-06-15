@@ -48,5 +48,26 @@ void main() {
       expect(new Directory(join(Directory.current.path, "lib")).statSync().type,
           FileSystemEntityType.directory);
     });
+
+    _listContainsPath(List<FileSystemEntity> entities, String path) {
+      bool contains = false;
+      for (var entity in entities) {
+        if (entity.path.endsWith(path)) {
+          contains = true;
+          break;
+        }
+      }
+      return contains;
+    }
+
+    test('list', () async {
+      var list = await Directory.current.list().toList();
+      expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
+
+      list = await new Directory(join(Directory.current.path, "lib"))
+          .list()
+          .toList();
+      expect(_listContainsPath(list, "node_io.dart"), isTrue);
+    });
   });
 }
