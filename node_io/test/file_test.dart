@@ -126,6 +126,9 @@ void main() {
       await file.writeAsBytes(bytes, mode: FileMode.append, flush: true);
       expect(await file.readAsBytes(), [0, 1, 2, 3, 0, 1, 2, 3]);
 
+      expect(await file.openRead().toList(), [
+        [0, 1, 2, 3, 0, 1, 2, 3]
+      ]);
       // cleanup
       await file.delete();
     });
@@ -144,6 +147,37 @@ void main() {
       // append
       await file.writeAsString(text, mode: FileMode.append, flush: true);
       expect(await file.readAsString(), "$text$text");
+
+      // cleanup
+      await file.delete();
+    });
+
+    test('open_read_write_bytes', () async {
+      File file = new File('open_read_write_bytes.bin,');
+      var sink = file.openWrite(mode: FileMode.write);
+      sink.write([1, 2, 3, 4]);
+      await sink.flush();
+      await sink.close();
+      expect(await file.openRead().toList(), [
+        [1, 2, 3, 4]
+      ]);
+
+      expect(await file.openRead(1, 2).toList(), [
+        [2, 3]
+      ]);
+
+      // cleanup
+      await file.delete();
+    });
+
+    test('add_bytes', () async {
+      File file = new File('add_bytes.bin');
+      var sink = file.openWrite(mode: FileMode.write);
+      sink.add([1, 2, 3, 4]);
+      sink.add('test'.codeUnits);
+      await sink.flush();
+      await sink.close();
+      expect(await file.readAsBytes(), [1, 2, 3, 4]..addAll('test'.codeUnits));
 
       // cleanup
       await file.delete();
