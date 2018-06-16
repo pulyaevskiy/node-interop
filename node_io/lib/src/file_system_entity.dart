@@ -140,8 +140,10 @@ class FileStat implements io.FileStat {
 
   static Future<FileStat> stat(String path) {
     var completer = new Completer<FileStat>();
-    void callback(err, stats) {
-      if (err == null) {
+
+    // stats has to be an optional param despite what the documentation says...
+    void callback(err, [stats]) {
+      if (err == null && stats != null) {
         completer.complete(new FileStat._fromNodeStats(stats));
       } else {
         completer.complete(new FileStat._internalNotFound());
