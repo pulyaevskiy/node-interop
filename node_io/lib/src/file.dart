@@ -59,7 +59,7 @@ class File extends FileSystemEntity implements io.File {
   Future<File> create({bool recursive: false}) {
     // write an empty file
     final Completer<File> completer = new Completer<File>();
-    void callback(err, fd) {
+    void callback(err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -301,7 +301,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   static Future<io.RandomAccessFile> open(String path, io.FileMode mode) {
     final completer = new Completer<_RandomAccessFile>();
-    void cb(err, fd) {
+    void cb(err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {

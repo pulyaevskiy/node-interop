@@ -73,7 +73,7 @@ class Directory extends FileSystemEntity implements io.Directory {
       throw new UnsupportedError('Recursive list is not supported in Node.');
     final controller = new StreamController<FileSystemEntity>();
 
-    void callback(err, files) {
+    void callback(err, [files]) {
       if (err != null) {
         controller.addError(err);
         controller.close();

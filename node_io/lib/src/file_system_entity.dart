@@ -143,7 +143,7 @@ class FileStat implements io.FileStat {
 
     // stats has to be an optional param despite what the documentation says...
     void callback(err, [stats]) {
-      if (err == null && stats != null) {
+      if (err == null) {
         completer.complete(new FileStat._fromNodeStats(stats));
       } else {
         completer.complete(new FileStat._internalNotFound());
