@@ -204,8 +204,18 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<File> rename(String newPath) {
-    // TODO: implement rename
-    throw new UnimplementedError();
+    final completer = new Completer<File>();
+    void cb(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(new File(newPath));
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.rename(path, newPath, jsCallback);
+    return completer.future;
   }
 
   @override

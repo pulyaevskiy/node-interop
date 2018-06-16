@@ -81,5 +81,22 @@ void main() {
       await dir.delete();
       expect(await dir.exists(), isFalse);
     });
+
+    test('rename', () async {
+      var src = new Directory('src');
+      var dst = new Directory('dst');
+      try {
+        await src.delete();
+      } catch (_) {}
+      try {
+        await dst.delete();
+      } catch (_) {}
+      await src.create();
+      await src.rename(dst.path);
+      expect(await src.exists(), isFalse);
+      expect(await dst.exists(), isTrue);
+
+      await dst.delete();
+    });
   });
 }

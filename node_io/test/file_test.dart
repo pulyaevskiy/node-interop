@@ -182,5 +182,22 @@ void main() {
       // cleanup
       await file.delete();
     });
+
+    test('rename', () async {
+      var src = new File('src');
+      var dst = new File('dst');
+      try {
+        await src.delete();
+      } catch (_) {}
+      try {
+        await dst.delete();
+      } catch (_) {}
+      await src.create();
+      await src.rename(dst.path);
+      expect(await src.exists(), isFalse);
+      expect(await dst.exists(), isTrue);
+
+      await dst.delete();
+    });
   });
 }
