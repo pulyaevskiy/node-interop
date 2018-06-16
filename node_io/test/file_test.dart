@@ -97,5 +97,56 @@ void main() {
       await file.delete();
       expect(await file.exists(), isFalse);
     });
+
+    test('create', () async {
+      var file = new File('create.txt');
+      try {
+        await file.delete();
+      } catch (_) {}
+      expect(await file.exists(), isFalse);
+      await file.create();
+      expect(await file.exists(), isTrue);
+
+      // cleanup
+      await file.delete();
+    });
+
+    test('read_write_bytes', () async {
+      var file = new File('as_bytes.bin');
+      List<int> bytes = [0, 1, 2, 3];
+
+      await file.writeAsBytes(bytes, flush: true);
+      expect(await file.readAsBytes(), bytes);
+
+      // overwrite
+      await file.writeAsBytes(bytes, flush: true);
+      expect(await file.readAsBytes(), bytes);
+
+      // append
+      await file.writeAsBytes(bytes, mode: FileMode.append, flush: true);
+      expect(await file.readAsBytes(), [0, 1, 2, 3, 0, 1, 2, 3]);
+
+      // cleanup
+      await file.delete();
+    });
+
+    test('read_write_string', () async {
+      String text = "test";
+      var file = new File('as_text.txt');
+
+      await file.writeAsString(text, flush: true);
+      expect(await file.readAsString(), text);
+
+      // overwrite
+      await file.writeAsString(text, flush: true);
+      expect(await file.readAsString(), text);
+
+      // append
+      await file.writeAsString(text, mode: FileMode.append, flush: true);
+      expect(await file.readAsString(), "$text$text");
+
+      // cleanup
+      await file.delete();
+    });
   });
 }

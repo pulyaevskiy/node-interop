@@ -57,8 +57,25 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<File> create({bool recursive: false}) {
-    // TODO: implement create
-    throw new UnimplementedError();
+    // write an empty file
+    final Completer<File> completer = new Completer<File>();
+    void callback(err, fd) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        fs.close(fd, js.allowInterop((err) {
+          if (err != null) {
+            completer.completeError(err);
+          } else {
+            completer.complete(this);
+          }
+        }));
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    fs.open(_absolutePath, "w", jsCallback);
+    return completer.future;
   }
 
   @override
@@ -174,9 +191,9 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<String> readAsString({Encoding encoding: utf8}) {
-    // TODO: implement readAsString
-    throw new UnimplementedError();
+  Future<String> readAsString({Encoding encoding: utf8}) async {
+    var bytes = await readAsBytes();
+    return encoding.decode(bytes);
   }
 
   @override
@@ -223,9 +240,14 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<io.File> writeAsBytes(List<int> bytes,
-      {io.FileMode mode: io.FileMode.write, bool flush: false}) {
-    // TODO: implement writeAsBytes
-    throw new UnimplementedError();
+      {io.FileMode mode: io.FileMode.write, bool flush: false}) async {
+    var sink = openWrite(mode: mode);
+    sink.add(bytes);
+    if (flush == true) {
+      await sink.flush();
+    }
+    await sink.close();
+    return this;
   }
 
   @override
@@ -239,9 +261,14 @@ class File extends FileSystemEntity implements io.File {
   Future<io.File> writeAsString(String contents,
       {io.FileMode mode: io.FileMode.write,
       Encoding encoding: utf8,
-      bool flush: false}) {
-    // TODO: implement writeAsString
-    throw new UnimplementedError();
+      bool flush: false}) async {
+    var sink = openWrite(mode: mode, encoding: encoding);
+    sink.write(contents);
+    if (flush == true) {
+      await sink.flush();
+    }
+    await sink.close();
+    return this;
   }
 
   @override
