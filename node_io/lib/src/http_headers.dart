@@ -87,7 +87,8 @@ class RequestHttpHeaders extends HttpHeaders {
       throw new io.HttpException('HTTP headers are not mutable.');
 
   @override
-  Iterable<String> _getHeaderNames() => objectKeys(_request.headers);
+  Iterable<String> _getHeaderNames() =>
+      new List<String>.from(objectKeys(_request.headers));
 }
 
 /// Proxy to native JavaScript HTTP headers.

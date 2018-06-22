@@ -108,10 +108,11 @@ class InternetAddress implements io.InternetAddress {
   @override
   Future<io.InternetAddress> reverse() {
     final Completer<io.InternetAddress> completer = new Completer();
-    void reverseResult(error, List<String> hostnames) {
+    void reverseResult(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
+        final hostnames = new List<String>.from(result);
         completer.complete(new InternetAddress._(address, hostnames.first));
       }
     }
