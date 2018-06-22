@@ -11,6 +11,6 @@ dependencies:
 
 dev_dependencies:
   test: ^1.0.0
-  build_runner:
+  build_runner: ^0.8.10
   build_node_compilers:
     path: ../build_node_compilers
