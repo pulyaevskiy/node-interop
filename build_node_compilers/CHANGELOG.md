@@ -1,3 +1,8 @@
+# 0.1.7
+
+- Removed extra dependency constraint on analyzer package.
+- Upgraded all dependencies to latest.
+
 # 0.1.6
 
 - Removed redundant `**_test.dart` glob from build config which was causing

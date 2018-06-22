@@ -43,10 +43,11 @@ class InternetAddress implements io.InternetAddress {
     Completer<List<io.InternetAddress>> completer = new Completer();
     var options = new DNSLookupOptions(all: true, verbatim: true);
 
-    void handleLookup(error, List<DNSAddress> addresses) {
+    void handleLookup(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
+        final addresses = new List<DNSAddress>.from(result);
         var list = addresses
             .map((item) => new InternetAddress._(item.address, host))
             .toList(growable: false);
@@ -107,10 +108,11 @@ class InternetAddress implements io.InternetAddress {
   @override
   Future<io.InternetAddress> reverse() {
     final Completer<io.InternetAddress> completer = new Completer();
-    void reverseResult(error, List<String> hostnames) {
+    void reverseResult(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
+        final hostnames = new List<String>.from(result);
         completer.complete(new InternetAddress._(address, hostnames.first));
       }
     }

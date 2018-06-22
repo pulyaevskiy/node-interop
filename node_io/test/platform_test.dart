@@ -14,7 +14,7 @@ void main([String scriptName = 'platform_test.dart']) {
     });
 
     test('script', () {
-      expect(Platform.script, new isInstanceOf<Uri>());
+      expect(Platform.script, const TypeMatcher<Uri>());
       expect(Platform.script.isAbsolute, isTrue);
       expect(Platform.script.path, process.argv[1]);
       expect(Platform.script.pathSegments.last, contains(scriptName));
@@ -70,13 +70,13 @@ void main([String scriptName = 'platform_test.dart']) {
     test('packageConfig', () {
       expect(() {
         Platform.packageConfig;
-      }, throwsA(new isInstanceOf<UnsupportedError>()));
+      }, throwsA(const TypeMatcher<UnsupportedError>()));
     });
 
     test('packageRoot', () {
       expect(() {
         Platform.packageRoot;
-      }, throwsA(new isInstanceOf<UnsupportedError>()));
+      }, throwsA(const TypeMatcher<UnsupportedError>()));
     });
 
     test('pathSeparator', () {
@@ -95,7 +95,7 @@ void main([String scriptName = 'platform_test.dart']) {
     test('localeName', () {
       expect(() {
         Platform.localeName;
-      }, throwsA(new isInstanceOf<UnsupportedError>()));
+      }, throwsA(const TypeMatcher<UnsupportedError>()));
     });
   });
 }

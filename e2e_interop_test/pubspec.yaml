@@ -10,7 +10,7 @@ dependencies:
     path: ../node_interop
 
 dev_dependencies:
-  test: ^0.12.0
-  build_runner:
+  test: ^1.0.0
+  build_runner: ^0.8.10
   build_node_compilers:
     path: ../build_node_compilers

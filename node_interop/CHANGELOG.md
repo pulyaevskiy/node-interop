@@ -1,3 +1,7 @@
+## 1.0.0-dev.8.0
+
+- Upgraded to latest build_node_compilers.
+
 ## 1.0.0-dev.7.0
 
 - Fixed: Changed `ServerResponse.getHeader` return type from `String` to
@@ -21,7 +25,7 @@
 ## 1.0.0-dev.3.0
 
 - Added or completed bindings for following Node.js modules: `dns`, `events`,
-  `fs`, `http`, `https`, `module`, `net`, `os`, `path`, `process`, 
+  `fs`, `http`, `https`, `module`, `net`, `os`, `path`, `process`,
   `querystring`, `stream`, `timers`, `tls`.
 - Added more examples and tests.
 
@@ -37,19 +41,19 @@
 
 ### Breaking changes:
 
-- node_interop depends on Dart 2 SDK which allows us to leverage new 
+- node_interop depends on Dart 2 SDK which allows us to leverage new
   build_runner system and move away from Pub transformers.
 - Removed Pub transformer, which means you shouldn't need it in your
   `pubspec.yaml` anymore. Build system is now based on `build` package. See docs
   for more details.
 - node_interop no longer exports Dart-specific abstractions like an HTTP client
   or FileSystem. These abstractions have been moved to separate packages:
-  `node_io` and `node_http`. This way node_interop now only exposes JS bindings 
+  `node_io` and `node_http`. This way node_interop now only exposes JS bindings
   for Node and some utility functions.
 - library structure is changed to map closer to built-in Node modules. There is
-  a separate file for each module which exposes that module's bindings, 
+  a separate file for each module which exposes that module's bindings,
   e.g. `fs.dart`, `http.dart`.
-- `node` object has been removed. Can use `require` and `exports` functions 
+- `node` object has been removed. Can use `require` and `exports` functions
   directly. There is also new convenience function `setExport`.
 - `jsPromiseToFuture` renamed to `promiseToFuture`.
 - `futureToJsPromise` renamed to `futureToPromise`.

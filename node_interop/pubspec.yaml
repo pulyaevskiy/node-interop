@@ -1,6 +1,6 @@
 name: node_interop
 description: Node.js API bindings and utilities for Dart.
-version: 1.0.0-dev.7.0
+version: 1.0.0-dev.8.0
 homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 
@@ -11,7 +11,7 @@ dependencies:
   js: ^0.6.1
 
 dev_dependencies:
-  test: ^0.12.35
-  build_runner: ^0.8.2+2
-  build_node_compilers: ^0.1.2
+  test: ^1.0.0
+  build_runner: ^0.8.10
+  build_node_compilers: ^0.1.7
   build_test:

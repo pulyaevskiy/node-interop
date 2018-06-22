@@ -60,6 +60,7 @@ abstract class DNSLookupOptions {
 }
 
 @JS()
+@anonymous
 abstract class DNSAddress {
   external String get address;
   external num get family;

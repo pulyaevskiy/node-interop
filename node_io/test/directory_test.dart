@@ -11,7 +11,7 @@ import 'package:test/test.dart';
 void main() {
   group('Directory', () {
     test('current directory', () {
-      expect(Directory.current, new isInstanceOf<Directory>());
+      expect(Directory.current, const TypeMatcher<Directory>());
       expect(Directory.current.path, process.cwd());
     });
 

@@ -9,7 +9,7 @@ void main() {
   group('Buffer', () {
     test('from array', () {
       final buffer = Buffer.from([1, 2, 3]);
-      // expect(buffer, new isInstanceOf<Buffer>()); // TODO: fails in dart2js
+      // expect(buffer, const TypeMatcher<Buffer>()); // TODO: fails in dart2js
       expect(buffer, [1, 2, 3]);
     });
 
