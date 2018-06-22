@@ -42,7 +42,7 @@ void main() {
       var file = new File(path);
       final copyPath = path.replaceFirst('copy.txt', 'copy_copy.txt');
       final result = await file.copy(copyPath);
-      expect(result, new isInstanceOf<File>());
+      expect(result, const TypeMatcher<File>());
       expect(result.path, copyPath);
       expect(result.existsSync(), isTrue);
     });
@@ -53,7 +53,7 @@ void main() {
       var file = new File(path);
       final copyPath = path.replaceFirst('copy_sync.txt', 'copy_sync_copy.txt');
       final result = await file.copy(copyPath);
-      expect(result, new isInstanceOf<File>());
+      expect(result, const TypeMatcher<File>());
       expect(result.path, copyPath);
       expect(result.existsSync(), isTrue);
     });

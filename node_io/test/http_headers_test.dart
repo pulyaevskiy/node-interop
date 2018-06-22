@@ -58,18 +58,18 @@ void main() {
     });
 
     test('contentType', () async {
-      expect(headers.contentType, new isInstanceOf<ContentType>());
+      expect(headers.contentType, const TypeMatcher<ContentType>());
       expect(headers.contentType, same(headers.contentType));
       expect(emptyHeaders.contentType, isNull);
     });
 
     test('date', () async {
-      expect(headers.date, new isInstanceOf<DateTime>());
+      expect(headers.date, const TypeMatcher<DateTime>());
       expect(emptyHeaders.date, isNull);
     });
 
     test('expires', () async {
-      expect(headers.expires, new isInstanceOf<DateTime>());
+      expect(headers.expires, const TypeMatcher<DateTime>());
       expect(emptyHeaders.expires, isNull);
     });
 
@@ -83,7 +83,7 @@ void main() {
     });
 
     test('ifModifiedSince', () async {
-      expect(headers.ifModifiedSince, new isInstanceOf<DateTime>());
+      expect(headers.ifModifiedSince, const TypeMatcher<DateTime>());
       expect(emptyHeaders.ifModifiedSince, isNull);
     });
 
@@ -100,7 +100,7 @@ void main() {
       expect(headers.value('transfer-encoding'), 'chunked');
       expect(() {
         headers.value('set-cookie');
-      }, throwsA(new isInstanceOf<HttpException>()));
+      }, throwsA(const TypeMatcher<HttpException>()));
     });
 
     test('forEach', () {
