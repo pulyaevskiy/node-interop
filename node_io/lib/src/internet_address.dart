@@ -43,10 +43,11 @@ class InternetAddress implements io.InternetAddress {
     Completer<List<io.InternetAddress>> completer = new Completer();
     var options = new DNSLookupOptions(all: true, verbatim: true);
 
-    void handleLookup(error, List<DNSAddress> addresses) {
+    void handleLookup(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
+        final addresses = new List<DNSAddress>.from(result);
         var list = addresses
             .map((item) => new InternetAddress._(item.address, host))
             .toList(growable: false);

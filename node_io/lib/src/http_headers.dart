@@ -287,7 +287,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   @override
   void forEach(void f(String name, List<String> values)) {
     var names = _getHeaderNames();
-    names.forEach((name) {
+    names.forEach((String name) {
       f(name, this[name]);
     });
   }
