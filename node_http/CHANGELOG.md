@@ -1,3 +1,7 @@
+## 1.0.0-dev.6.0
+
+- Upgraded to latest build_node_compilers.
+
 ## 1.0.0-dev.5.0
 
 - Fixed deprecation warnings with Dart 2 dev 61 SDK version.
