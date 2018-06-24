@@ -1,3 +1,7 @@
+# 0.1.8
+
+- Fixed strong mode issue with parsing dart2js_args using latest Dart 2 SDK.
+
 # 0.1.7
 
 - Removed extra dependency constraint on analyzer package.

@@ -6,8 +6,15 @@ import 'package:test/test.dart';
 void main() {
   group('dartdevc', () {
     setUpAll(() {
-      final compile = Process.runSync(
-          'pub', ['run', 'build_runner', 'build', '--output', 'build']);
+      final compile = Process.runSync('pub', [
+        'run',
+        'build_runner',
+        'build',
+        '--define',
+        'build_node_compilers|entrypoint=compiler=dartdevc',
+        '--output',
+        'build',
+      ]);
       expect(compile.exitCode, 0);
     });
     tearDownAll(() {
@@ -41,8 +48,8 @@ void main() {
         'run',
         'build_runner',
         'build',
-        '--define',
-        'build_node_compilers|entrypoint=compiler=dart2js',
+        // '--define',
+        // 'build_node_compilers|entrypoint=compiler=dart2js',
         '--output',
         'build',
       ]);
