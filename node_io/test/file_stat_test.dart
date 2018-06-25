@@ -12,9 +12,9 @@ void main() {
   group('FileStat', () {
     test('statSync', () {
       var stat = FileStat.statSync(Directory.current.path);
-      expect(stat.accessed, new isInstanceOf<DateTime>());
-      expect(stat.changed, new isInstanceOf<DateTime>());
-      expect(stat.modified, new isInstanceOf<DateTime>());
+      expect(stat.accessed, const TypeMatcher<DateTime>());
+      expect(stat.changed, const TypeMatcher<DateTime>());
+      expect(stat.modified, const TypeMatcher<DateTime>());
       expect(stat.type, FileSystemEntityType.directory);
       expect(stat.size, isNotNull);
       expect(stat.mode, isNotNull);
@@ -22,9 +22,9 @@ void main() {
 
     test('stat_directory', () async {
       var stat = await FileStat.stat(Directory.current.path);
-      expect(stat.accessed, new isInstanceOf<DateTime>());
-      expect(stat.changed, new isInstanceOf<DateTime>());
-      expect(stat.modified, new isInstanceOf<DateTime>());
+      expect(stat.accessed, const TypeMatcher<DateTime>());
+      expect(stat.changed, const TypeMatcher<DateTime>());
+      expect(stat.modified, const TypeMatcher<DateTime>());
       expect(stat.type, FileSystemEntityType.directory);
       expect(stat.size, isNotNull);
       expect(stat.mode, isNotNull);

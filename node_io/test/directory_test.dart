@@ -11,8 +11,12 @@ import 'package:test/test.dart';
 
 void main() {
   group('Directory', () {
+    Directory dir(String name) {
+      return new Directory(join(Directory.current.path, name));
+    }
+
     test('current directory', () {
-      expect(Directory.current, new isInstanceOf<Directory>());
+      expect(Directory.current, const TypeMatcher<Directory>());
       expect(Directory.current.path, process.cwd());
     });
 
@@ -21,32 +25,18 @@ void main() {
       expect(Directory.current.exists(), completion(isTrue));
       expect(Directory.current.isAbsolute, isTrue);
 
-      expect(
-          await new Directory(join(Directory.current.path, "__dummy__"))
-              .exists(),
-          isFalse);
+      expect(dir('__dummy__').exists(), completion(isFalse));
     });
 
     test('stat', () async {
       expect(
-          (await new Directory(join(Directory.current.path, "__dummy__"))
-                  .stat())
-              .type,
-          FileSystemEntityType.notFound);
-      expect(
-          (await new Directory(join(Directory.current.path, "lib")).stat())
-              .type,
-          FileSystemEntityType.directory);
+          (await dir('__dummy__').stat()).type, FileSystemEntityType.notFound);
+      expect((await dir('lib').stat()).type, FileSystemEntityType.directory);
     });
 
     test('statSync', () async {
-      expect(
-          new Directory(join(Directory.current.path, "__dummy__"))
-              .statSync()
-              .type,
-          FileSystemEntityType.notFound);
-      expect(new Directory(join(Directory.current.path, "lib")).statSync().type,
-          FileSystemEntityType.directory);
+      expect(dir('__dummy__').statSync().type, FileSystemEntityType.notFound);
+      expect(dir('lib').statSync().type, FileSystemEntityType.directory);
     });
 
     _listContainsPath(List<FileSystemEntity> entities, String path) {
@@ -64,22 +54,20 @@ void main() {
       var list = await Directory.current.list().toList();
       expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
 
-      list = await new Directory(join(Directory.current.path, "lib"))
-          .list()
-          .toList();
+      list = await dir('lib').list().toList();
       expect(_listContainsPath(list, "node_io.dart"), isTrue);
     });
 
     test('create_delete', () async {
-      var dir = new Directory(join(Directory.current.path, "delete_dir"));
+      var directory = dir('delete_dir');
       try {
-        await dir.delete();
+        await directory.delete();
       } catch (_) {}
       ;
-      await dir.create();
-      expect(await dir.exists(), isTrue);
-      await dir.delete();
-      expect(await dir.exists(), isFalse);
+      await directory.create();
+      expect(await directory.exists(), isTrue);
+      await directory.delete();
+      expect(await directory.exists(), isFalse);
     });
 
     test('rename', () async {

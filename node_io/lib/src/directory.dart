@@ -40,7 +40,7 @@ class Directory extends FileSystemEntity implements io.Directory {
       FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
-  Future<Directory> delete({bool recursive: false}) {
+  Future<io.FileSystemEntity> delete({bool recursive: false}) {
     if (recursive)
       return new Future.error(new UnsupportedError(
           'Recursive delete is not supported by Node API'));
@@ -87,6 +87,7 @@ class Directory extends FileSystemEntity implements io.Directory {
           } else if (stat.type == io.FileSystemEntityType.directory) {
             controller.add(new Directory(filePath));
           } else {
+            // TODO we don't support links so we just ignore them
             // Yes not supported but no throw yet so it works for other cases
             // throw new UnimplementedError('Link entities not implemented yet.');
           }

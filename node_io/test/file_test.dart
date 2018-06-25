@@ -28,34 +28,25 @@ void main() {
       expect(file.existsSync(), isTrue);
     });
 
+    File file(String name) {
+      return new File(join(Directory.current.path, name));
+    }
+
     test('exists', () async {
-      expect(await new File(join(Directory.current.path, "__dummy__")).exists(),
-          isFalse);
-      expect(
-          await new File(join(Directory.current.path, "pubspec.yaml")).exists(),
-          isTrue);
+      expect(await file('__dummy__').exists(), isFalse);
+      expect(await file('pubspec.yaml').exists(), isTrue);
     });
 
     test('stat', () async {
       expect(
-          (await new File(join(Directory.current.path, "__dummy__")).stat())
-              .type,
-          FileSystemEntityType.notFound);
+          (await file('__dummy__').stat()).type, FileSystemEntityType.notFound);
       expect(
-          (await new File(join(Directory.current.path, "pubspec.yaml")).stat())
-              .type,
-          FileSystemEntityType.file);
+          (await file('pubspec.yaml').stat()).type, FileSystemEntityType.file);
     });
 
     test('statSync', () async {
-      expect(
-          new File(join(Directory.current.path, "__dummy__")).statSync().type,
-          FileSystemEntityType.notFound);
-      expect(
-          new File(join(Directory.current.path, "pubspec.yaml"))
-              .statSync()
-              .type,
-          FileSystemEntityType.file);
+      expect(file('__dummy__').statSync().type, FileSystemEntityType.notFound);
+      expect(file('pubspec.yaml').statSync().type, FileSystemEntityType.file);
     });
 
     test('readAsBytes', () async {
@@ -73,7 +64,7 @@ void main() {
       var file = new File(path);
       final copyPath = path.replaceFirst('copy.txt', 'copy_copy.txt');
       final result = await file.copy(copyPath);
-      expect(result, new isInstanceOf<File>());
+      expect(result, const TypeMatcher<File>());
       expect(result.path, copyPath);
       expect(result.existsSync(), isTrue);
     });
@@ -84,7 +75,7 @@ void main() {
       var file = new File(path);
       final copyPath = path.replaceFirst('copy_sync.txt', 'copy_sync_copy.txt');
       final result = await file.copy(copyPath);
-      expect(result, new isInstanceOf<File>());
+      expect(result, const TypeMatcher<File>());
       expect(result.path, copyPath);
       expect(result.existsSync(), isTrue);
     });
@@ -147,24 +138,6 @@ void main() {
       // append
       await file.writeAsString(text, mode: FileMode.append, flush: true);
       expect(await file.readAsString(), "$text$text");
-
-      // cleanup
-      await file.delete();
-    });
-
-    test('open_read_write_bytes', () async {
-      File file = new File('open_read_write_bytes.bin,');
-      var sink = file.openWrite(mode: FileMode.write);
-      sink.write([1, 2, 3, 4]);
-      await sink.flush();
-      await sink.close();
-      expect(await file.openRead().toList(), [
-        [1, 2, 3, 4]
-      ]);
-
-      expect(await file.openRead(1, 2).toList(), [
-        [2, 3]
-      ]);
 
       // cleanup
       await file.delete();

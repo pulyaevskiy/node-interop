@@ -85,10 +85,11 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<FileSystemEntity> delete({bool recursive: false}) {
-    if (recursive)
+  Future<io.FileSystemEntity> delete({bool recursive: false}) {
+    if (recursive) {
       return new Future.error(new UnsupportedError(
           'Recursive delete is not supported by Node API'));
+    }
     final Completer<File> completer = new Completer<File>();
     void callback(err) {
       if (err != null) {

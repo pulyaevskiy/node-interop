@@ -187,13 +187,7 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
 
   @override
   void write(Object obj) {
-    // Only encode string
-    if (obj is List) {
-      _write(obj);
-    } else {
-      obj = obj.toString();
-      _write(encoding.encode(obj.toString()));
-    }
+    _write(encoding.encode(obj.toString()));
   }
 
   @override
@@ -215,7 +209,7 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   @override
   add(List<int> data) {
     // Add as buffer
-    if (!(data is Uint8List)) {
+    if (data is! Uint8List) {
       data = new Uint8List.fromList(data);
     }
     super.add(data);
