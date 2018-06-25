@@ -57,8 +57,25 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<File> create({bool recursive: false}) {
-    // TODO: implement create
-    throw new UnimplementedError();
+    // write an empty file
+    final Completer<File> completer = new Completer<File>();
+    void callback(err, [fd]) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        fs.close(fd, js.allowInterop((err) {
+          if (err != null) {
+            completer.completeError(err);
+          } else {
+            completer.complete(this);
+          }
+        }));
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    fs.open(_absolutePath, "w", jsCallback);
+    return completer.future;
   }
 
   @override
@@ -68,9 +85,23 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<FileSystemEntity> delete({bool recursive: false}) {
-    // TODO: implement delete
-    throw new UnimplementedError();
+  Future<io.FileSystemEntity> delete({bool recursive: false}) {
+    if (recursive) {
+      return new Future.error(new UnsupportedError(
+          'Recursive delete is not supported by Node API'));
+    }
+    final Completer<File> completer = new Completer<File>();
+    void callback(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(this);
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    fs.unlink(_absolutePath, jsCallback);
+    return completer.future;
   }
 
   @override
@@ -161,9 +192,9 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<String> readAsString({Encoding encoding: utf8}) {
-    // TODO: implement readAsString
-    throw new UnimplementedError();
+  Future<String> readAsString({Encoding encoding: utf8}) async {
+    var bytes = await readAsBytes();
+    return encoding.decode(bytes);
   }
 
   @override
@@ -174,8 +205,18 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<File> rename(String newPath) {
-    // TODO: implement rename
-    throw new UnimplementedError();
+    final completer = new Completer<File>();
+    void cb(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(new File(newPath));
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.rename(path, newPath, jsCallback);
+    return completer.future;
   }
 
   @override
@@ -210,9 +251,14 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<io.File> writeAsBytes(List<int> bytes,
-      {io.FileMode mode: io.FileMode.write, bool flush: false}) {
-    // TODO: implement writeAsBytes
-    throw new UnimplementedError();
+      {io.FileMode mode: io.FileMode.write, bool flush: false}) async {
+    var sink = openWrite(mode: mode);
+    sink.add(bytes);
+    if (flush == true) {
+      await sink.flush();
+    }
+    await sink.close();
+    return this;
   }
 
   @override
@@ -226,9 +272,14 @@ class File extends FileSystemEntity implements io.File {
   Future<io.File> writeAsString(String contents,
       {io.FileMode mode: io.FileMode.write,
       Encoding encoding: utf8,
-      bool flush: false}) {
-    // TODO: implement writeAsString
-    throw new UnimplementedError();
+      bool flush: false}) async {
+    var sink = openWrite(mode: mode, encoding: encoding);
+    sink.write(contents);
+    if (flush == true) {
+      await sink.flush();
+    }
+    await sink.close();
+    return this;
   }
 
   @override
@@ -251,7 +302,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   static Future<io.RandomAccessFile> open(String path, io.FileMode mode) {
     final completer = new Completer<_RandomAccessFile>();
-    void cb(err, fd) {
+    void cb(err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {

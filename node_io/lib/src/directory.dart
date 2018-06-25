@@ -8,6 +8,7 @@ import 'dart:js' as js;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/path.dart' as nodePath;
+import 'package:path/path.dart';
 
 import 'file.dart';
 import 'file_system_entity.dart';
@@ -39,17 +40,18 @@ class Directory extends FileSystemEntity implements io.Directory {
       FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
-  Future<io.Directory> delete({bool recursive: false}) {
+  Future<io.FileSystemEntity> delete({bool recursive: false}) {
     if (recursive)
       return new Future.error(new UnsupportedError(
           'Recursive delete is not supported by Node API'));
-    final completer = new Completer<io.FileSystemEntity>();
+    final completer = new Completer<Directory>();
 
     void callback([error]) {
       if (error == null) {
         completer.complete(this);
+      } else {
+        completer.completeError(error);
       }
-      completer.completeError(error);
     }
 
     final jsCallback = js.allowInterop(callback);
@@ -65,23 +67,29 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Stream<io.FileSystemEntity> list(
+  Stream<FileSystemEntity> list(
       {bool recursive: false, bool followLinks: true}) {
+    if (recursive)
+      throw new UnsupportedError('Recursive list is not supported in Node.');
     final controller = new StreamController<FileSystemEntity>();
 
-    void callback(err, files) {
+    void callback(err, [files]) {
       if (err != null) {
         controller.addError(err);
         controller.close();
       } else {
         for (var filePath in files) {
+          // Need to append the original path to build a proper path
+          filePath = join(path, filePath);
           final stat = FileStat.statSync(filePath);
           if (stat.type == io.FileSystemEntityType.file) {
             controller.add(new File(filePath));
           } else if (stat.type == io.FileSystemEntityType.directory) {
             controller.add(new Directory(filePath));
           } else {
-            throw new UnimplementedError('Link entities not implemented yet.');
+            // TODO we don't support links so we just ignore them
+            // Yes not supported but no throw yet so it works for other cases
+            // throw new UnimplementedError('Link entities not implemented yet.');
           }
         }
         controller.close();
@@ -117,10 +125,10 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Future<io.Directory> create({bool recursive: false}) {
+  Future<Directory> create({bool recursive: false}) {
     if (recursive)
       throw new UnsupportedError('Recursive create is not supported in Node.');
-    final completer = new Completer();
+    final completer = new Completer<Directory>();
     void callback(err) {
       if (err == null) {
         completer.complete(new Directory(path));

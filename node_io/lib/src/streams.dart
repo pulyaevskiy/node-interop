@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:js';
+import 'dart:typed_data';
 
 import 'package:node_interop/node.dart';
 import 'package:node_interop/stream.dart';
@@ -203,5 +204,14 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   @override
   void writeln([Object obj = ""]) {
     _write(encoding.encode("$obj\n"));
+  }
+
+  @override
+  add(List<int> data) {
+    // Add as buffer
+    if (data is! Uint8List) {
+      data = new Uint8List.fromList(data);
+    }
+    super.add(data);
   }
 }

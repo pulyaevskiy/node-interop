@@ -12,7 +12,7 @@ import 'package:node_interop/stream.dart';
 
 import 'src/streams.dart';
 
-export 'dart:io' show FileSystemEntityType;
+export 'dart:io' show FileSystemEntityType, FileMode;
 
 export 'src/directory.dart';
 export 'src/file.dart';
