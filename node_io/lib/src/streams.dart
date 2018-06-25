@@ -167,10 +167,17 @@ class WritableStream<S> implements StreamSink<S> {
 /// Writable stream of bytes, also accepts `String` values which are encoded
 /// with specified [Encoding].
 class NodeIOSink extends WritableStream<List<int>> implements IOSink {
+  static dynamic _nodeIoSinkConvert(List<int> data) {
+    if (data is! Uint8List) {
+      data = new Uint8List.fromList(data);
+    }
+    return Buffer.from(data);
+  }
+
   Encoding _encoding;
 
   NodeIOSink(Writable nativeStream, {Encoding encoding: utf8})
-      : super(nativeStream, convert: (data) => Buffer.from(data)) {
+      : super(nativeStream, convert: _nodeIoSinkConvert) {
     _encoding = encoding;
   }
 
@@ -204,14 +211,5 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   @override
   void writeln([Object obj = ""]) {
     _write(encoding.encode("$obj\n"));
-  }
-
-  @override
-  add(List<int> data) {
-    // Add as buffer
-    if (data is! Uint8List) {
-      data = new Uint8List.fromList(data);
-    }
-    super.add(data);
   }
 }

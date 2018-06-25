@@ -12,6 +12,7 @@ import 'package:path/path.dart';
 
 import 'file.dart';
 import 'file_system_entity.dart';
+import 'link.dart';
 
 class Directory extends FileSystemEntity implements io.Directory {
   @override
@@ -87,9 +88,7 @@ class Directory extends FileSystemEntity implements io.Directory {
           } else if (stat.type == io.FileSystemEntityType.directory) {
             controller.add(new Directory(filePath));
           } else {
-            // TODO we don't support links so we just ignore them
-            // Yes not supported but no throw yet so it works for other cases
-            // throw new UnimplementedError('Link entities not implemented yet.');
+            controller.add(new Link(filePath));
           }
         }
         controller.close();
