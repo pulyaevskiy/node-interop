@@ -2,12 +2,12 @@
 
 - Fixed: handling errors in `Directory.delete`.
 - Fixed: handling relative paths in `Directory.list`.
-- Updated: `Directory.list` silently skips link FS entries which are not implemented yet.
 - Fixed: strong mode issues in `Directory` and `File`.
 - Added: `File.create`, `File.delete`, `File.readAsString`, `File.rename`,
     `File.writeAsBytes`, `File.writeAsString`.
 - Fixed: handling errors in `File.open`, `File.stat`, `File.statSync`.
 - Fixed: converting byte data in `NodeIOSink`.
+- Added: Minimal scaffold for Link FS entities.
 
 ## 1.0.0-dev.6.0
 
