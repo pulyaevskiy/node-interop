@@ -1,3 +1,7 @@
+## 1.0.0-dev.7.0
+
+- Added support for followRedirects.
+
 ## 1.0.0-dev.6.0
 
 - Upgraded to latest build_node_compilers.
