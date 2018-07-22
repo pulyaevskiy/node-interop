@@ -71,9 +71,8 @@ void addNodePreamble(File output) {
 Future<String> _createPackageFile(Iterable<AssetId> inputSources,
     BuildStep buildStep, ScratchSpace scratchSpace) async {
   var inputUri = buildStep.inputId.uri;
-  var packageFileName = '.package-${md5.convert(inputUri
-      .toString()
-      .codeUnits)}';
+  var packageFileName =
+      '.package-${md5.convert(inputUri.toString().codeUnits)}';
   var packagesFile = scratchSpace
       .fileFor(new AssetId(buildStep.inputId.package, packageFileName));
   var packageNames = inputSources.map((s) => s.package).toSet();
