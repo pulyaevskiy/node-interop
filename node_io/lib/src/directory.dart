@@ -32,8 +32,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   io.Directory get absolute => new Directory(nodePath.path.resolve(path));
 
   @override
-  Future<bool> exists() => FileStat
-      .stat(path)
+  Future<bool> exists() => FileStat.stat(path)
       .then((stat) => stat.type == io.FileSystemEntityType.directory);
 
   @override
