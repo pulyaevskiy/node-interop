@@ -1,3 +1,7 @@
+# 0.1.9
+
+- Fixed analysis warnings with latest Pub and Dart SDK.
+
 # 0.1.8
 
 - Fixed strong mode issue with parsing dart2js_args using latest Dart 2 SDK.
