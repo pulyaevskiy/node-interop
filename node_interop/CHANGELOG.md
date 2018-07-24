@@ -1,3 +1,7 @@
+## 1.0.0-dev.9.0
+
+- Fixed analysis warnings.
+
 ## 1.0.0-dev.8.0
 
 - Upgraded to latest build_node_compilers.
