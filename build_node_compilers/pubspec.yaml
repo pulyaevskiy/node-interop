@@ -8,6 +8,7 @@ environment:
   sdk: '>=2.0.0-dev.37 <3.0.0'
 
 dependencies:
+  analyzer: ^0.32.0
   bazel_worker: ^0.1.4
   build: ^0.12.6
   build_config: '>=0.2.6 <0.4.0'
