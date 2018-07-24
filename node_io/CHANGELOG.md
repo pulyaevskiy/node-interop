@@ -1,3 +1,7 @@
+## 1.0.0-dev.8.0
+
+- Fixed: analysis warnings with latest Pub and Dart SDK.
+
 ## 1.0.0-dev.7.0
 
 - Fixed: handling errors in `Directory.delete`.
