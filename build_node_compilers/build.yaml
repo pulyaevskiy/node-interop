@@ -26,5 +26,5 @@ builders:
     auto_apply: root_package
     defaults:
       generate_for:
-        include: ["node/**", "example/**", "test/**.node_test.dart"]
+        include: ["node/**", "lib/**", "example/**", "test/**.node_test.dart"]
         exclude: ["test/**.vm_test.dart"]

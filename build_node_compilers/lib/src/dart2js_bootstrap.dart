@@ -10,6 +10,7 @@ import 'package:node_preamble/preamble.dart';
 import 'package:build_modules/build_modules.dart';
 import 'package:crypto/crypto.dart';
 import 'package:scratch_space/scratch_space.dart';
+import 'package:path/path.dart' as p;
 
 import 'node_entrypoint_builder.dart';
 
@@ -27,12 +28,20 @@ Future<Null> bootstrapDart2Js(
 
   var packageFile = await _createPackageFile(allSrcs, buildStep, scratchSpace);
 
+  var dartPath = dartEntrypointId.path.startsWith('lib/')
+      ? 'package:${dartEntrypointId.package}/'
+          '${dartEntrypointId.path.substring('lib/'.length)}'
+      : dartEntrypointId.path;
+  var jsOutputPath =
+      '${p.withoutExtension(dartPath.replaceFirst('package:', 'packages/'))}'
+      '$jsEntrypointExtension';
+
   var jsOutputId = dartEntrypointId.changeExtension(jsEntrypointExtension);
   var args = dart2JsArgs.toList()
     ..addAll([
       '--packages=$packageFile',
-      '-o${jsOutputId.path}',
-      dartEntrypointId.path,
+      '-o${jsOutputPath}',
+      dartPath,
     ]);
   var dart2js = await buildStep.fetchResource(dart2JsWorkerResource);
   var result = await dart2js.compile(args);
