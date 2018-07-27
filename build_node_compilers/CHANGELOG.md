@@ -1,3 +1,7 @@
+# 0.1.10
+
+- Handle entrypoints inside `lib/` folder.
+
 # 0.1.9
 
 - Fixed analysis warnings with latest Pub and Dart SDK.
