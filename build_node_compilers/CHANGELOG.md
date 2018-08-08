@@ -1,3 +1,7 @@
+# 0.1.11
+
+- Upgraded to latest build_runner (fixes dependency resolution with Dart 2 stable).
+
 # 0.1.10
 
 - Handle entrypoints inside `lib/` folder.

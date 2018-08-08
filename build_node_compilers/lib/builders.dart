@@ -4,6 +4,8 @@
 import 'package:build/build.dart';
 import 'package:build_node_compilers/build_node_compilers.dart';
 
+const ddcKernelExtension = '.ddc.dill';
+
 Builder devCompilerBuilder(_) => const DevCompilerBuilder();
 Builder nodeEntrypointBuilder(BuilderOptions options) =>
     new NodeEntrypointBuilder.fromOptions(options);
