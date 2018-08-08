@@ -16,7 +16,7 @@ import '../builders.dart';
 import 'common.dart';
 import 'errors.dart';
 
-final sdkDir = cli_util.getSdkPath();
+final _sdkDir = cli_util.getSdkPath();
 
 const jsModuleErrorsExtension = '.node.ddc.js.errors';
 const jsModuleExtension = '.node.ddc.js';
@@ -40,22 +40,28 @@ class DevCompilerBuilder implements Builder {
 
   @override
   Future build(BuildStep buildStep) async {
-    var module = new Module.fromJson(
+    var module = Module.fromJson(
         json.decode(await buildStep.readAsString(buildStep.inputId))
             as Map<String, dynamic>);
-    try {
-      await createDevCompilerModule(module, buildStep, useKernel,
-          debugMode: !useKernel);
-    } on DartDevcCompilationException catch (e) {
+
+    Future<Null> handleError(e) async {
       await buildStep.writeAsString(
           buildStep.inputId.changeExtension(jsModuleErrorsExtension), '$e');
-      log.severe('', e);
+      log.severe('$e');
+    }
+
+    try {
+      await _createDevCompilerModule(module, buildStep, useKernel);
+    } on DartDevcCompilationException catch (e) {
+      await handleError(e);
+    } on MissingModulesException catch (e) {
+      await handleError(e);
     }
   }
 }
 
 /// Compile [module] with the dev compiler.
-Future createDevCompilerModule(
+Future _createDevCompilerModule(
     Module module, BuildStep buildStep, bool useKernel,
     {bool debugMode = true}) async {
   var transitiveDeps = await module.computeTransitiveDependencies(buildStep);
@@ -64,14 +70,15 @@ Future createDevCompilerModule(
       : module.linkedSummaryId);
   var scratchSpace = await buildStep.fetchResource(scratchSpaceResource);
 
-  var allAssetIds = new Set<AssetId>()
+  var allAssetIds = Set<AssetId>()
     ..addAll(module.sources)
     ..addAll(transitiveSummaryDeps);
   await scratchSpace.ensureAssets(allAssetIds, buildStep);
-  File jsOutputFile = scratchSpace.fileFor(module.jsId(jsModuleExtension));
-  var sdkSummary =
-      p.url.join(sdkDir, 'lib/_internal/ddc_sdk.${useKernel ? 'dill' : 'sum'}');
-  var request = new WorkRequest();
+  var jsId = module.jsId(jsModuleExtension);
+  var jsOutputFile = scratchSpace.fileFor(jsId);
+  var sdkSummary = p.url
+      .join(_sdkDir, 'lib/_internal/ddc_sdk.${useKernel ? 'dill' : 'sum'}');
+  var request = WorkRequest();
 
   request.arguments.addAll([
     '--dart-sdk-summary=$sdkSummary',
@@ -80,12 +87,9 @@ Future createDevCompilerModule(
     jsOutputFile.path,
   ]);
 
-  var jsId = module.jsId(jsModuleExtension);
-
   if (!useKernel) {
     // Add the default analysis_options.
     await scratchSpace.ensureAssets([defaultAnalysisOptionsId], buildStep);
-
     var libraryRoot = '/${p.split(p.dirname(jsId.path)).first}';
     request.arguments.addAll([
       '--module-root=.',
@@ -99,9 +103,13 @@ Future createDevCompilerModule(
   if (debugMode) {
     request.arguments.addAll([
       '--source-map',
-      '--source-map-comment',
-      '--inline-source-map',
     ]);
+    if (!useKernel) {
+      request.arguments.addAll([
+        '--source-map-comment',
+        '--inline-source-map',
+      ]);
+    }
   } else {
     request.arguments.add('--no-source-map');
   }
@@ -126,7 +134,7 @@ Future createDevCompilerModule(
         request.arguments
             .add('--url-mapping=$uri,${scratchSpace.fileFor(id).path}');
       } else {
-        var absoluteFileUri = new Uri.file('/${id.path}');
+        var absoluteFileUri = Uri.file('/${id.path}');
         request.arguments.add('--url-mapping=$absoluteFileUri,${id.path}');
       }
     }
@@ -139,7 +147,7 @@ Future createDevCompilerModule(
       ..addAll(transitiveSummaryDeps);
     packagesFile = await createPackagesFile(allDeps, scratchSpace);
     request.arguments.addAll([
-      "--packages",
+      '--packages',
       packagesFile.absolute.uri.toString(),
     ]);
   }
@@ -151,7 +159,7 @@ Future createDevCompilerModule(
     if (uri.startsWith('package:')) {
       return uri;
     }
-    return useKernel ? id.path : new Uri.file('/${id.path}').toString();
+    return useKernel ? id.path : Uri.file('/${id.path}').toString();
   }));
 
   WorkResponse response;
@@ -170,7 +178,7 @@ Future createDevCompilerModule(
   if (response.exitCode != EXIT_CODE_OK || !jsOutputFile.existsSync()) {
     var message =
         response.output.replaceAll('${scratchSpace.tempDir.path}/', '');
-    throw new DartDevcCompilationException(jsId, '$message}');
+    throw DartDevcCompilationException(jsId, '$message}');
   } else {
     // Copy the output back using the buildStep.
     await scratchSpace.copyOutput(jsId, buildStep);

@@ -2,17 +2,20 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:build/build.dart';
 import 'package:build_modules/build_modules.dart';
-import 'package:path/path.dart' as _p; // ignore: library_prefixes
+import 'package:path/path.dart' as _p;
+import 'package:pool/pool.dart';
 
+import 'ddc_names.dart';
 import 'dev_compiler_builder.dart';
 import 'node_entrypoint_builder.dart';
 
 /// Alias `_p.url` to `p`.
-_p.Context get p => _p.url;
+_p.Context get _context => _p.url;
 
 Future<Null> bootstrapDdc(BuildStep buildStep,
     {bool useKernel, bool buildRootAppSummary}) async {
@@ -40,20 +43,23 @@ Future<Null> bootstrapDdc(BuildStep buildStep,
   // See https://github.com/dart-lang/sdk/issues/27262 for the root issue
   // which will allow us to not rely on the naming schemes that dartdevc uses
   // internally, but instead specify our own.
-  var appModuleScope = () {
+  var appModuleScope = toJSIdentifier(() {
     if (useKernel) {
-      var basename = p.basename(jsId.path);
+      var basename = _context.basename(jsId.path);
       return basename.substring(0, basename.length - jsModuleExtension.length);
     } else {
-      return p.split(_ddcModuleName(jsId)).skip(1).join('__');
+      Iterable<String> scope = _context.split(_ddcModuleName(jsId));
+      if (scope.first == 'packages') {
+        scope = scope.skip(1);
+      }
+      return scope.skip(1).join('__');
     }
-  }();
-  appModuleScope = appModuleScope.replaceAll('.', '\$46');
+  }());
 
   // Map from module name to module path for custom modules.
-  Map<String, String> modulePaths = {
-    'dart_sdk': 'packages/\$sdk/dev_compiler/common/dart_sdk',
-  };
+  var modulePaths = SplayTreeMap.of(
+      {'dart_sdk': r'packages/$sdk/dev_compiler/common/dart_sdk'});
+
   List<AssetId> transitiveJsModules = [jsId]
     ..addAll(transitiveDeps.map((dep) => dep.jsId(jsModuleExtension)));
   for (var transJsId in transitiveJsModules) {
@@ -61,10 +67,10 @@ Future<Null> bootstrapDdc(BuildStep buildStep,
     // `packages/` for lib modules. We set baseUrl to `/` to simplify things,
     // and we only allow you to serve top level directories.
     String moduleName = _ddcModuleName(transJsId);
-    modulePaths[moduleName] = p.withoutExtension(
+    modulePaths[moduleName] = _context.withoutExtension(
         transJsId.path.startsWith('lib')
             ? '$moduleName$jsModuleExtension'
-            : p.joinAll(p.split(transJsId.path).skip(1)));
+            : _context.joinAll(_context.split(transJsId.path).skip(1)));
   }
 
   var bootstrapContent = new StringBuffer();
@@ -74,8 +80,9 @@ Future<Null> bootstrapDdc(BuildStep buildStep,
   var bootstrapId = dartEntrypointId.changeExtension(ddcBootstrapExtension);
   await buildStep.writeAsString(bootstrapId, bootstrapContent.toString());
 
-  var bootstrapModuleName = p.withoutExtension(
-      p.relative(bootstrapId.path, from: p.dirname(dartEntrypointId.path)));
+  var bootstrapModuleName = _context.withoutExtension(_context.relative(
+      bootstrapId.path,
+      from: _context.dirname(dartEntrypointId.path)));
 
   var entrypointJsContent = _entryPointJs(bootstrapModuleName);
   await buildStep.writeAsString(
@@ -87,20 +94,25 @@ Future<Null> bootstrapDdc(BuildStep buildStep,
       '"file":""}');
 }
 
+final _lazyBuildPool = Pool(16);
+
 /// Ensures that all transitive js modules for [module] are available and built.
 Future<List<Module>> _ensureTransitiveModules(
     Module module, AssetReader reader) async {
   // Collect all the modules this module depends on, plus this module.
   var transitiveDeps = await module.computeTransitiveDependencies(reader);
-  List<AssetId> jsModules = transitiveDeps
+  var jsModules = transitiveDeps
       .map((module) => module.jsId(jsModuleExtension))
       .toList()
         ..add(module.jsId(jsModuleExtension));
   // Check that each module is readable, and warn otherwise.
   await Future.wait(jsModules.map((jsId) async {
-    if (await reader.canRead(jsId)) return;
-    log.warning(
-        'Unable to read $jsId, check your console for compilation errors.');
+    if (await _lazyBuildPool.withResource(() => reader.canRead(jsId))) return;
+    var errorsId = jsId.addExtension('.errors');
+    await reader.canRead(errorsId);
+    log.warning('Unable to read $jsId, check your console or the '
+        '`.dart_tool/build/generated/${errorsId.package}/${errorsId.path}` '
+        'log file.');
   }));
   return transitiveDeps;
 }
@@ -142,12 +154,13 @@ String _dartLoaderSetup(Map<String, String> modulePaths) => '''
 let modulePaths = ${const JsonEncoder.withIndent(" ").convert(modulePaths)};
 
 const path = require('path');
+const process = require('process');
 
 /// Resolves module [id] for Dart package names to their absolute filenames.
 /// Regular NodeJS module IDs are returned as-is.
 function resolveId(id) {
   if (id in modulePaths) {
-    var parts = __dirname.split(path.sep);
+    var parts = process.argv[1].split(path.sep).slice(0,-1);
     parts.push(modulePaths[id]);
     var newId = parts.join(path.sep);
     return newId;

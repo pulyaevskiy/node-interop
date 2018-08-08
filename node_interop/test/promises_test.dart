@@ -39,17 +39,17 @@ abstract class JsPromises {
 }
 
 void main() {
-  createFile('promises.js', promisesJS);
+  final promises = createFile('promises.js', promisesJS);
 
   test('promiseToFuture', () async {
-    final JsPromises js = require('./promises.js');
+    final JsPromises js = require(promises);
     Promise promise = js.createPromise('Futures are better than Promises');
     Future<String> future = promiseToFuture(promise);
     expect(future, completion('Futures are better than Promises'));
   });
 
   test('futureToPromise', () {
-    final JsPromises js = require('./promises.js');
+    final JsPromises js = require(promises);
     var future = new Future.value('Yes');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
@@ -57,7 +57,7 @@ void main() {
   });
 
   test('create promise in Dart', () {
-    final JsPromises js = require('./promises.js');
+    final JsPromises js = require(promises);
     var promise = new Promise(allowInterop((resolve, reject) {
       resolve('Yas');
     }));
@@ -73,7 +73,7 @@ void main() {
   });
 
   test('reject a Future', () {
-    final JsPromises js = require('./promises.js');
+    final JsPromises js = require(promises);
     var future = new Future.error('No');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
