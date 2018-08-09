@@ -222,7 +222,6 @@ class File extends FileSystemEntity implements io.File {
   @override
   File renameSync(String newPath) {
     fs.renameSync(path, newPath);
-
     return new File(newPath);
   }
 

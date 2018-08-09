@@ -58,6 +58,35 @@ void main() {
       expect(data, [1, 2, 3, 4, 5]);
     });
 
+    test('readAsBytesSync', () async {
+      var path = createFile(
+          'readAsBytesSync.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
+      var file = new File(path);
+      expect(file.existsSync(), isTrue);
+      var data = file.readAsBytesSync();
+      expect(data, [1, 2, 3, 4, 5]);
+    });
+
+    test('readAsStringSync', () async {
+      var path = createFile('readAsStringSync.txt', 'hello world');
+      var file = new File(path);
+      expect(file.existsSync(), isTrue);
+      var data = file.readAsStringSync();
+      expect(data, 'hello world');
+    });
+
+    test('renameSync', () async {
+      var path = createFile('renameSync.txt', 'hello world');
+      var file = new File(path);
+      expect(file.existsSync(), isTrue);
+      final renamedPath =
+          file.path.replaceFirst('renameSync.txt', 'renamedSync.txt');
+      file.renameSync(renamedPath);
+      final renamed = new File(renamedPath);
+      expect(file.existsSync(), isFalse);
+      expect(renamed.existsSync(), isTrue);
+    });
+
     test('copy', () async {
       var path =
           createFile('copy.txt', new String.fromCharCodes([1, 2, 3, 4, 5]));
