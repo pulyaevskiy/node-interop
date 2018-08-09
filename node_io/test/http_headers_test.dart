@@ -45,10 +45,10 @@ abstract class HeadersFixture {
 }
 
 void main() {
-  createFile('headers.js', headersJS);
+  final headersFile = createFile('headers.js', headersJS);
 
   group('RequestHttpHeaders', () {
-    HeadersFixture jsHeaders = require('./headers.js');
+    HeadersFixture jsHeaders = require(headersFile);
     var headers = new RequestHttpHeaders(jsHeaders.request);
     var emptyHeaders = new RequestHttpHeaders(jsHeaders.minimal);
 

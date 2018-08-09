@@ -1,3 +1,7 @@
+## 1.0.0-dev.10.0
+
+- Internal changes.
+
 ## 1.0.0-dev.9.0
 
 - Fixed analysis warnings.
