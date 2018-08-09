@@ -175,8 +175,9 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   List<int> readAsBytesSync() {
-    // TODO: implement readAsBytesSync
-    throw new UnimplementedError();
+    final List<int> buffer = fs.readFileSync(path);
+
+    return buffer;
   }
 
   @override
@@ -199,8 +200,7 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   String readAsStringSync({Encoding encoding: utf8}) {
-    // TODO: implement readAsStringSync
-    throw new UnimplementedError();
+    return encoding.decode(readAsBytesSync());
   }
 
   @override
@@ -221,8 +221,9 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   File renameSync(String newPath) {
-    // TODO: implement renameSync
-    throw new UnimplementedError();
+    fs.renameSync(path, newPath);
+
+    return new File(newPath);
   }
 
   @override
