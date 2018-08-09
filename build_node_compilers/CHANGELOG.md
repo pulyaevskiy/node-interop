@@ -1,3 +1,8 @@
+# 0.1.12
+
+- Fixed function responsible for resolving module paths for dartdevc to support symlinked
+  entrypoints.
+
 # 0.1.11
 
 - Upgraded to latest build_runner (fixes dependency resolution with Dart 2 stable).

@@ -34,7 +34,7 @@ void main() {
 
     test('exports', () {
       final run =
-          Process.runSync('node', ['test/slow_pi.js'], runInShell: true);
+          Process.runSync('node', ['build/node/slow_pi.js'], runInShell: true);
       expect(run.exitCode, 0);
       expect(run.stdout, contains('slowPi(100): 3.1514934010709914\n'));
       expect(run.stdout, contains('fastPi: 3.1514934010709914\n'));
@@ -75,7 +75,7 @@ void main() {
 
     test('exports', () {
       final run =
-          Process.runSync('node', ['test/slow_pi.js'], runInShell: true);
+          Process.runSync('node', ['build/node/slow_pi.js'], runInShell: true);
       expect(run.exitCode, 0);
       expect(run.stdout, contains('slowPi(100): 3.1514934010709914\n'));
       expect(run.stdout, contains('fastPi: 3.1514934010709914\n'));
