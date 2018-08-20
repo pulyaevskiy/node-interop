@@ -57,8 +57,8 @@ dynamic jsify(Object dartObject) {
   return util.jsify(dartObject);
 }
 
-/// Returns [:true:] if the [value] is a very basic built-in type - e.g.
-/// [null], [num], [bool] or [String]. It returns [:false:] in the other case.
+/// Returns `true` if the [value] is a very basic built-in type - e.g.
+/// [null], [num], [bool] or [String]. It returns `false` in the other case.
 bool _isBasicType(value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
