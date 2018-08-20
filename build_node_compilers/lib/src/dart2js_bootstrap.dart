@@ -69,13 +69,13 @@ void addNodePreamble(File output) {
 /// Creates a `.packages` file unique to this entrypoint at the root of the
 /// scratch space and returns it's filename.
 ///
-/// Since mulitple invocations of Dart2Js will share a scratch space and we only
+/// Since multiple invocations of Dart2Js will share a scratch space and we only
 /// know the set of packages involved the current entrypoint we can't construct
 /// a `.packages` file that will work for all invocations of Dart2Js so a unique
 /// file is created for every entrypoint that is run.
 ///
 /// The filename is based off the MD5 hash of the asset path so that files are
-/// unique regarless of situations like `web/foo/bar.dart` vs
+/// unique regardless of situations like `web/foo/bar.dart` vs
 /// `web/foo-bar.dart`.
 Future<String> _createPackageFile(Iterable<AssetId> inputSources,
     BuildStep buildStep, ScratchSpace scratchSpace) async {
