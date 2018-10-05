@@ -9,7 +9,7 @@ import 'package:node_interop/node.dart';
 /// Simple example of reading contents of current working directory and
 /// printing out as nicely indented JSON.
 void main() {
-  final List<String> contents = fs.readdirSync(process.cwd());
+  final contents = List<String>.from(fs.readdirSync(process.cwd()));
   final json = new JsonEncoder.withIndent('  ');
   print(json.convert(contents));
 }

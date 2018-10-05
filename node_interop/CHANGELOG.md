@@ -1,3 +1,7 @@
+## 1.0.0-dev.11.0
+
+- Upgraded to build_node_compilers 0.2.0
+
 ## 1.0.0-dev.10.0
 
 - Internal changes.
