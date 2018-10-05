@@ -1,3 +1,7 @@
+## 1.0.0-dev.9.0
+
+- Upgraded to build_node_compilers 0.2.0
+
 ## 1.0.0-dev.8.0
 
 - Fixed analysis warnings with latest Pub and Dart SDK.
