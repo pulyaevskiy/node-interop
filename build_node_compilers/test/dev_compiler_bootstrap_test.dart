@@ -11,6 +11,7 @@ import 'util.dart';
 
 main() {
   Map<String, dynamic> assets;
+  final platform = DartPlatform.dartdevc;
 
   setUp(() async {
     assets = {
@@ -29,10 +30,13 @@ main() {
     };
 
     // Set up all the other required inputs for this test.
-    await testBuilderAndCollectAssets(new ModuleBuilder(), assets);
-    await testBuilderAndCollectAssets(new UnlinkedSummaryBuilder(), assets);
-    await testBuilderAndCollectAssets(new LinkedSummaryBuilder(), assets);
-    await testBuilderAndCollectAssets(new DevCompilerBuilder(), assets);
+    await testBuilderAndCollectAssets(const ModuleLibraryBuilder(), assets);
+    await testBuilderAndCollectAssets(MetaModuleBuilder(platform), assets);
+    await testBuilderAndCollectAssets(MetaModuleCleanBuilder(platform), assets);
+    await testBuilderAndCollectAssets(ModuleBuilder(platform), assets);
+    await testBuilderAndCollectAssets(UnlinkedSummaryBuilder(platform), assets);
+    await testBuilderAndCollectAssets(LinkedSummaryBuilder(platform), assets);
+    await testBuilderAndCollectAssets(DevCompilerBuilder(), assets);
   });
 
   test("can bootstrap dart entrypoints", () async {
