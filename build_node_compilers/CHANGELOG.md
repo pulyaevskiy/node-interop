@@ -1,3 +1,7 @@
+# 0.2.0
+
+- Breaking changes: upgraded to build_runner 1.0.0, build_modules 0.4.0
+
 # 0.1.12
 
 - Fixed function responsible for resolving module paths for dartdevc to support symlinked

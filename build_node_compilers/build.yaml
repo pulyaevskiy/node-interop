@@ -11,7 +11,16 @@ builders:
         - .node.ddc.js.map
     is_optional: True
     auto_apply: all_packages
-    required_inputs: [".dart"]
+    required_inputs:
+      - .dart
+      - .dartdevc.module
+    applies_builders:
+      # We want this to apply for dart2js as well - luckily this builder doesn't
+      # need to be disabled since it's lazy so we can use is as a handle to get
+      # the cleanup builder applied.
+      - build_node_compilers|dart_source_cleanup
+      - build_modules|dartdevc
+      - build_modules|dart2js
   entrypoint:
     target: "build_node_compilers"
     import: "package:build_node_compilers/builders.dart"
@@ -21,7 +30,11 @@ builders:
         - .dart.bootstrap.js
         - .dart.js
         - .dart.js.map
-    required_inputs:  [".dart", ".node.ddc.js", ".module"]
+    required_inputs:
+      - .dart
+      - .node.ddc.js
+      - .dartdevc.module
+      - .dart2js.module
     build_to: cache
     auto_apply: root_package
     defaults:

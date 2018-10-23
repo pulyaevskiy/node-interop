@@ -6,6 +6,11 @@ import 'package:build_node_compilers/build_node_compilers.dart';
 
 const ddcKernelExtension = '.ddc.dill';
 
-Builder devCompilerBuilder(_) => const DevCompilerBuilder();
+Builder devCompilerBuilder(_) => DevCompilerBuilder();
 Builder nodeEntrypointBuilder(BuilderOptions options) =>
-    new NodeEntrypointBuilder.fromOptions(options);
+    NodeEntrypointBuilder.fromOptions(options);
+
+PostProcessBuilder dartSourceCleanup(BuilderOptions options) =>
+    (options.config['enabled'] as bool ?? false)
+        ? const FileDeletingBuilder(['.dart', '.js.map'])
+        : const FileDeletingBuilder(['.dart', '.js.map'], isEnabled: false);

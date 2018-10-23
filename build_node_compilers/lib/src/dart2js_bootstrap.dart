@@ -17,7 +17,8 @@ import 'node_entrypoint_builder.dart';
 Future<Null> bootstrapDart2Js(
     BuildStep buildStep, List<String> dart2JsArgs) async {
   var dartEntrypointId = buildStep.inputId;
-  var moduleId = dartEntrypointId.changeExtension(moduleExtension);
+  var moduleId =
+      dartEntrypointId.changeExtension(moduleExtension(DartPlatform.dart2js));
   var module = new Module.fromJson(json
       .decode(await buildStep.readAsString(moduleId)) as Map<String, dynamic>);
   var allDeps = (await module.computeTransitiveDependencies(buildStep))
