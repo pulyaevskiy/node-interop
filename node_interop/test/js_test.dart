@@ -12,6 +12,13 @@ void main() {
       var value = returnsUndefined();
       expect(value, undefined);
     });
+
+    test('create Error', () {
+      final error = JsError('Things happen');
+      expect(error, TypeMatcher<JsError>());
+      expect(error.message, 'Things happen');
+      expect(error.stack, isNotEmpty);
+    });
   });
 }
 

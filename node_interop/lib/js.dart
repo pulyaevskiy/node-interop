@@ -32,7 +32,7 @@ external List<String> objectKeys(object);
 /// JavaScript Error object.
 @JS('Error')
 abstract class JsError {
-  external JsError([String message, String fileName, int lineNumber]);
+  external factory JsError([message]);
 
   external String get message;
   external String get stack;

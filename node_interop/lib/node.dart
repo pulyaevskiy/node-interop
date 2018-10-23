@@ -51,7 +51,7 @@ external Process get process;
 
 @JS()
 @anonymous
-abstract class NodeJsError extends JsError {
+abstract class NodeJsError implements JsError {
   external String get code;
 }
 

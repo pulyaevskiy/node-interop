@@ -1,3 +1,8 @@
+## 1.0.0-dev.11.0
+
+- Fixed Console method bindings to not force `String` arguments and allow any type.
+- Breaking: Updated `JsError` constructor definition to match Node.js documentation.
+
 ## 1.0.0-dev.10.0
 
 - Internal changes.
