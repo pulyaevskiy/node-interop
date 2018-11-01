@@ -5,11 +5,14 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:http/http.dart';
-import 'package:node_interop/http.dart' as nodeHttp;
-import 'package:node_interop/https.dart' as nodeHttps;
+import 'package:node_interop/http.dart';
+import 'package:node_interop/https.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/util.dart';
 import 'package:node_io/node_io.dart';
+
+export 'package:node_interop/http.dart' show HttpAgentOptions;
+export 'package:node_interop/https.dart' show HttpsAgentOptions;
 
 /// HTTP client which uses Node.js I/O system.
 ///
@@ -18,35 +21,44 @@ class NodeClient extends BaseClient {
   /// Keep sockets around even when there are no outstanding requests, so they
   /// can be used for future requests without having to reestablish a TCP
   /// connection. Defaults to `true`.
-  final bool keepAlive;
+  @Deprecated('To be removed in 1.0.0')
+  bool get keepAlive => _httpOptions.keepAlive;
 
   /// When using the keepAlive option, specifies the initial delay for TCP
   /// Keep-Alive packets. Ignored when the keepAlive option is false.
   /// Defaults to 1000.
-  final int keepAliveMsecs;
+  @Deprecated('To be removed in 1.0.0')
+  int get keepAliveMsecs => _httpOptions.keepAliveMsecs;
 
+  /// Creates new Node HTTP client.
+  ///
+  /// If [httpOptions] or [httpsOptions] are provided they are used to create
+  /// underlying `HttpAgent` and `HttpsAgent` respectively. These arguments also
+  /// take precedence over [keepAlive] and [keepAliveMsecs].
   NodeClient({
-    this.keepAlive = true,
-    this.keepAliveMsecs = 1000,
-  });
+    bool keepAlive = true,
+    int keepAliveMsecs = 1000,
+    HttpAgentOptions httpOptions,
+    HttpsAgentOptions httpsOptions,
+  })  : _httpOptions = httpOptions ??
+            HttpAgentOptions(
+                keepAlive: keepAlive, keepAliveMsecs: keepAliveMsecs),
+        _httpsOptions = httpsOptions ??
+            HttpsAgentOptions(
+                keepAlive: keepAlive, keepAliveMsecs: keepAliveMsecs);
+
+  final HttpAgentOptions _httpOptions;
+  final HttpsAgentOptions _httpsOptions;
 
   /// Native JavaScript connection agent used by this client for insecure
   /// requests.
-  nodeHttp.HttpAgent get httpAgent =>
-      _httpAgent ??= nodeHttp.createHttpAgent(new nodeHttp.HttpAgentOptions(
-        keepAlive: keepAlive,
-        keepAliveMsecs: keepAliveMsecs,
-      ));
-  nodeHttp.HttpAgent _httpAgent;
+  HttpAgent get httpAgent => _httpAgent ??= createHttpAgent(_httpOptions);
+  HttpAgent _httpAgent;
 
   /// Native JavaScript connection agent used by this client for secure
   /// requests.
-  nodeHttp.HttpAgent get httpsAgent =>
-      _httpsAgent ??= nodeHttps.createHttpsAgent(new nodeHttp.HttpAgentOptions(
-        keepAlive: keepAlive,
-        keepAliveMsecs: keepAliveMsecs,
-      ));
-  nodeHttp.HttpAgent _httpsAgent;
+  HttpAgent get httpsAgent => _httpsAgent ??= createHttpsAgent(_httpsOptions);
+  HttpAgent _httpsAgent;
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
@@ -97,13 +109,12 @@ class _RequestHandler {
 
     var usedAgent =
         (url.scheme == 'http') ? client.httpAgent : client.httpsAgent;
-    var sendRequest = (url.scheme == 'http')
-        ? nodeHttp.http.request
-        : nodeHttps.https.request;
+    var sendRequest =
+        (url.scheme == 'http') ? http.request : https.request;
 
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
-    var options = new nodeHttp.RequestOptions(
+    var options = new RequestOptions(
       protocol: "${url.scheme}:",
       hostname: url.host,
       port: url.port,
@@ -114,7 +125,7 @@ class _RequestHandler {
     );
     var completer = new Completer<StreamedResponse>();
 
-    void handleResponse(nodeHttp.IncomingMessage response) {
+    void handleResponse(IncomingMessage response) {
       final rawHeaders = dartify(response.headers) as Map<String, dynamic>;
       final headers = new Map<String, String>();
       for (var key in rawHeaders.keys) {
@@ -155,7 +166,7 @@ class _RequestHandler {
     return completer.future;
   }
 
-  bool isRedirect(nodeHttp.IncomingMessage message, String method) {
+  bool isRedirect(IncomingMessage message, String method) {
     final statusCode = message.statusCode;
     if (method == "GET" || method == "HEAD") {
       return statusCode == HttpStatus.movedPermanently ||

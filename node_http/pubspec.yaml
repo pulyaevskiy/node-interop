@@ -1,6 +1,6 @@
 name: node_http
 description: HTTP client powered by Node.js I/O system.
-version: 1.0.0-dev.9.0
+version: 1.0.0-dev.10.0
 homepage: https://github.com/pulyaevskiy/node-interop
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   http: ^0.11.3
-  node_interop: ^1.0.0-dev
+  node_interop: ^1.0.0-dev.13.0
   node_io: ^1.0.0-dev
 
 dev_dependencies:
