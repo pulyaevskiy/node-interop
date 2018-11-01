@@ -30,7 +30,7 @@ HTTPS _https;
 /// Convenience method for creating instances of "https" module's Agent class.
 ///
 /// This is equivalent of Node's `new https.Agent([options])`.
-HttpAgent createHttpsAgent([HttpAgentOptions options]) {
+HttpsAgent createHttpsAgent([HttpsAgentOptions options]) {
   var args = (options == null) ? [] : [options];
   return callConstructor(https.Agent, args);
 }
@@ -81,4 +81,62 @@ abstract class HttpsServer implements TLSServer, HttpServer {
   external num get timeout;
   @override
   external num get keepAliveTimeout;
+}
+
+@JS()
+@anonymous
+abstract class HttpsAgentOptions {
+  external bool get keepAlive;
+  external num get keepAliveMsecs;
+  external num get maxSockets;
+  external num get maxFreeSockets;
+
+  /// Optionally override the trusted CA certificates.
+  ///
+  /// Default is to trust the well-known CAs curated by Mozilla.
+  external dynamic get ca;
+
+  /// Cert chains in PEM format.
+  external dynamic get cert;
+
+  /// Cipher suite specification, replacing the default.
+  external String get ciphers;
+
+  /// Name of an OpenSSL engine which can provide the client certificate.
+  external String get clientCertEngine;
+
+  /// PEM formatted CRLs (Certificate Revocation Lists).
+  external dynamic get crl;
+
+  /// Private keys in PEM format.
+  external dynamic get key;
+
+  /// Shared passphrase used for a single private key and/or a PFX.
+  external String get passphrase;
+
+  /// PFX or PKCS12 encoded private key and certificate chain.
+  ///
+  /// An alternative to providing key and cert individually.
+  external dynamic get pfx;
+
+  /// SSL method to use.
+  ///
+  /// For example, 'TLSv1_2_method' to force TLS version 1.2. Default: 'TLS_method'.
+  /// Possible values listed here: https://www.openssl.org/docs/man1.1.0/ssl/ssl.html#Dealing-with-Protocol-Methods
+  external String get secureProtocol;
+  external factory HttpsAgentOptions({
+    bool keepAlive,
+    num keepAliveMsecs,
+    num maxSockets,
+    num maxFreeSockets,
+    dynamic ca,
+    dynamic cert,
+    String ciphers,
+    String clientCertEngine,
+    dynamic crl,
+    dynamic key,
+    String passphrase,
+    dynamic pfx,
+    String secureProtocol,
+  });
 }

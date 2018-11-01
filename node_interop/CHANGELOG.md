@@ -1,3 +1,8 @@
+## 1.0.0-dev.13.0
+
+- Added `HttpsAgentOptions` with basic TLS/SSL parameters.
+- Breaking: createHttpsAgent() now expects instance of `HttpsAgentOptions` instead of `HttpAgentOptions`.
+
 ## 1.0.0-dev.12.0
 
 - Fixed Console method bindings to not force `String` arguments and allow any type.
