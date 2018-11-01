@@ -109,8 +109,7 @@ class _RequestHandler {
 
     var usedAgent =
         (url.scheme == 'http') ? client.httpAgent : client.httpsAgent;
-    var sendRequest =
-        (url.scheme == 'http') ? http.request : https.request;
+    var sendRequest = (url.scheme == 'http') ? http.request : https.request;
 
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
