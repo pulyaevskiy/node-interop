@@ -1,3 +1,7 @@
+## 1.0.0-dev.10.0
+
+- Fixed `NodeHttpResponse.redirect` failing to convert `Uri` to string.
+
 ## 1.0.0-dev.9.0
 
 - Upgraded to latest build_node_compilers (0.2.0)

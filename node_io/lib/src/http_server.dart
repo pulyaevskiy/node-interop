@@ -356,7 +356,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   @override
   Future redirect(Uri location, {int status: io.HttpStatus.movedTemporarily}) {
     statusCode = status;
-    headers.set("location", location);
+    headers.set("location", "$location");
     return close();
   }
 }
