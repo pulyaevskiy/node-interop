@@ -7,6 +7,8 @@ Write applications in Dart, run in NodeJS.
 * [Structure](#structure)
 * [Status](#status)
 
+**Looking for latest updates? Make sure to check the most recent `1.0.0-dev.*` release!**
+
 ## What is this?
 
 This library provides JavaScript bindings and some utilities to work with 
@@ -131,7 +133,8 @@ Writable createWritable(WritableOptions options) {
 
 ## Status
 
-While 1.0.0 is still in `dev` mode breaking changes are likely to occur.
+Version 1.0.0 is considered stable though not feature complete. It is recommended to check
+`1.0.0-dev.*` versions for latest updates and bug fixes.
 
 Make sure to checkout [CHANGELOG.md][changelog] after every release, all 
 notable changes and upgrade instructions will be described there.

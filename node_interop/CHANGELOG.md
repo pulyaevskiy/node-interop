@@ -1,3 +1,13 @@
+## 1.0.0
+
+No functional changes in this version, it is published to replace obsolete `0.0.7` version on the
+Pub's package homepage to improve discoverability.
+
+Ongoing work will continue in `1.0.0-dev.*` branch until it's considered stable and feature complete.
+Make sure to checkout recent dev version for latest updates.
+
+Non-breaking changes may be published to the stable track periodically.
+
 ## 1.0.0-dev.13.0
 
 - Added `HttpsAgentOptions` with basic TLS/SSL parameters.

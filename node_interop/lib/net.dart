@@ -78,7 +78,7 @@ abstract class NetServer implements EventEmitter {
   external NetServer close([void callback()]);
   external void getConnections([void callback(error, int count)]);
 
-  /// See oficial documentation on possible signatures:
+  /// See official documentation on possible signatures:
   /// - https://nodejs.org/api/net.html#net_server_listen
   external void listen([arg1, arg2, arg3, arg4]);
   external bool get listening;
