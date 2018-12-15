@@ -1,3 +1,8 @@
+# 0.2.1
+
+- Added dart_source_cleanup option (#51)
+- Upgraded dependencies
+
 # 0.2.0
 
 - Breaking changes: upgraded to build_runner 1.0.0, build_modules 0.4.0
