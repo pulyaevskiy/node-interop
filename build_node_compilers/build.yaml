@@ -41,3 +41,10 @@ builders:
       generate_for:
         include: ["node/**", "lib/**", "example/**", "test/**.node_test.dart"]
         exclude: ["test/**.vm_test.dart"]
+post_process_builders:
+  dart_source_cleanup:
+    import: "package:build_node_compilers/builders.dart"
+    builder_factory: dartSourceCleanup
+    defaults:
+      release_options:
+        enabled: true
