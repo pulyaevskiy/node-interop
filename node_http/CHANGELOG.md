@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Upgraded dependency on `http` package to `^0.12.0`.
+
 ## 1.0.0-dev.10.0
 
 - Added `httpOptions` and `httpsOptions` arguments to NodeClient constructor to allow full
