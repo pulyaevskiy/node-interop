@@ -76,7 +76,7 @@ abstract class FS {
   external void readlink(path,
       [optionsOrCallback, callback(error, linkString)]);
   external dynamic readlinkSync(path, [options]);
-  external void readSync(int fd, buffer, int offset, int length, int position);
+  external int readSync(int fd, buffer, int offset, int length, int position);
   external void realpath(path,
       [optionsOrCallback, void callback(error, resolvedPath)]);
   // TODO: realpath.native(path[, options], callback)

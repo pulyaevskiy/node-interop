@@ -50,12 +50,40 @@ void main() {
       return contains;
     }
 
+    test('systemTemp', () {
+      expect(Directory.systemTemp.path, isNotEmpty);
+    });
+
     test('list', () async {
       var list = await Directory.current.list().toList();
       expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
 
       list = await dir('lib').list().toList();
       expect(_listContainsPath(list, "node_io.dart"), isTrue);
+    });
+
+    test('listSync', () async {
+      var list = Directory.current.listSync();
+      expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
+
+      list = dir('lib').listSync();
+      expect(_listContainsPath(list, "node_io.dart"), isTrue);
+    });
+
+    test('createTemp', () async {
+      final dir = Directory.systemTemp;
+      final tmp = await dir.createTemp('createTemp_');
+      expect(tmp.existsSync(), true);
+      expect(tmp.path, contains('createTemp_'));
+      await tmp.delete(); // just for cleanup
+    });
+
+    test('createTemp', ()  {
+      final dir = Directory.systemTemp;
+      final tmp = dir.createTempSync('createTempSync_');
+      expect(tmp.existsSync(), true);
+      expect(tmp.path, contains('createTempSync_'));
+      tmp.deleteSync(); // just for cleanup
     });
 
     test('create_delete', () async {

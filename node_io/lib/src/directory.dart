@@ -8,11 +8,13 @@ import 'dart:js' as js;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/os.dart';
 import 'package:path/path.dart';
 
 import 'file.dart';
 import 'file_system_entity.dart';
 import 'link.dart';
+import 'platform.dart';
 
 class Directory extends FileSystemEntity implements io.Directory {
   @override
@@ -26,6 +28,10 @@ class Directory extends FileSystemEntity implements io.Directory {
     path = (path is io.Directory) ? path.path : path;
     assert(path is String);
     process.chdir(path);
+  }
+
+  static io.Directory get systemTemp {
+    return new Directory(os.tmpdir());
   }
 
   @override
@@ -150,17 +156,68 @@ class Directory extends FileSystemEntity implements io.Directory {
 
   @override
   Future<io.Directory> createTemp([String prefix]) {
-    throw new UnimplementedError();
+    prefix ??= '';
+    if (path == '') {
+      throw new ArgumentError("Directory.createTemp called with an empty path. "
+          "To use the system temp directory, use Directory.systemTemp");
+    }
+    String fullPrefix;
+    if (path.endsWith('/') || (Platform.isWindows && path.endsWith('\\'))) {
+      fullPrefix = "$path$prefix";
+    } else {
+      fullPrefix = "$path${Platform.pathSeparator}$prefix";
+    }
+
+    final completer = new Completer<Directory>();
+    void callback(err, result) {
+      if (err == null) {
+        completer.complete(new Directory(result));
+      } else {
+        completer.completeError(err);
+      }
+    }
+
+    var jsCallback = js.allowInterop(callback);
+
+    fs.mkdtemp(fullPrefix, jsCallback);
+    return completer.future;
   }
 
   @override
   io.Directory createTempSync([String prefix]) {
-    throw new UnimplementedError();
+    prefix ??= '';
+    if (path == '') {
+      throw new ArgumentError("Directory.createTemp called with an empty path. "
+          "To use the system temp directory, use Directory.systemTemp");
+    }
+    String fullPrefix;
+    if (path.endsWith('/') || (Platform.isWindows && path.endsWith('\\'))) {
+      fullPrefix = "$path$prefix";
+    } else {
+      fullPrefix = "$path${Platform.pathSeparator}$prefix";
+    }
+    final resultPath = fs.mkdtempSync(fullPrefix);
+    return new Directory(resultPath);
   }
 
   @override
   List<io.FileSystemEntity> listSync(
       {bool recursive: false, bool followLinks: true}) {
-    throw new UnimplementedError();
+    if (recursive)
+      throw new UnsupportedError('Recursive list is not supported in Node.js.');
+
+    final files = fs.readdirSync(path);
+    return files.map((filePath) {
+      // Need to append the original path to build a proper path
+      filePath = join(path, filePath);
+      final stat = FileStat.statSync(filePath);
+      if (stat.type == io.FileSystemEntityType.file) {
+        return new File(filePath);
+      } else if (stat.type == io.FileSystemEntityType.directory) {
+        return new Directory(filePath);
+      } else {
+        return new Link(filePath);
+      }
+    }).toList();
   }
 }

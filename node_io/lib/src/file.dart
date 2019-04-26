@@ -6,8 +6,11 @@ import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:js' as js;
 
+import 'package:node_interop/buffer.dart';
 import 'package:node_interop/fs.dart';
+import 'package:node_interop/js.dart';
 import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/util.dart';
 
 import 'file_system_entity.dart';
 import 'streams.dart';
@@ -80,8 +83,8 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   void createSync({bool recursive: false}) {
-    // TODO: implement createSync
-    throw new UnimplementedError();
+    final fd = fs.openSync(_absolutePath, "w");
+    fs.closeSync(fd);
   }
 
   @override
@@ -106,8 +109,11 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   void deleteSync({bool recursive: false}) {
-    // TODO: implement deleteSync
-    throw new UnimplementedError();
+    if (recursive) {
+      throw new UnsupportedError(
+          'Recursive delete is not supported by Node API');
+    }
+    fs.unlinkSync(_absolutePath);
   }
 
   @override
@@ -176,20 +182,20 @@ class File extends FileSystemEntity implements io.File {
   @override
   List<int> readAsBytesSync() {
     final List<int> buffer = fs.readFileSync(path);
-
     return buffer;
   }
 
   @override
   Future<List<String>> readAsLines({Encoding encoding: utf8}) {
-    // TODO: implement readAsLines
-    throw new UnimplementedError();
+    return openRead()
+        .transform(encoding.decoder)
+        .transform(new LineSplitter())
+        .toList();
   }
 
   @override
   List<String> readAsLinesSync({Encoding encoding: utf8}) {
-    // TODO: implement readAsLinesSync
-    throw new UnimplementedError();
+    return utf8.decode(readAsBytesSync()).split('\n');
   }
 
   @override
@@ -226,27 +232,49 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future setLastAccessed(DateTime time) {
-    // TODO: implement setLastAccessed
-    throw new UnimplementedError();
+  Future<void> setLastAccessed(DateTime time) async {
+    return _utimes(atime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
   void setLastAccessedSync(DateTime time) {
-    // TODO: implement setLastAccessedSync
-    throw new UnimplementedError();
+    _utimesSync(atime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
-  Future setLastModified(DateTime time) {
-    // TODO: implement setLastModified
-    throw new UnimplementedError();
+  Future<void> setLastModified(DateTime time) async {
+    return _utimes(mtime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
   void setLastModifiedSync(DateTime time) {
-    // TODO: implement setLastModifiedSync
-    throw new UnimplementedError();
+    _utimesSync(mtime: new Date(time.millisecondsSinceEpoch));
+  }
+
+  Future<void> _utimes({Date atime, Date mtime}) async {
+    final currentStat = await stat();
+    atime ??= new Date(currentStat.accessed.millisecondsSinceEpoch);
+    mtime ??= new Date(currentStat.modified.millisecondsSinceEpoch);
+
+    final Completer<void> completer = new Completer();
+    void cb([err]) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete();
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.utimes(_absolutePath, atime, mtime, jsCallback);
+    return completer.future;
+  }
+
+  void _utimesSync({Date atime, Date mtime}) {
+    final currentStat = statSync();
+    atime ??= new Date(currentStat.accessed.millisecondsSinceEpoch);
+    mtime ??= new Date(currentStat.modified.millisecondsSinceEpoch);
+    fs.utimesSync(_absolutePath, atime, mtime);
   }
 
   @override
@@ -264,8 +292,9 @@ class File extends FileSystemEntity implements io.File {
   @override
   void writeAsBytesSync(List<int> bytes,
       {io.FileMode mode: io.FileMode.write, bool flush: false}) {
-    // TODO: implement writeAsBytesSync
-    throw new UnimplementedError();
+    var flag = _RandomAccessFile.fileModeToJsFlags(mode);
+    var options = jsify({"flag": flag});
+    fs.writeFileSync(_absolutePath, Buffer.from(bytes), options);
   }
 
   @override
@@ -297,6 +326,9 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   /// File path.
   final String path;
+
+  bool _asyncDispatched = false;
+  int _position = 0;
 
   _RandomAccessFile(this.fd, this.path);
 
@@ -339,87 +371,110 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> close() {
-    var completer = new Completer();
-    void callback(err) {
-      if (err == null) {
-        completer.complete(this);
-      } else {
-        completer.completeError(err);
+    return _dispatch(() {
+      var completer = new Completer<io.RandomAccessFile>();
+      void callback(err) {
+        if (err == null) {
+          completer.complete(this);
+        } else {
+          completer.completeError(err);
+        }
       }
-    }
 
-    var jsCallback = js.allowInterop(callback);
-    fs.close(fd, jsCallback);
-    return completer.future;
+      var jsCallback = js.allowInterop(callback);
+      fs.close(fd, jsCallback);
+
+      return completer.future;
+    });
   }
 
   @override
   void closeSync() {
+    _checkAvailable();
     fs.closeSync(fd);
   }
 
   @override
-  Future<io.RandomAccessFile> flush() => new Future.value(this);
+  Future<io.RandomAccessFile> flush() {
+    return _dispatch(() {
+      return new Future.value(this);
+    });
+  }
 
   @override
   void flushSync() {
+    _checkAvailable(); // Still check for async ops for consistency.
     // no-op
   }
 
   @override
   Future<int> length() {
-    // TODO: implement length
-    throw new UnimplementedError();
+    return _dispatch(() {
+      File file = new File(path);
+      return file.stat().then((stat) => stat.size);
+    });
   }
 
   @override
   int lengthSync() {
-    // TODO: implement lengthSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    File file = new File(path);
+    return file.statSync().size;
   }
 
   @override
   Future<io.RandomAccessFile> lock(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    // TODO: implement lock
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   void lockSync(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    // TODO: implement lockSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   Future<int> position() {
-    // TODO: implement position
-    throw new UnimplementedError();
+    return _dispatch(() => new Future<int>.value(_position));
   }
 
   @override
   int positionSync() {
-    // TODO: implement positionSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    return _position;
   }
 
   @override
   Future<List<int>> read(int bytes) {
-    // TODO: implement read
-    throw new UnimplementedError();
+    return _dispatch(() {
+      var buffer = Buffer.alloc(bytes);
+      final completer = new Completer<List<int>>();
+      void cb(err, bytesRead, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          assert(bytesRead == bytes);
+          _position += bytes;
+          completer.complete(new List<int>.from(buffer));
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.read(fd, buffer, 0, bytes, _position, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   Future<int> readByte() {
-    // TODO: implement readByte
-    throw new UnimplementedError();
+    return read(1).then((bytes) => bytes.single);
   }
 
   @override
   int readByteSync() {
-    // TODO: implement readByteSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    return readSync(1).single;
   }
 
   @override
@@ -430,26 +485,33 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   int readIntoSync(List<int> buffer, [int start = 0, int end]) {
-    // TODO: implement readIntoSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    end ??= buffer.length;
+    var bytes = end - start;
+    if (bytes == 0) return 0;
+    var readBytes = readSync(bytes);
+    buffer.setRange(start, end, readBytes);
+    return 0; // TODO: There is no documentation in Dart SDK about meaning of returned value.
   }
 
   @override
   List<int> readSync(int bytes) {
-    // TODO: implement readSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    Object buffer = Buffer.alloc(bytes);
+    fs.readSync(fd, buffer, 0, bytes, _position);
+    // TODO: assert(bytesRead == bytes);
+    _position += bytes;
+    return new List<int>.from(buffer);
   }
 
   @override
   Future<io.RandomAccessFile> setPosition(int position) {
-    // TODO: implement setPosition
-    throw new UnimplementedError();
+    throw new UnsupportedError("Setting position is not supported by Node.js");
   }
 
   @override
   void setPositionSync(int position) {
-    // TODO: implement setPositionSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("Setting position is not supported by Node.js");
   }
 
   @override
@@ -460,20 +522,19 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   void truncateSync(int length) {
+    _checkAvailable();
     // TODO: implement truncateSync
     throw new UnimplementedError();
   }
 
   @override
   Future<io.RandomAccessFile> unlock([int start = 0, int end = -1]) {
-    // TODO: implement unlock
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   void unlockSync([int start = 0, int end = -1]) {
-    // TODO: implement unlockSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
@@ -484,6 +545,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   int writeByteSync(int value) {
+    _checkAvailable();
     // TODO: implement writeByteSync
     throw new UnimplementedError();
   }
@@ -497,6 +559,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   void writeFromSync(List<int> buffer, [int start = 0, int end]) {
+    _checkAvailable();
     // TODO: implement writeFromSync
     throw new UnimplementedError();
   }
@@ -510,7 +573,44 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   void writeStringSync(String string, {Encoding encoding: utf8}) {
+    _checkAvailable();
     // TODO: implement writeStringSync
     throw new UnimplementedError();
+  }
+
+  bool _closed = false;
+
+  Future<T> _dispatch<T>(Future<T> request(), {bool markClosed: false}) {
+    if (_closed) {
+      return new Future.error(new io.FileSystemException("File closed", path));
+    }
+    if (_asyncDispatched) {
+      var msg = "An async operation is currently pending";
+      return new Future.error(new io.FileSystemException(msg, path));
+    }
+    if (markClosed) {
+      // Set closed to true to ensure that no more async requests can be issued
+      // for this file.
+      _closed = true;
+    }
+    _asyncDispatched = true;
+
+    return request().whenComplete(() {
+      _asyncDispatched = false;
+    });
+//    data[0] = _pointer();
+//    return _IOService._dispatch(request, data).whenComplete(() {
+//      _asyncDispatched = false;
+//    });
+  }
+
+  void _checkAvailable() {
+    if (_asyncDispatched) {
+      throw new io.FileSystemException(
+          "An async operation is currently pending", path);
+    }
+    if (_closed) {
+      throw new io.FileSystemException("File closed", path);
+    }
   }
 }
