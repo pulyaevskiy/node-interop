@@ -78,7 +78,7 @@ void main() {
       await tmp.delete(); // just for cleanup
     });
 
-    test('createTemp', ()  {
+    test('createTemp', () {
       final dir = Directory.systemTemp;
       final tmp = dir.createTempSync('createTempSync_');
       expect(tmp.existsSync(), true);
