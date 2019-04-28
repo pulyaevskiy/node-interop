@@ -5,7 +5,6 @@
 library file_test;
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:node_interop/fs.dart';
 import 'package:node_io/node_io.dart';
