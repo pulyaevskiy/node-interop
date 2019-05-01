@@ -479,8 +479,13 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<int> readInto(List<int> buffer, [int start = 0, int end]) {
-    // TODO: implement readInto
-    throw new UnimplementedError();
+    end ??= buffer.length;
+    var bytes = end - start;
+    if (bytes == 0) return new Future.value(0);
+    return read(bytes).then((readBytes) {
+      buffer.setRange(start, end, readBytes);
+      return readBytes.length;
+    });
   }
 
   @override
@@ -491,7 +496,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
     if (bytes == 0) return 0;
     var readBytes = readSync(bytes);
     buffer.setRange(start, end, readBytes);
-    return 0; // TODO: There is no documentation in Dart SDK about meaning of returned value.
+    return bytes;
   }
 
   @override
@@ -499,7 +504,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
     _checkAvailable();
     Object buffer = Buffer.alloc(bytes);
     fs.readSync(fd, buffer, 0, bytes, _position);
-    // TODO: assert(bytesRead == bytes);
+    // TODO: assert(bytesRead == bytes); when definition of fs.readSync is fixed to return int
     _position += bytes;
     return new List<int>.from(buffer);
   }
@@ -516,15 +521,26 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> truncate(int length) {
-    // TODO: implement truncate
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb([err]) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.ftruncate(fd, length, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   void truncateSync(int length) {
     _checkAvailable();
-    // TODO: implement truncateSync
-    throw new UnimplementedError();
+    fs.ftruncateSync(fd, length);
   }
 
   @override
@@ -539,43 +555,67 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> writeByte(int value) {
-    // TODO: implement writeByte
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb(err, bytesWritten, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.write(fd, Buffer.from([value]), jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   int writeByteSync(int value) {
     _checkAvailable();
-    // TODO: implement writeByteSync
-    throw new UnimplementedError();
+    return fs.writeSync(fd, Buffer.from([value]));
   }
 
   @override
   Future<io.RandomAccessFile> writeFrom(List<int> buffer,
       [int start = 0, int end]) {
-    // TODO: implement writeFrom
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb(err, bytesWritten, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      end ??= buffer.length;
+      final length = end - start;
+      fs.write(fd, Buffer.from(buffer), start, length, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   void writeFromSync(List<int> buffer, [int start = 0, int end]) {
     _checkAvailable();
-    // TODO: implement writeFromSync
-    throw new UnimplementedError();
+    end ??= buffer.length;
+    final length = end - start;
+    return fs.writeSync(fd, Buffer.from(buffer), start, length);
   }
 
   @override
   Future<io.RandomAccessFile> writeString(String string,
       {Encoding encoding: utf8}) {
-    // TODO: implement writeString
-    throw new UnimplementedError();
+    return writeFrom(encoding.encode(string));
   }
 
   @override
   void writeStringSync(String string, {Encoding encoding: utf8}) {
     _checkAvailable();
-    // TODO: implement writeStringSync
-    throw new UnimplementedError();
+    writeFromSync(encoding.encode(string));
   }
 
   bool _closed = false;
@@ -598,10 +638,6 @@ class _RandomAccessFile implements io.RandomAccessFile {
     return request().whenComplete(() {
       _asyncDispatched = false;
     });
-//    data[0] = _pointer();
-//    return _IOService._dispatch(request, data).whenComplete(() {
-//      _asyncDispatched = false;
-//    });
   }
 
   void _checkAvailable() {

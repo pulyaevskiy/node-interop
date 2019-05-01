@@ -117,7 +117,7 @@ abstract class FS {
 
   /// See official documentation on all possible argument combinations:
   /// - https://nodejs.org/api/fs.html#fs_fs_writesync_fd_buffer_offset_length_position
-  external void writeSync(int fd, data, [arg1, arg2, arg3]);
+  external int writeSync(int fd, data, [arg1, arg2, arg3]);
 }
 
 @JS()
