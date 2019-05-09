@@ -503,8 +503,8 @@ class _RandomAccessFile implements io.RandomAccessFile {
   List<int> readSync(int bytes) {
     _checkAvailable();
     Object buffer = Buffer.alloc(bytes);
-    fs.readSync(fd, buffer, 0, bytes, _position);
-    // TODO: assert(bytesRead == bytes); when definition of fs.readSync is fixed to return int
+    final bytesRead = fs.readSync(fd, buffer, 0, bytes, _position);
+    assert(bytesRead == bytes);
     _position += bytes;
     return new List<int>.from(buffer);
   }
@@ -603,7 +603,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
     _checkAvailable();
     end ??= buffer.length;
     final length = end - start;
-    return fs.writeSync(fd, Buffer.from(buffer), start, length);
+    fs.writeSync(fd, Buffer.from(buffer), start, length);
   }
 
   @override

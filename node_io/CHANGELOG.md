@@ -1,3 +1,8 @@
+## 1.0.0
+
+- Complete file system implementations for `Directory`, `File`, `RandomAccessFile`
+- Added `STATUS.md` which reflects coverage of already implemented `dart:io` APIs.
+
 ## 1.0.0-dev.10.0
 
 - Fixed `NodeHttpResponse.redirect` failing to convert `Uri` to string.

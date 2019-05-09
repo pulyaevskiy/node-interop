@@ -14,13 +14,16 @@ import 'streams.dart';
 
 export 'dart:io'
     show
+        HttpDate,
         HttpStatus,
         HttpHeaders,
+        HeaderValue,
         ContentType,
         Cookie,
         HttpException,
         HttpRequest,
-        HttpResponse;
+        HttpResponse,
+        HttpConnectionInfo;
 
 class _HttpConnectionInfo implements io.HttpConnectionInfo {
   @override

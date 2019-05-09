@@ -16,6 +16,7 @@ class Link extends FileSystemEntity implements io.Link {
   Link(this.path);
 
   factory Link.fromRawPath(Uint8List rawPath) {
+    // TODO: implement fromRawPath
     throw new UnimplementedError();
   }
 

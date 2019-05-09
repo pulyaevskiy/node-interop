@@ -7,54 +7,54 @@ This document shows which `dart:io` APIs have been implemented so far in `node_i
 -[ ] BytesBuilder
 -[ ] CompressionOptions
 -[ ] ConnectionTask
--[ ] ContentType
--[ ] Cookie
+-[x] ContentType
+-[x] Cookie
 -[ ] Datagram
 -[ ] DetachedSocket
 -[x] Directory
--[ ] File
+-[x] File
 -[ ] FileLock
--[ ] FileMode
--[ ] FileStat
+-[x] FileMode
+-[x] FileStat
 -[ ] FileSystemCreateEvent
 -[ ] FileSystemDeleteEvent
--[ ] FileSystemEntity
--[ ] FileSystemEntityType
+-[x] FileSystemEntity
+-[x] FileSystemEntityType
 -[ ] FileSystemEvent
 -[ ] FileSystemModifyEvent
 -[ ] FileSystemMoveEvent
 -[ ] GZipCodec
--[ ] HeaderValue
+-[x] HeaderValue
 -[ ] HttpClient
 -[ ] HttpClientBasicCredentials
 -[ ] HttpClientCredentials
 -[ ] HttpClientDigestCredentials
 -[ ] HttpClientRequest
 -[ ] HttpClientResponse
--[ ] HttpConnectionInfo
+-[x] HttpConnectionInfo
 -[ ] HttpConnectionsInfo
--[ ] HttpDate
--[ ] HttpHeaders
+-[x] HttpDate
+-[x] HttpHeaders
 -[ ] HttpOverrides
--[ ] HttpRequest
--[ ] HttpResponse
--[ ] HttpServer
+-[x] HttpRequest
+-[x] HttpResponse
+-[x] HttpServer
 -[ ] HttpSession
--[ ] HttpStatus
--[ ] InternetAddress
--[ ] InternetAddressType
+-[x] HttpStatus
+-[x] InternetAddress
+-[x] InternetAddressType
 -[ ] IOOverrides
--[ ] IOSink
--[ ] Link
+-[x] IOSink
+-[x] Link
 -[ ] NetworkInterface
 -[ ] OSError
--[ ] Platform
+-[x] Platform
 -[ ] Process
 -[ ] ProcessInfo
 -[ ] ProcessResult
 -[ ] ProcessSignal
 -[ ] ProcessStartMode
--[ ] RandomAccessFile
+-[x] RandomAccessFile
 -[ ] RawDatagramSocket
 -[ ] RawSecureServerSocket
 -[ ] RawSecureSocket
@@ -87,15 +87,15 @@ This document shows which `dart:io` APIs have been implemented so far in `node_i
 
 ### Properties
 
--[ ] exitCode
--[ ] pid
+-[x] exitCode
+-[x] pid
 -[ ] stderr
 -[ ] stdin
 -[ ] stdout
 
 ### Functions
 
--[ ] exit
+-[x] exit
 -[ ] sleep
 -[ ] stdioType
 
