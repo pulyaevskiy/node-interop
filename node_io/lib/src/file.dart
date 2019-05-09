@@ -25,6 +25,111 @@ class _WriteStream extends NodeIOSink {
       : super(nativeStream, encoding: encoding);
 }
 
+/// A reference to a file on the file system.
+///
+/// A File instance is an object that holds a [path] on which operations can
+/// be performed.
+/// You can get the parent directory of the file using the getter [parent],
+/// a property inherited from [FileSystemEntity].
+///
+/// Create a new File object with a pathname to access the specified file on the
+/// file system from your program.
+///
+///     var myFile = new File('file.txt');
+///
+/// The File class contains methods for manipulating files and their contents.
+/// Using methods in this class, you can open and close files, read to and write
+/// from them, create and delete them, and check for their existence.
+///
+/// When reading or writing a file, you can use streams (with [openRead]),
+/// random access operations (with [open]),
+/// or convenience methods such as [readAsString],
+///
+/// Most methods in this class occur in synchronous and asynchronous pairs,
+/// for example, [readAsString] and [readAsStringSync].
+/// Unless you have a specific reason for using the synchronous version
+/// of a method, prefer the asynchronous version to avoid blocking your program.
+///
+/// ## If path is a link
+///
+/// If [path] is a symbolic link, rather than a file,
+/// then the methods of File operate on the ultimate target of the
+/// link, except for [delete] and [deleteSync], which operate on
+/// the link.
+///
+/// ## Read from a file
+///
+/// The following code sample reads the entire contents from a file as a string
+/// using the asynchronous [readAsString] method:
+///
+///     import 'dart:async';
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       new File('file.txt').readAsString().then((String contents) {
+///         print(contents);
+///       });
+///     }
+///
+/// A more flexible and useful way to read a file is with a [Stream].
+/// Open the file with [openRead], which returns a stream that
+/// provides the data in the file as chunks of bytes.
+/// Listen to the stream for data and process as needed.
+/// You can use various transformers in succession to manipulate the
+/// data into the required format or to prepare it for output.
+///
+/// You might want to use a stream to read large files,
+/// to manipulate the data with transformers,
+/// or for compatibility with another API, such as [WebSocket]s.
+///
+///     import 'dart:convert';
+///     import 'dart:async';
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     main() {
+///       final file = new File('file.txt');
+///       Stream<List<int>> inputStream = file.openRead();
+///
+///       inputStream
+///         .transform(utf8.decoder)       // Decode bytes to UTF-8.
+///         .transform(new LineSplitter()) // Convert stream to individual lines.
+///         .listen((String line) {        // Process results.
+///             print('$line: ${line.length} bytes');
+///           },
+///           onDone: () { print('File is now closed.'); },
+///           onError: (e) { print(e.toString()); });
+///     }
+///
+/// ## Write to a file
+///
+/// To write a string to a file, use the [writeAsString] method:
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       final filename = 'file.txt';
+///       new File(filename).writeAsString('some content')
+///         .then((File file) {
+///           // Do something with the file.
+///         });
+///     }
+///
+/// You can also write to a file using a [Stream]. Open the file with
+/// [openWrite], which returns an [IOSink] to which you can write data.
+/// Be sure to close the sink with the [IOSink.close] method.
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       var file = new File('file.txt');
+///       var sink = file.openWrite();
+///       sink.write('FILE ACCESSED ${new DateTime.now()}\n');
+///
+///       // Close the IOSink to free system resources.
+///       sink.close();
+///     }
 class File extends FileSystemEntity implements io.File {
   @override
   final String path;

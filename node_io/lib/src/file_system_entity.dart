@@ -89,6 +89,9 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
   }
 }
 
+/// A FileStat object represents the result of calling the POSIX stat() function
+/// on a file system object.  It is an immutable object, representing the
+/// snapshotted values returned by the stat() call.
 class FileStat implements io.FileStat {
   @override
   final DateTime changed;
@@ -138,6 +141,12 @@ class FileStat implements io.FileStat {
     );
   }
 
+  /// Asynchronously calls the operating system's stat() function on [path].
+  ///
+  /// Returns a Future which completes with a [FileStat] object containing
+  /// the data returned by stat(). If the call fails, completes the future with a
+  /// [FileStat] object with `.type` set to FileSystemEntityType.notFound and
+  /// the other fields invalid.
   static Future<FileStat> stat(String path) {
     var completer = new Completer<FileStat>();
 
@@ -155,6 +164,11 @@ class FileStat implements io.FileStat {
     return completer.future;
   }
 
+  /// Calls the operating system's stat() function on [path].
+  ///
+  /// Returns a [FileStat] object containing the data returned by stat().
+  /// If the call fails, returns a [FileStat] object with .type set to
+  /// FileSystemEntityType.notFound and the other fields invalid.
   static FileStat statSync(String path) {
     try {
       return new FileStat._fromNodeStats(fs.statSync(path));

@@ -38,7 +38,76 @@ class _HttpConnectionInfo implements io.HttpConnectionInfo {
   _HttpConnectionInfo(this.localPort, this.remoteAddress, this.remotePort);
 }
 
+/// A server that delivers content, such as web pages, using the HTTP protocol.
+///
+/// The HttpServer is a [Stream] that provides [io.HttpRequest] objects. Each
+/// HttpRequest has an associated [io.HttpResponse] object.
+/// The server responds to a request by writing to that HttpResponse object.
+/// The following example shows how to bind an HttpServer to an IPv6
+/// [InternetAddress] on port 80 (the standard port for HTTP servers)
+/// and how to listen for requests.
+/// Port 80 is the default HTTP port. However, on most systems accessing
+/// this requires super-user privileges. For local testing consider
+/// using a non-reserved port (1024 and above).
+///
+///     import 'dart:io';
+///
+///     main() {
+///       HttpServer
+///           .bind(InternetAddress.anyIPv6, 80)
+///           .then((server) {
+///             server.listen((HttpRequest request) {
+///               request.response.write('Hello, world!');
+///               request.response.close();
+///             });
+///           });
+///     }
+///
+/// Incomplete requests, in which all or part of the header is missing, are
+/// ignored, and no exceptions or HttpRequest objects are generated for them.
+/// Likewise, when writing to an HttpResponse, any [Socket] exceptions are
+/// ignored and any future writes are ignored.
+///
+/// The HttpRequest exposes the request headers and provides the request body,
+/// if it exists, as a Stream of data. If the body is unread, it is drained
+/// when the server writes to the HttpResponse or closes it.
 abstract class HttpServer implements io.HttpServer {
+  /// Starts listening for HTTP requests on the specified [address] and
+  /// [port].
+  ///
+  /// The [address] can either be a [String] or an
+  /// [InternetAddress]. If [address] is a [String], [bind] will
+  /// perform a [InternetAddress.lookup] and use the first value in the
+  /// list. To listen on the loopback adapter, which will allow only
+  /// incoming connections from the local host, use the value
+  /// [InternetAddress.loopbackIPv4] or
+  /// [InternetAddress.loopbackIPv6]. To allow for incoming
+  /// connection from the network use either one of the values
+  /// [InternetAddress.anyIPv4] or [InternetAddress.anyIPv6] to
+  /// bind to all interfaces or the IP address of a specific interface.
+  ///
+  /// If an IP version 6 (IPv6) address is used, both IP version 6
+  /// (IPv6) and version 4 (IPv4) connections will be accepted. To
+  /// restrict this to version 6 (IPv6) only, use [v6Only] to set
+  /// version 6 only. However, if the address is
+  /// [InternetAddress.loopbackIPv6], only IP version 6 (IPv6) connections
+  /// will be accepted.
+  ///
+  /// If [port] has the value [:0:] an ephemeral port will be chosen by
+  /// the system. The actual port used can be retrieved using the
+  /// [port] getter.
+  ///
+  /// The optional argument [backlog] can be used to specify the listen
+  /// backlog for the underlying OS listen setup. If [backlog] has the
+  /// value of [:0:] (the default) a reasonable value will be chosen by
+  /// the system.
+  ///
+  /// The optional argument [shared] specifies whether additional HttpServer
+  /// objects can bind to the same combination of `address`, `port` and `v6Only`.
+  /// If `shared` is `true` and more `HttpServer`s from this isolate or other
+  /// isolates are bound to the port, then the incoming connections will be
+  /// distributed among all the bound `HttpServer`s. Connections can be
+  /// distributed over multiple isolates this way.
   static Future<io.HttpServer> bind(address, int port,
           {int backlog: 0, bool v6Only: false, bool shared: false}) =>
       _HttpServer.bind(address, port,
