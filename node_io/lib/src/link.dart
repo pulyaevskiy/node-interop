@@ -3,12 +3,16 @@
 
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:js' as js;
 import 'dart:typed_data';
 
+import 'package:node_interop/fs.dart';
 import 'package:node_interop/path.dart' as nodePath;
 
+import 'directory.dart';
 import 'file_system_entity.dart';
 
+/// Link objects are references to filesystem links.
 class Link extends FileSystemEntity implements io.Link {
   @override
   final String path;
@@ -48,14 +52,30 @@ class Link extends FileSystemEntity implements io.Link {
 
   @override
   Future<Link> create(String target, {bool recursive: false}) {
-    // TODO: implement create
-    throw new UnimplementedError();
+    if (recursive) {
+      throw new UnsupportedError("Recursive flag not supported by Node.js");
+    }
+
+    final completer = new Completer<Link>();
+    void cb([err]) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(this);
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.link(target, path, jsCallback);
+    return completer.future;
   }
 
   @override
   void createSync(String target, {bool recursive: false}) {
-    // TODO: implement createSync
-    throw new UnimplementedError();
+    if (recursive) {
+      throw new UnsupportedError("Recursive flag not supported by Node.js");
+    }
+    fs.linkSync(target, path);
   }
 
   @override

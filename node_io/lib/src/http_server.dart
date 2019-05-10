@@ -65,7 +65,7 @@ class _HttpConnectionInfo implements io.HttpConnectionInfo {
 ///
 /// Incomplete requests, in which all or part of the header is missing, are
 /// ignored, and no exceptions or HttpRequest objects are generated for them.
-/// Likewise, when writing to an HttpResponse, any [Socket] exceptions are
+/// Likewise, when writing to an HttpResponse, any [io.Socket] exceptions are
 /// ignored and any future writes are ignored.
 ///
 /// The HttpRequest exposes the request headers and provides the request body,
@@ -159,7 +159,7 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
       response.end();
       return;
     }
-    _controller.add(new NodeHttpRequest(request, response));
+    _controller.add(new _NodeHttpRequest(request, response));
   }
 
   Future<io.HttpServer> _bind() {
@@ -233,11 +233,11 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
 
 /// Server side HTTP request object which delegates IO operations to
 /// Node's native representations.
-class NodeHttpRequest extends ReadableStream<List<int>>
+class _NodeHttpRequest extends ReadableStream<List<int>>
     implements io.HttpRequest {
   final _http.ServerResponse _nativeResponse;
 
-  NodeHttpRequest(_http.IncomingMessage nativeRequest, this._nativeResponse)
+  _NodeHttpRequest(_http.IncomingMessage nativeRequest, this._nativeResponse)
       : super(nativeRequest, convert: (chunk) => new List.unmodifiable(chunk));
 
   _http.IncomingMessage get nativeInstance => super.nativeInstance;
@@ -319,7 +319,7 @@ class NodeHttpRequest extends ReadableStream<List<int>>
 
   @override
   io.HttpResponse get response =>
-      _response ??= new NodeHttpResponse(_nativeResponse);
+      _response ??= new _NodeHttpResponse(_nativeResponse);
   io.HttpResponse _response; // ignore: close_sinks
 
   @override
@@ -330,8 +330,8 @@ class NodeHttpRequest extends ReadableStream<List<int>>
   Uri get uri => Uri.parse(nativeInstance.url);
 }
 
-class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
-  NodeHttpResponse(_http.ServerResponse nativeResponse) : super(nativeResponse);
+class _NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
+  _NodeHttpResponse(_http.ServerResponse nativeResponse) : super(nativeResponse);
 
   _http.ServerResponse get nativeInstance => super.nativeInstance;
 

@@ -81,7 +81,7 @@ class _WriteStream extends NodeIOSink {
 ///
 /// You might want to use a stream to read large files,
 /// to manipulate the data with transformers,
-/// or for compatibility with another API, such as [WebSocket]s.
+/// or for compatibility with another API.
 ///
 ///     import 'dart:convert';
 ///     import 'dart:async';
@@ -117,8 +117,8 @@ class _WriteStream extends NodeIOSink {
 ///     }
 ///
 /// You can also write to a file using a [Stream]. Open the file with
-/// [openWrite], which returns an [IOSink] to which you can write data.
-/// Be sure to close the sink with the [IOSink.close] method.
+/// [openWrite], which returns an [io.IOSink] to which you can write data.
+/// Be sure to close the sink with the [io.IOSink.close] method.
 ///
 ///     import 'package:node_io/node_io.dart';
 ///
