@@ -6,24 +6,11 @@ library file_test;
 
 import 'dart:async';
 
-import 'package:node_interop/fs.dart';
 import 'package:node_io/node_io.dart';
 import 'package:path/path.dart';
 import 'package:test/test.dart';
 
-String createPath(String name) {
-  var segments = Platform.script.pathSegments.toList();
-  segments
-    ..removeLast()
-    ..add(name);
-  return Platform.pathSeparator + segments.join(Platform.pathSeparator);
-}
-
-String createFile(String name, String contents) {
-  var jsFilepath = createPath(name);
-  fs.writeFileSync(jsFilepath, contents);
-  return jsFilepath;
-}
+import 'fs_utils.dart';
 
 void main() {
   group('File', () {

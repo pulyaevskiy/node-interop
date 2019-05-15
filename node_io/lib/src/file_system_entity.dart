@@ -161,7 +161,7 @@ class FileStat implements io.FileStat {
     }
 
     var jsCallback = js.allowInterop(callback);
-    fs.stat(path, jsCallback);
+    fs.lstat(path, jsCallback);
     return completer.future;
   }
 
@@ -172,7 +172,7 @@ class FileStat implements io.FileStat {
   /// FileSystemEntityType.notFound and the other fields invalid.
   static FileStat statSync(String path) {
     try {
-      return new FileStat._fromNodeStats(fs.statSync(path));
+      return new FileStat._fromNodeStats(fs.lstatSync(path));
     } catch (_) {
       return new FileStat._internalNotFound();
     }

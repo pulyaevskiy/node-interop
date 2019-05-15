@@ -66,7 +66,7 @@ class Link extends FileSystemEntity implements io.Link {
     }
 
     final jsCallback = js.allowInterop(cb);
-    fs.link(target, path, jsCallback);
+    fs.symlink(target, path, jsCallback);
     return completer.future;
   }
 
@@ -75,7 +75,7 @@ class Link extends FileSystemEntity implements io.Link {
     if (recursive) {
       throw new UnsupportedError("Recursive flag not supported by Node.js");
     }
-    fs.linkSync(target, path);
+    fs.symlinkSync(target, path);
   }
 
   @override
