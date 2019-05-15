@@ -26,5 +26,43 @@ void main() {
       link.createSync(filepath);
       expect(link.existsSync(), isTrue);
     });
+
+    test('delete', () async {
+      var filepath = createFile("link_delete_test.txt", 'data');
+      var linkpath = createPath("link_delete.txt");
+      var link = new Link(linkpath);
+      var created = await link.create(filepath);
+      await created.delete();
+      expect(created.exists(), completion(isFalse));
+    });
+
+    test('deleteSync', () {
+      var filepath = createFile("link_delete_sync_test.txt", 'data');
+      var linkpath = createPath("link_delete_sync.txt");
+      var link = new Link(linkpath);
+      link.createSync(filepath);
+      link.deleteSync();
+      expect(link.existsSync(), isFalse);
+    });
+
+    test('rename', () async {
+      var filepath = createFile("link_rename_test.txt", 'data');
+      var linkpath = createPath("link_rename.txt");
+      var link = new Link(linkpath);
+      var created = await link.create(filepath);
+      var renamed = await created.rename(createPath("link_new_name.txt"));
+      expect(renamed.exists(), completion(isTrue));
+      expect(renamed.path, createPath("link_new_name.txt"));
+    });
+
+    test('renameSync', () {
+      var filepath = createFile("link_rename_sync_test.txt", 'data');
+      var linkpath = createPath("link_rename_sync.txt");
+      var link = new Link(linkpath);
+      link.createSync(filepath);
+      var renamed = link.renameSync(createPath("link_rename_sync_new.txt"));
+      expect(renamed.existsSync(), isTrue);
+      expect(renamed.path, createPath("link_rename_sync_new.txt"));
+    });
   });
 }

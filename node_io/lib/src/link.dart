@@ -79,39 +79,74 @@ class Link extends FileSystemEntity implements io.Link {
   }
 
   @override
-  Future<FileSystemEntity> delete({bool recursive: false}) {
-    // TODO: implement delete
-    throw new UnimplementedError();
+  Future<Link> delete({bool recursive: false}) {
+    if (recursive) {
+      return Future.error(
+          UnsupportedError('Recursive flag is not supported by Node.js'));
+    }
+    final Completer<Link> completer = new Completer<Link>();
+    void callback(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(this);
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    fs.unlink(_absolutePath, jsCallback);
+    return completer.future;
   }
 
   @override
   void deleteSync({bool recursive: false}) {
-    // TODO: implement deleteSync
-    throw new UnimplementedError();
+    if (recursive) {
+      throw UnsupportedError('Recursive flag is not supported by Node.js');
+    }
+    fs.unlinkSync(_absolutePath);
   }
 
   @override
   Future<Link> rename(String newPath) {
-    // TODO: implement rename
-    throw new UnimplementedError();
+    final completer = new Completer<Link>();
+    void cb(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(new Link(newPath));
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.rename(path, newPath, jsCallback);
+    return completer.future;
   }
 
   @override
   Link renameSync(String newPath) {
-    // TODO: implement renameSync
-    throw new UnimplementedError();
+    fs.renameSync(path, newPath);
+    return new Link(newPath);
   }
 
   @override
   Future<String> target() {
-    // TODO: implement target
-    throw new UnimplementedError();
+    final completer = new Completer<String>();
+    void cb(err, String target) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(target);
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.readlink(path, jsCallback);
+    return completer.future;
   }
 
   @override
   String targetSync() {
-    // TODO: implement targetSync
-    throw new UnimplementedError();
+    return fs.readlinkSync(path);
   }
 
   @override
