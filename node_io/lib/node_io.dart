@@ -1,33 +1,72 @@
-/// Node I/O system for Dart.
+// Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
+// is governed by a BSD-style license that can be found in the LICENSE file.
+
+/// Node.js I/O system for Dart.
 ///
 /// This library is designed so that you should be able to replace imports of
 /// `dart:io` with `package:node_io/node_io.dart` and get the same functionality
-/// working.
+/// working without any additional modifications.
 library node_io;
 
-import 'dart:async';
-
 import 'package:node_interop/node.dart';
-import 'package:node_interop/stream.dart';
 
-import 'src/streams.dart';
-
-export 'dart:io' show FileSystemEntityType, FileMode;
+export 'dart:io'
+    show
+        BytesBuilder,
+        Datagram,
+        FileSystemEntity,
+        FileSystemEntityType,
+        FileMode,
+        IOSink,
+        RandomAccessFile,
+        FileSystemException,
+        HttpHeaders,
+        OSError;
 
 export 'src/directory.dart';
 export 'src/file.dart';
-export 'src/file_system_entity.dart';
+export 'src/file_system_entity.dart' show FileStat;
 export 'src/http_server.dart';
-export 'src/platform.dart';
 export 'src/internet_address.dart';
-export 'src/http_headers.dart' hide HttpHeaders;
+export 'src/link.dart';
+export 'src/network_interface.dart';
+export 'src/platform.dart';
 
+/// Get the global exit code for the current process.
+///
+/// The exit code is global and the last assignment to exitCode
+/// determines the exit code of the process on normal termination.
+///
+/// See [exit] for more information on how to chose a value for the exit code.
 int get exitCode => process.exitCode;
 
+/// Set the global exit code for the current process.
+///
+/// The exit code is global and the last assignment to exitCode
+/// determines the exit code of the process on normal termination.
+///
+/// Default value is 0.
+///
+/// See [exit] for more information on how to chose a value for the exit code.
 set exitCode(int value) {
   process.exitCode = value;
 }
 
+/// Exit the process immediately with the given exit code.
+///
+/// This does not wait for any asynchronous operations to terminate. Using
+/// exit is therefore very likely to lose data.
+///
+/// The handling of exit codes is platform specific.
+///
+/// On Linux and OS X an exit code for normal termination will always be in
+/// the range 0..255. If an exit code outside this range is set the actual
+/// exit code will be the lower 8 bits masked off and treated as an unsigned
+/// value. E.g. using an exit code of -1 will result in an actual exit code of
+/// 255 being reported.
+///
+/// On Windows the exit code can be set to any 32-bit value. However some of
+/// these values are reserved for reporting system errors like crashes.
 void exit([int code]) {
   if (code is! int) {
     throw new ArgumentError("Integer value for exit code expected");
@@ -35,43 +74,5 @@ void exit([int code]) {
   process.exit(code);
 }
 
+/// Returns the PID of the current process.
 int get pid => process.pid;
-
-class Stdin extends ReadableStream<List<int>> implements Stream<List<int>> {
-  Stdin(Readable nativeInstance) : super(nativeInstance);
-}
-
-// TODO: below:
-// part 'bytes_builder.dart';
-// part 'common.dart';
-// part 'crypto.dart';
-// part 'data_transformer.dart';
-// part 'directory.dart';
-// part 'directory_impl.dart';
-// part 'eventhandler.dart';
-// part 'file.dart';
-// part 'file_impl.dart';
-// part 'file_system_entity.dart';
-// part 'http.dart';
-// part 'http_date.dart';
-// part 'http_headers.dart';
-// part 'http_impl.dart';
-// part 'http_parser.dart';
-// part 'http_session.dart';
-// part 'io_resource_info.dart';
-// part 'io_sink.dart';
-// part 'io_service.dart';
-// part 'link.dart';
-// part 'platform.dart';
-// part 'platform_impl.dart';
-// part 'process.dart';
-// part 'secure_server_socket.dart';
-// part 'secure_socket.dart';
-// part 'security_context.dart';
-// part 'service_object.dart';
-// part 'socket.dart';
-// part 'stdio.dart';
-// part 'string_transformer.dart';
-// part 'sync_socket.dart';
-// part 'websocket.dart';
-// part 'websocket_impl.dart';

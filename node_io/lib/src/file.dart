@@ -6,8 +6,11 @@ import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:js' as js;
 
+import 'package:node_interop/buffer.dart';
 import 'package:node_interop/fs.dart';
+import 'package:node_interop/js.dart';
 import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/util.dart';
 
 import 'file_system_entity.dart';
 import 'streams.dart';
@@ -22,6 +25,111 @@ class _WriteStream extends NodeIOSink {
       : super(nativeStream, encoding: encoding);
 }
 
+/// A reference to a file on the file system.
+///
+/// A File instance is an object that holds a [path] on which operations can
+/// be performed.
+/// You can get the parent directory of the file using the getter [parent],
+/// a property inherited from [FileSystemEntity].
+///
+/// Create a new File object with a pathname to access the specified file on the
+/// file system from your program.
+///
+///     var myFile = new File('file.txt');
+///
+/// The File class contains methods for manipulating files and their contents.
+/// Using methods in this class, you can open and close files, read to and write
+/// from them, create and delete them, and check for their existence.
+///
+/// When reading or writing a file, you can use streams (with [openRead]),
+/// random access operations (with [open]),
+/// or convenience methods such as [readAsString],
+///
+/// Most methods in this class occur in synchronous and asynchronous pairs,
+/// for example, [readAsString] and [readAsStringSync].
+/// Unless you have a specific reason for using the synchronous version
+/// of a method, prefer the asynchronous version to avoid blocking your program.
+///
+/// ## If path is a link
+///
+/// If [path] is a symbolic link, rather than a file,
+/// then the methods of File operate on the ultimate target of the
+/// link, except for [delete] and [deleteSync], which operate on
+/// the link.
+///
+/// ## Read from a file
+///
+/// The following code sample reads the entire contents from a file as a string
+/// using the asynchronous [readAsString] method:
+///
+///     import 'dart:async';
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       new File('file.txt').readAsString().then((String contents) {
+///         print(contents);
+///       });
+///     }
+///
+/// A more flexible and useful way to read a file is with a [Stream].
+/// Open the file with [openRead], which returns a stream that
+/// provides the data in the file as chunks of bytes.
+/// Listen to the stream for data and process as needed.
+/// You can use various transformers in succession to manipulate the
+/// data into the required format or to prepare it for output.
+///
+/// You might want to use a stream to read large files,
+/// to manipulate the data with transformers,
+/// or for compatibility with another API.
+///
+///     import 'dart:convert';
+///     import 'dart:async';
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     main() {
+///       final file = new File('file.txt');
+///       Stream<List<int>> inputStream = file.openRead();
+///
+///       inputStream
+///         .transform(utf8.decoder)       // Decode bytes to UTF-8.
+///         .transform(new LineSplitter()) // Convert stream to individual lines.
+///         .listen((String line) {        // Process results.
+///             print('$line: ${line.length} bytes');
+///           },
+///           onDone: () { print('File is now closed.'); },
+///           onError: (e) { print(e.toString()); });
+///     }
+///
+/// ## Write to a file
+///
+/// To write a string to a file, use the [writeAsString] method:
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       final filename = 'file.txt';
+///       new File(filename).writeAsString('some content')
+///         .then((File file) {
+///           // Do something with the file.
+///         });
+///     }
+///
+/// You can also write to a file using a [Stream]. Open the file with
+/// [openWrite], which returns an [io.IOSink] to which you can write data.
+/// Be sure to close the sink with the [io.IOSink.close] method.
+///
+///     import 'package:node_io/node_io.dart';
+///
+///     void main() {
+///       var file = new File('file.txt');
+///       var sink = file.openWrite();
+///       sink.write('FILE ACCESSED ${new DateTime.now()}\n');
+///
+///       // Close the IOSink to free system resources.
+///       sink.close();
+///     }
 class File extends FileSystemEntity implements io.File {
   @override
   final String path;
@@ -80,8 +188,8 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   void createSync({bool recursive: false}) {
-    // TODO: implement createSync
-    throw new UnimplementedError();
+    final fd = fs.openSync(_absolutePath, "w");
+    fs.closeSync(fd);
   }
 
   @override
@@ -106,8 +214,11 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   void deleteSync({bool recursive: false}) {
-    // TODO: implement deleteSync
-    throw new UnimplementedError();
+    if (recursive) {
+      throw new UnsupportedError(
+          'Recursive delete is not supported by Node API');
+    }
+    fs.unlinkSync(_absolutePath);
   }
 
   @override
@@ -176,20 +287,20 @@ class File extends FileSystemEntity implements io.File {
   @override
   List<int> readAsBytesSync() {
     final List<int> buffer = fs.readFileSync(path);
-
     return buffer;
   }
 
   @override
   Future<List<String>> readAsLines({Encoding encoding: utf8}) {
-    // TODO: implement readAsLines
-    throw new UnimplementedError();
+    return openRead()
+        .transform(encoding.decoder)
+        .transform(new LineSplitter())
+        .toList();
   }
 
   @override
   List<String> readAsLinesSync({Encoding encoding: utf8}) {
-    // TODO: implement readAsLinesSync
-    throw new UnimplementedError();
+    return utf8.decode(readAsBytesSync()).split('\n');
   }
 
   @override
@@ -226,27 +337,49 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future setLastAccessed(DateTime time) {
-    // TODO: implement setLastAccessed
-    throw new UnimplementedError();
+  Future<void> setLastAccessed(DateTime time) async {
+    return _utimes(atime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
   void setLastAccessedSync(DateTime time) {
-    // TODO: implement setLastAccessedSync
-    throw new UnimplementedError();
+    _utimesSync(atime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
-  Future setLastModified(DateTime time) {
-    // TODO: implement setLastModified
-    throw new UnimplementedError();
+  Future<void> setLastModified(DateTime time) async {
+    return _utimes(mtime: new Date(time.millisecondsSinceEpoch));
   }
 
   @override
   void setLastModifiedSync(DateTime time) {
-    // TODO: implement setLastModifiedSync
-    throw new UnimplementedError();
+    _utimesSync(mtime: new Date(time.millisecondsSinceEpoch));
+  }
+
+  Future<void> _utimes({Date atime, Date mtime}) async {
+    final currentStat = await stat();
+    atime ??= new Date(currentStat.accessed.millisecondsSinceEpoch);
+    mtime ??= new Date(currentStat.modified.millisecondsSinceEpoch);
+
+    final Completer<void> completer = new Completer();
+    void cb([err]) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete();
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.utimes(_absolutePath, atime, mtime, jsCallback);
+    return completer.future;
+  }
+
+  void _utimesSync({Date atime, Date mtime}) {
+    final currentStat = statSync();
+    atime ??= new Date(currentStat.accessed.millisecondsSinceEpoch);
+    mtime ??= new Date(currentStat.modified.millisecondsSinceEpoch);
+    fs.utimesSync(_absolutePath, atime, mtime);
   }
 
   @override
@@ -264,8 +397,9 @@ class File extends FileSystemEntity implements io.File {
   @override
   void writeAsBytesSync(List<int> bytes,
       {io.FileMode mode: io.FileMode.write, bool flush: false}) {
-    // TODO: implement writeAsBytesSync
-    throw new UnimplementedError();
+    var flag = _RandomAccessFile.fileModeToJsFlags(mode);
+    var options = jsify({"flag": flag});
+    fs.writeFileSync(_absolutePath, Buffer.from(bytes), options);
   }
 
   @override
@@ -297,6 +431,9 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   /// File path.
   final String path;
+
+  bool _asyncDispatched = false;
+  int _position = 0;
 
   _RandomAccessFile(this.fd, this.path);
 
@@ -339,178 +476,282 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> close() {
-    var completer = new Completer();
-    void callback(err) {
-      if (err == null) {
-        completer.complete(this);
-      } else {
-        completer.completeError(err);
+    return _dispatch(() {
+      var completer = new Completer<io.RandomAccessFile>();
+      void callback(err) {
+        if (err == null) {
+          completer.complete(this);
+        } else {
+          completer.completeError(err);
+        }
       }
-    }
 
-    var jsCallback = js.allowInterop(callback);
-    fs.close(fd, jsCallback);
-    return completer.future;
+      var jsCallback = js.allowInterop(callback);
+      fs.close(fd, jsCallback);
+
+      return completer.future;
+    });
   }
 
   @override
   void closeSync() {
+    _checkAvailable();
     fs.closeSync(fd);
   }
 
   @override
-  Future<io.RandomAccessFile> flush() => new Future.value(this);
+  Future<io.RandomAccessFile> flush() {
+    return _dispatch(() {
+      return new Future.value(this);
+    });
+  }
 
   @override
   void flushSync() {
+    _checkAvailable(); // Still check for async ops for consistency.
     // no-op
   }
 
   @override
   Future<int> length() {
-    // TODO: implement length
-    throw new UnimplementedError();
+    return _dispatch(() {
+      File file = new File(path);
+      return file.stat().then((stat) => stat.size);
+    });
   }
 
   @override
   int lengthSync() {
-    // TODO: implement lengthSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    File file = new File(path);
+    return file.statSync().size;
   }
 
   @override
   Future<io.RandomAccessFile> lock(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    // TODO: implement lock
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   void lockSync(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    // TODO: implement lockSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   Future<int> position() {
-    // TODO: implement position
-    throw new UnimplementedError();
+    return _dispatch(() => new Future<int>.value(_position));
   }
 
   @override
   int positionSync() {
-    // TODO: implement positionSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    return _position;
   }
 
   @override
   Future<List<int>> read(int bytes) {
-    // TODO: implement read
-    throw new UnimplementedError();
+    return _dispatch(() {
+      var buffer = Buffer.alloc(bytes);
+      final completer = new Completer<List<int>>();
+      void cb(err, bytesRead, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          assert(bytesRead == bytes);
+          _position += bytes;
+          completer.complete(new List<int>.from(buffer));
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.read(fd, buffer, 0, bytes, _position, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   Future<int> readByte() {
-    // TODO: implement readByte
-    throw new UnimplementedError();
+    return read(1).then((bytes) => bytes.single);
   }
 
   @override
   int readByteSync() {
-    // TODO: implement readByteSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    return readSync(1).single;
   }
 
   @override
   Future<int> readInto(List<int> buffer, [int start = 0, int end]) {
-    // TODO: implement readInto
-    throw new UnimplementedError();
+    end ??= buffer.length;
+    var bytes = end - start;
+    if (bytes == 0) return new Future.value(0);
+    return read(bytes).then((readBytes) {
+      buffer.setRange(start, end, readBytes);
+      return readBytes.length;
+    });
   }
 
   @override
   int readIntoSync(List<int> buffer, [int start = 0, int end]) {
-    // TODO: implement readIntoSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    end ??= buffer.length;
+    var bytes = end - start;
+    if (bytes == 0) return 0;
+    var readBytes = readSync(bytes);
+    buffer.setRange(start, end, readBytes);
+    return bytes;
   }
 
   @override
   List<int> readSync(int bytes) {
-    // TODO: implement readSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    Object buffer = Buffer.alloc(bytes);
+    final bytesRead = fs.readSync(fd, buffer, 0, bytes, _position);
+    assert(bytesRead == bytes);
+    _position += bytes;
+    return new List<int>.from(buffer);
   }
 
   @override
   Future<io.RandomAccessFile> setPosition(int position) {
-    // TODO: implement setPosition
-    throw new UnimplementedError();
+    throw new UnsupportedError("Setting position is not supported by Node.js");
   }
 
   @override
   void setPositionSync(int position) {
-    // TODO: implement setPositionSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("Setting position is not supported by Node.js");
   }
 
   @override
   Future<io.RandomAccessFile> truncate(int length) {
-    // TODO: implement truncate
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb([err]) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.ftruncate(fd, length, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   void truncateSync(int length) {
-    // TODO: implement truncateSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    fs.ftruncateSync(fd, length);
   }
 
   @override
   Future<io.RandomAccessFile> unlock([int start = 0, int end = -1]) {
-    // TODO: implement unlock
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   void unlockSync([int start = 0, int end = -1]) {
-    // TODO: implement unlockSync
-    throw new UnimplementedError();
+    throw new UnsupportedError("File locks are not supported by Node.js");
   }
 
   @override
   Future<io.RandomAccessFile> writeByte(int value) {
-    // TODO: implement writeByte
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb(err, bytesWritten, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      fs.write(fd, Buffer.from([value]), jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   int writeByteSync(int value) {
-    // TODO: implement writeByteSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    return fs.writeSync(fd, Buffer.from([value]));
   }
 
   @override
   Future<io.RandomAccessFile> writeFrom(List<int> buffer,
       [int start = 0, int end]) {
-    // TODO: implement writeFrom
-    throw new UnimplementedError();
+    return _dispatch(() {
+      final completer = new Completer<io.RandomAccessFile>();
+      void cb(err, bytesWritten, buffer) {
+        if (err != null) {
+          completer.completeError(err);
+        } else {
+          completer.complete(this);
+        }
+      }
+
+      final jsCallback = js.allowInterop(cb);
+      end ??= buffer.length;
+      final length = end - start;
+      fs.write(fd, Buffer.from(buffer), start, length, jsCallback);
+      return completer.future;
+    });
   }
 
   @override
   void writeFromSync(List<int> buffer, [int start = 0, int end]) {
-    // TODO: implement writeFromSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    end ??= buffer.length;
+    final length = end - start;
+    fs.writeSync(fd, Buffer.from(buffer), start, length);
   }
 
   @override
   Future<io.RandomAccessFile> writeString(String string,
       {Encoding encoding: utf8}) {
-    // TODO: implement writeString
-    throw new UnimplementedError();
+    return writeFrom(encoding.encode(string));
   }
 
   @override
   void writeStringSync(String string, {Encoding encoding: utf8}) {
-    // TODO: implement writeStringSync
-    throw new UnimplementedError();
+    _checkAvailable();
+    writeFromSync(encoding.encode(string));
+  }
+
+  bool _closed = false;
+
+  Future<T> _dispatch<T>(Future<T> request(), {bool markClosed: false}) {
+    if (_closed) {
+      return new Future.error(new io.FileSystemException("File closed", path));
+    }
+    if (_asyncDispatched) {
+      var msg = "An async operation is currently pending";
+      return new Future.error(new io.FileSystemException(msg, path));
+    }
+    if (markClosed) {
+      // Set closed to true to ensure that no more async requests can be issued
+      // for this file.
+      _closed = true;
+    }
+    _asyncDispatched = true;
+
+    return request().whenComplete(() {
+      _asyncDispatched = false;
+    });
+  }
+
+  void _checkAvailable() {
+    if (_asyncDispatched) {
+      throw new io.FileSystemException(
+          "An async operation is currently pending", path);
+    }
+    if (_closed) {
+      throw new io.FileSystemException("File closed", path);
+    }
   }
 }

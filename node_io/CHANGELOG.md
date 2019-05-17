@@ -1,3 +1,14 @@
+## 1.0.0
+
+First stable release of this library which implements subset of `dart:io` interfaces,
+including File System objects, HttpServer, Platform and other common classes.
+
+Not all `dart:io` interfaces are covered yet. Feel free to file an issue on Github if you need
+a specific class implemented in node_io.
+
+- Complete file system implementations for `Directory`, `File`, `RandomAccessFile`, `Link`.
+- Added `STATUS.md` which reflects coverage of already implemented or exported `dart:io` APIs.
+
 ## 1.0.0-dev.10.0
 
 - Fixed `NodeHttpResponse.redirect` failing to convert `Uri` to string.

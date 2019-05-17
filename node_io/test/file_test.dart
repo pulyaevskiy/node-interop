@@ -4,21 +4,13 @@
 @TestOn('node')
 library file_test;
 
-import 'package:node_interop/fs.dart';
+import 'dart:async';
+
 import 'package:node_io/node_io.dart';
 import 'package:path/path.dart';
 import 'package:test/test.dart';
 
-String createFile(String name, String contents) {
-  var segments = Platform.script.pathSegments.toList();
-  segments
-    ..removeLast()
-    ..add(name);
-  var jsFilepath =
-      Platform.pathSeparator + segments.join(Platform.pathSeparator);
-  fs.writeFileSync(jsFilepath, contents);
-  return jsFilepath;
-}
+import 'fs_utils.dart';
 
 void main() {
   group('File', () {
@@ -56,6 +48,20 @@ void main() {
       expect(file.existsSync(), isTrue);
       var data = await file.readAsBytes();
       expect(data, [1, 2, 3, 4, 5]);
+    });
+
+    test('readAsLines', () async {
+      var path = createFile('readAsLines.txt', 'hello world\nsecond line');
+      var file = new File(path);
+      var lines = await file.readAsLines();
+      expect(lines, ['hello world', 'second line']);
+    });
+
+    test('readAsLinesSync', () {
+      var path = createFile('readAsLinesSync.txt', 'hello world\nsecond line');
+      var file = new File(path);
+      var lines = file.readAsLinesSync();
+      expect(lines, ['hello world', 'second line']);
     });
 
     test('readAsBytesSync', () async {
@@ -131,6 +137,19 @@ void main() {
       await file.delete();
     });
 
+    test('createSync', () {
+      final file = new File(join(Directory.systemTemp.path, 'create_sync.txt'));
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+      expect(file.existsSync(), isFalse);
+
+      file.createSync();
+      expect(file.existsSync(), isTrue);
+
+      file.deleteSync(); // cleanup
+    });
+
     test('read_write_bytes', () async {
       var file = new File('as_bytes.bin');
       List<int> bytes = [0, 1, 2, 3];
@@ -200,6 +219,50 @@ void main() {
       expect(await dst.exists(), isTrue);
 
       await dst.delete();
+    });
+
+    test('setLastAccessed', () async {
+      var path = createFile('setLastAccessed.txt', 'file');
+      var file = new File(path);
+      final atime = file.statSync().accessed;
+      await Future.delayed(Duration(seconds: 1));
+      final now = new DateTime.now();
+      await file.setLastAccessed(now);
+      expect(file.statSync().accessed.isAfter(atime), isTrue);
+    });
+
+    test('setLastAccessedSync', () async {
+      var path = createFile('setLastAccessed.txt', 'file');
+      var file = new File(path);
+      final atime = file.statSync().accessed;
+      await Future.delayed(Duration(seconds: 1));
+      final now = new DateTime.now();
+      file.setLastAccessedSync(now);
+      expect(file.statSync().accessed.isAfter(atime), isTrue);
+    });
+
+    test('writeAsBytesSync', () async {
+      var path = createPath('writeAsBytesSync.txt');
+      var file = new File(path);
+      if (file.existsSync()) file.deleteSync();
+
+      file.writeAsBytesSync([1, 2, 3, 4, 5]);
+      expect(file.existsSync(), isTrue);
+      var data = file.readAsBytesSync();
+      expect(data, [1, 2, 3, 4, 5]);
+    });
+  });
+
+  group('RandomAccessFile', () {
+    test('read', () async {
+      var path = createFile('setLastAccessed.txt', 'file');
+      var file = new File(path);
+      var fd = await file.open();
+      var result = await fd.read(4);
+      var content = new String.fromCharCodes(result);
+      expect(content, 'file');
+      expect(await fd.position(), 4);
+      await fd.close();
     });
   });
 }

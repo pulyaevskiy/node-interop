@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Fixed declaration of `fs.writeSync` and `fs.readSync` to return `int` instead of `void`.
+
 ## 1.0.0
 
 No functional changes in this version, it is published to replace obsolete `0.0.7` version on the

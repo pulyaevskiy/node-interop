@@ -11,7 +11,7 @@ import 'package:js/js.dart';
 import 'package:node_interop/http.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/test.dart';
-import 'package:node_io/node_io.dart';
+import 'package:node_io/src/http_headers.dart';
 import 'package:test/test.dart';
 
 const headersJS = '''

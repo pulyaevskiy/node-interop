@@ -9,6 +9,14 @@ import 'package:node_interop/net.dart';
 
 export 'dart:io' show InternetAddressType;
 
+/// An internet address.
+///
+/// This object holds an internet address. If this internet address
+/// is the result of a DNS lookup, the address also holds the hostname
+/// used to make the lookup.
+/// An Internet address combined with a port number represents an
+/// endpoint to which a socket can connect or a listening socket can
+/// bind.
 class InternetAddress implements io.InternetAddress {
   static const int _IPV6_ADDR_LENGTH = 16;
 
@@ -26,19 +34,26 @@ class InternetAddress implements io.InternetAddress {
       ? io.InternetAddressType.IPv4
       : io.InternetAddressType.IPv6;
 
-  // This probably shouldn't have been in the interface because dart:io
-  // version does not implement this setter.
-  set type(io.InternetAddressType value) =>
-      throw new UnsupportedError('Setting address type is not allowed.');
-
   InternetAddress._(this.address, [this._host])
       : _inAddr = _inet_pton(address) {
     if (net.isIP(address) == 0)
       throw new ArgumentError('${address} is not valid.');
   }
 
+  /// Creates a new [InternetAddress] from a numeric address.
+  ///
+  /// If the address in [address] is not a numeric IPv4
+  /// (dotted-decimal notation) or IPv6 (hexadecimal representation).
+  /// address [ArgumentError] is thrown.
   factory InternetAddress(String address) => new InternetAddress._(address);
 
+  /// Lookup a host, returning a Future of a list of
+  /// [InternetAddress]s. If [type] is [InternetAddressType.ANY], it
+  /// will lookup both IP version 4 (IPv4) and IP version 6 (IPv6)
+  /// addresses. If [type] is either [InternetAddressType.IPv4] or
+  /// [InternetAddressType.IPv6] it will only lookup addresses of the
+  /// specified type. The order of the list can, and most likely will,
+  /// change over time.
   static Future<List<io.InternetAddress>> lookup(String host) {
     Completer<List<io.InternetAddress>> completer = new Completer();
     var options = new DNSLookupOptions(all: true, verbatim: true);
