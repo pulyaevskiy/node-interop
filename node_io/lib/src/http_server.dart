@@ -331,7 +331,8 @@ class _NodeHttpRequest extends ReadableStream<List<int>>
 }
 
 class _NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
-  _NodeHttpResponse(_http.ServerResponse nativeResponse) : super(nativeResponse);
+  _NodeHttpResponse(_http.ServerResponse nativeResponse)
+      : super(nativeResponse);
 
   _http.ServerResponse get nativeInstance => super.nativeInstance;
 
