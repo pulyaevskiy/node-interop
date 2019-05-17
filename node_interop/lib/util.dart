@@ -22,6 +22,12 @@ export 'package:js/js_util.dart' hide jsify;
 /// `Map` instances. Both arrays and objects are traversed recursively
 /// converting nested values.
 ///
+/// Converting JS objects always results in a `Map<String, dynamic>` meaning
+/// even if original object had an integer key set, it will be converted into
+/// a `String`. This is different from JS semantics where you are allowed to
+/// access a key by passing its int value, e.g. `obj[1]` would work in JS,
+/// but fail in Dart.
+///
 /// See also:
 /// - [jsify]
 T dartify<T>(Object jsObject) {

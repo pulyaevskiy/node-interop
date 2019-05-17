@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Clarified documentation of `dartify` regarding conversion of JS object keys (#52).
+
 ## 1.0.1
 
 - Fixed declaration of `fs.writeSync` and `fs.readSync` to return `int` instead of `void`.
