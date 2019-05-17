@@ -4,16 +4,16 @@ This document shows which `dart:io` APIs have been implemented so far in `node_i
 
 ## Classes
 
--[ ] BytesBuilder
+-[x] BytesBuilder
 -[ ] CompressionOptions
 -[ ] ConnectionTask
 -[x] ContentType
 -[x] Cookie
--[ ] Datagram
+-[x] Datagram
 -[ ] DetachedSocket
 -[x] Directory
 -[x] File
--[ ] FileLock
+-[ ] FileLock (not supported by Node.js)
 -[x] FileMode
 -[x] FileStat
 -[ ] FileSystemCreateEvent
@@ -46,8 +46,8 @@ This document shows which `dart:io` APIs have been implemented so far in `node_i
 -[ ] IOOverrides
 -[x] IOSink
 -[x] Link
--[ ] NetworkInterface
--[ ] OSError
+-[x] NetworkInterface
+-[x] OSError
 -[x] Platform
 -[ ] Process
 -[ ] ProcessInfo
@@ -108,7 +108,7 @@ This document shows which `dart:io` APIs have been implemented so far in `node_i
 -[ ] CertificateException
 -[ ] FileSystemException
 -[ ] HandshakeException
--[ ] HttpException
+-[x] HttpException
 -[ ] IOException
 -[ ] ProcessException
 -[ ] RedirectException

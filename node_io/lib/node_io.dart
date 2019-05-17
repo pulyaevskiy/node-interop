@@ -12,13 +12,16 @@ import 'package:node_interop/node.dart';
 
 export 'dart:io'
     show
+        BytesBuilder,
+        Datagram,
         FileSystemEntity,
         FileSystemEntityType,
         FileMode,
         IOSink,
         RandomAccessFile,
         FileSystemException,
-        HttpHeaders;
+        HttpHeaders,
+        OSError;
 
 export 'src/directory.dart';
 export 'src/file.dart';
@@ -26,6 +29,7 @@ export 'src/file_system_entity.dart' show FileStat;
 export 'src/http_server.dart';
 export 'src/internet_address.dart';
 export 'src/link.dart';
+export 'src/network_interface.dart';
 export 'src/platform.dart';
 
 /// Get the global exit code for the current process.

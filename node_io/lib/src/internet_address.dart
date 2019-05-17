@@ -34,11 +34,6 @@ class InternetAddress implements io.InternetAddress {
       ? io.InternetAddressType.IPv4
       : io.InternetAddressType.IPv6;
 
-  // This probably shouldn't have been in the interface because dart:io
-  // version does not implement this setter.
-  set type(io.InternetAddressType value) =>
-      throw new UnsupportedError('Setting address type is not allowed.');
-
   InternetAddress._(this.address, [this._host])
       : _inAddr = _inet_pton(address) {
     if (net.isIP(address) == 0)

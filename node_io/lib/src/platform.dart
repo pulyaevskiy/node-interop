@@ -6,6 +6,59 @@ import 'package:node_interop/os.dart';
 import 'package:node_interop/path.dart';
 import 'package:node_interop/util.dart';
 
+/// Information about the environment in which the current program is running.
+///
+/// Platform provides information such as the operating system,
+/// the hostname of the computer, the value of environment variables,
+/// the path to the running program,
+/// and so on.
+///
+/// ## Get the URI to the current Dart script
+///
+/// Use the [script] getter to get the URI to the currently running
+/// Dart script.
+///
+///     import 'dart:io' show Platform;
+///
+///     void main() {
+///       // Get the URI of the script being run.
+///       var uri = Platform.script;
+///       // Convert the URI to a path.
+///       var path = uri.toFilePath();
+///     }
+///
+/// ## Get the value of an environment variable
+///
+/// The [environment] getter returns a the names and values of environment
+/// variables in a [Map] that contains key-value pairs of strings. The Map is
+/// unmodifiable. This sample shows how to get the value of the `PATH`
+/// environment variable.
+///
+///     import 'dart:io' show Platform;
+///
+///     void main() {
+///       Map<String, String> envVars = Platform.environment;
+///       print(envVars['PATH']);
+///     }
+///
+/// ## Determine the OS
+///
+/// You can get the name of the operating system as a string with the
+/// [operatingSystem] getter. You can also use one of the static boolean
+/// getters: [isMacOS], [isLinux], and [isWindows].
+///
+///     import 'dart:io' show Platform, stdout;
+///
+///     void main() {
+///       // Get the operating system as a string.
+///       String os = Platform.operatingSystem;
+///       // Or, use a predicate getter.
+///       if (Platform.isMacOS) {
+///         print('is a Mac');
+///       } else {
+///         print('is not a Mac');
+///       }
+///     }
 abstract class Platform {
   /// The number of individual execution units of the machine.
   static int get numberOfProcessors => os.cpus().length;
