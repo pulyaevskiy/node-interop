@@ -64,5 +64,32 @@ void main() {
       expect(renamed.existsSync(), isTrue);
       expect(renamed.path, createPath("link_rename_sync_new.txt"));
     });
+
+    test('target and targetSync', () async {
+      var filepath = createFile("link_target_test.txt", 'data');
+      var linkpath = createPath("link_target.txt");
+      var link = new Link(linkpath);
+      var created = await link.create(filepath);
+
+      expect(created.target(), completion(filepath));
+      expect(created.targetSync(), filepath);
+    });
+
+    test('update and updateSync', () async {
+      var filepath = createFile("link_update_test.txt", 'data');
+      var filepath2 = createFile("link_update_new_test.txt", 'data');
+      var filepath3 = createFile("link_update_new_sync_test.txt", 'data');
+      var linkpath = createPath("link_update.txt");
+      var link = new Link(linkpath);
+      var created = await link.create(filepath);
+
+      var updated = await created.update(filepath2);
+      expect(updated.existsSync(), isTrue);
+      expect(updated.targetSync(), filepath2);
+
+      updated.updateSync(filepath3);
+      expect(updated.existsSync(), isTrue);
+      expect(updated.targetSync(), filepath3);
+    });
   });
 }

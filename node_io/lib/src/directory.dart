@@ -7,8 +7,8 @@ import 'dart:js' as js;
 
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
-import 'package:node_interop/path.dart' as nodePath;
 import 'package:node_interop/os.dart';
+import 'package:node_interop/path.dart' as nodePath;
 import 'package:path/path.dart';
 
 import 'file.dart';
@@ -101,7 +101,6 @@ class Directory extends FileSystemEntity implements io.Directory {
     assert(path is String);
     process.chdir(path);
   }
-
 
   /// Gets the system temp directory.
   ///

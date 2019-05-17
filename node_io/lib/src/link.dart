@@ -151,13 +151,12 @@ class Link extends FileSystemEntity implements io.Link {
 
   @override
   Future<Link> update(String target) {
-    // TODO: implement update
-    throw new UnimplementedError();
+    return delete().then((link) => link.create(target));
   }
 
   @override
   void updateSync(String target) {
-    // TODO: implement updateSync
-    throw new UnimplementedError();
+    deleteSync();
+    createSync(target);
   }
 }
