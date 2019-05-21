@@ -15,7 +15,6 @@ import 'node.dart';
 
 export 'package:js/js_util.dart' hide jsify;
 
-
 Util get util => _util ??= require('util');
 Util _util;
 
