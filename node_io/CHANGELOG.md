@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Server side `NodeHttpRequest` and `NodeHttpResponse` are not available in public interface.
+
 ## 1.0.0
 
 First stable release of this library which implements subset of `dart:io` interfaces,
