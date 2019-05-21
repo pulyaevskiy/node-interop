@@ -333,8 +333,7 @@ class NodeHttpRequest extends ReadableStream<List<int>>
 /// Server side HTTP response object which delegates IO operations to
 /// Node.js native representations.
 class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
-  NodeHttpResponse(_http.ServerResponse nativeResponse)
-      : super(nativeResponse);
+  NodeHttpResponse(_http.ServerResponse nativeResponse) : super(nativeResponse);
 
   _http.ServerResponse get nativeInstance => super.nativeInstance;
 
