@@ -1,3 +1,8 @@
+## 1.0.3
+
+- Removed generic annotations from Process methods per #56 (not supported by Dart yet).
+- Added `util.inspect` binding.
+
 ## 1.0.2
 
 - Clarified documentation of `dartify` regarding conversion of JS object keys (#52).

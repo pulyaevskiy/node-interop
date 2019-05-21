@@ -16,7 +16,7 @@ import 'stream.dart';
 abstract class Process implements EventEmitter {
   external void abort();
   external String get arch;
-  external List<String> get argv;
+  external List get argv;
   external String get argv0;
   external dynamic get channel;
   external void chdir(String directory);
@@ -32,7 +32,7 @@ abstract class Process implements EventEmitter {
   /// - https://nodejs.org/api/process.html#process_process_emitwarning_warning_type_code_ctor
   external void emitWarning(warning, [arg1, arg2, arg3]);
   external dynamic get env;
-  external List<String> get execArgv;
+  external List get execArgv;
   external String get execPath;
   external void exit([int code = 0]);
   external int get exitCode;
@@ -43,7 +43,7 @@ abstract class Process implements EventEmitter {
   external List getgroups();
   external int getuid();
   external bool hasUncaughtExceptionCaptureCallback();
-  external List<int> hrtime([List<int> time]);
+  external List hrtime([List<int> time]);
   external void initgroups(user, extra_group);
   external void kill(num pid, [signal]);
   external Module get mainModule;

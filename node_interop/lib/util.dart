@@ -9,11 +9,25 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart' as util;
+import 'package:js/js_util.dart' as js_util;
 
 import 'node.dart';
 
 export 'package:js/js_util.dart' hide jsify;
+
+
+Util get util => _util ??= require('util');
+Util _util;
+
+@JS()
+@anonymous
+abstract class Util {
+  /// Possible signatures:
+  ///
+  /// inspect(object[, options])
+  /// inspect(object[, showHidden[, depth[, colors]]])
+  external dynamic inspect(object, [arg1, arg2, arg3]);
+}
 
 /// Returns Dart representation from JS Object.
 ///
@@ -42,7 +56,7 @@ T dartify<T>(Object jsObject) {
   var keys = objectKeys(jsObject);
   var result = new Map<String, dynamic>();
   for (var key in keys) {
-    result[key] = dartify(util.getProperty(jsObject, key));
+    result[key] = dartify(js_util.getProperty(jsObject, key));
   }
 
   return result as T;
@@ -60,7 +74,7 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
-  return util.jsify(dartObject);
+  return js_util.jsify(dartObject);
 }
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
