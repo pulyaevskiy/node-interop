@@ -1,6 +1,6 @@
 ## 1.0.1
 
-- Server side `NodeHttpRequest` and `NodeHttpResponse` are not available in public interface.
+- Server side `NodeHttpRequest` and `NodeHttpResponse` are now available in public interface.
 
 ## 1.0.0
 
