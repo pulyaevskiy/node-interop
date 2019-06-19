@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:js';
+import 'dart:typed_data';
 
 import 'package:node_interop/dns.dart';
 import 'package:node_interop/net.dart';
@@ -21,7 +22,7 @@ class InternetAddress implements io.InternetAddress {
   static const int _IPV6_ADDR_LENGTH = 16;
 
   final String _host;
-  final List<int> _inAddr;
+  final Uint8List _inAddr;
 
   @override
   final String address;
@@ -118,7 +119,7 @@ class InternetAddress implements io.InternetAddress {
   }
 
   @override
-  List<int> get rawAddress => new List.from(_inAddr);
+  Uint8List get rawAddress => new Uint8List.fromList(_inAddr);
 
   @override
   Future<io.InternetAddress> reverse() {
@@ -146,10 +147,10 @@ const int _kColon = 58;
 ///
 /// This implementation assumes that [ip] address has been validated for
 /// correctness.
-List<int> _inet_pton(String ip) {
+Uint8List _inet_pton(String ip) {
   if (ip.contains(':')) {
     // ipv6
-    final List<int> result = new List<int>.filled(16, 0);
+    final Uint8List result = new Uint8List(16);
 
     // Special cases:
     if (ip == '::') return result;
@@ -189,6 +190,6 @@ List<int> _inet_pton(String ip) {
     return result;
   } else {
     // ipv4
-    return ip.split('.').map(int.parse).toList(growable: false);
+    return new Uint8List.fromList(ip.split('.').map(int.parse).toList());
   }
 }
