@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:js' as js;
+import 'dart:typed_data';
 
 import 'package:node_interop/buffer.dart';
 import 'package:node_interop/fs.dart';
@@ -281,13 +282,15 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<List<int>> readAsBytes() => openRead().fold(new List<int>(),
-      (List<int> previous, List<int> element) => previous..addAll(element));
+  Future<Uint8List> readAsBytes() => openRead()
+      .fold(new List<int>(),
+          (List<int> previous, List<int> element) => previous..addAll(element))
+      .then((List<int> list) => new Uint8List.fromList(list));
 
   @override
-  List<int> readAsBytesSync() {
+  Uint8List readAsBytesSync() {
     final List<int> buffer = fs.readFileSync(path);
-    return buffer;
+    return new Uint8List.fromList(buffer);
   }
 
   @override
@@ -551,17 +554,17 @@ class _RandomAccessFile implements io.RandomAccessFile {
   }
 
   @override
-  Future<List<int>> read(int bytes) {
+  Future<Uint8List> read(int bytes) {
     return _dispatch(() {
       var buffer = Buffer.alloc(bytes);
-      final completer = new Completer<List<int>>();
+      final completer = new Completer<Uint8List>();
       void cb(err, bytesRead, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
           assert(bytesRead == bytes);
           _position += bytes;
-          completer.complete(new List<int>.from(buffer));
+          completer.complete(new Uint8List.fromList(buffer));
         }
       }
 
@@ -605,13 +608,13 @@ class _RandomAccessFile implements io.RandomAccessFile {
   }
 
   @override
-  List<int> readSync(int bytes) {
+  Uint8List readSync(int bytes) {
     _checkAvailable();
     Object buffer = Buffer.alloc(bytes);
     final bytesRead = fs.readSync(fd, buffer, 0, bytes, _position);
     assert(bytesRead == bytes);
     _position += bytes;
-    return new List<int>.from(buffer);
+    return new Uint8List.fromList(buffer);
   }
 
   @override
