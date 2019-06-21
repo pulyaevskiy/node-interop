@@ -65,7 +65,7 @@ void main() {
       final ip = new InternetAddress('8.8.8.8');
       final reversed = await ip.reverse();
       expect(reversed.address, equals('8.8.8.8'));
-      expect(reversed.host, contains('google.com'));
+      expect(reversed.host, contains('google'));
     });
   });
 }
