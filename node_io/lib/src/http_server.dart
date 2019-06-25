@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:js';
 import 'dart:js_util';
+import 'dart:typed_data';
 
 import 'package:node_interop/http.dart' as _http;
 
@@ -233,14 +234,16 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
 
 /// Server side HTTP request object which delegates IO operations to
 /// Node.js native representations.
-class NodeHttpRequest extends ReadableStream<List<int>>
-    implements io.HttpRequest {
+class NodeHttpRequest implements io.HttpRequest, HasReadable {
+  final ReadableStream<Uint8List> _delegate;
   final _http.ServerResponse _nativeResponse;
 
   NodeHttpRequest(_http.IncomingMessage nativeRequest, this._nativeResponse)
-      : super(nativeRequest, convert: (chunk) => new List.unmodifiable(chunk));
+      : _delegate = ReadableStream(nativeRequest,
+            convert: (chunk) => new Uint8List.fromList(chunk));
 
-  _http.IncomingMessage get nativeInstance => super.nativeInstance;
+  @override
+  _http.IncomingMessage get nativeInstance => _delegate.nativeInstance;
 
   @override
   io.X509Certificate get certificate => throw new UnimplementedError();
@@ -328,6 +331,214 @@ class NodeHttpRequest extends ReadableStream<List<int>>
 
   @override
   Uri get uri => Uri.parse(nativeInstance.url);
+
+  @override
+  StreamSubscription<Uint8List> listen(
+    void Function(Uint8List event) onData, {
+    Function onError,
+    void Function() onDone,
+    bool cancelOnError,
+  }) {
+    return const Stream<Uint8List>.empty().listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
+  }
+
+  @override
+  Future<bool> any(bool Function(Uint8List element) test) {
+    return _delegate.any(test);
+  }
+
+  @override
+  Stream<Uint8List> asBroadcastStream({
+    void Function(StreamSubscription<Uint8List> subscription) onListen,
+    void Function(StreamSubscription<Uint8List> subscription) onCancel,
+  }) {
+    return _delegate.asBroadcastStream(onListen: onListen, onCancel: onCancel);
+  }
+
+  @override
+  Stream<E> asyncExpand<E>(Stream<E> Function(Uint8List event) convert) {
+    return _delegate.asyncExpand<E>(convert);
+  }
+
+  @override
+  Stream<E> asyncMap<E>(FutureOr<E> Function(Uint8List event) convert) {
+    return _delegate.asyncMap<E>(convert);
+  }
+
+  @override
+  Stream<R> cast<R>() {
+    return _delegate.cast<R>();
+  }
+
+  @override
+  Future<bool> contains(Object needle) {
+    return _delegate.contains(needle);
+  }
+
+  @override
+  Stream<Uint8List> distinct(
+      [bool Function(Uint8List previous, Uint8List next) equals]) {
+    return _delegate.distinct(equals);
+  }
+
+  @override
+  Future<E> drain<E>([E futureValue]) {
+    return _delegate.drain<E>(futureValue);
+  }
+
+  @override
+  Future<Uint8List> elementAt(int index) {
+    return _delegate.elementAt(index);
+  }
+
+  @override
+  Future<bool> every(bool Function(Uint8List element) test) {
+    return _delegate.every(test);
+  }
+
+  @override
+  Stream<S> expand<S>(Iterable<S> Function(Uint8List element) convert) {
+    return _delegate.expand(convert);
+  }
+
+  @override
+  Future<Uint8List> get first => _delegate.first;
+
+  @override
+  Future<Uint8List> firstWhere(
+    bool Function(Uint8List element) test, {
+    List<int> Function() orElse,
+  }) {
+    return _delegate.firstWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Future<S> fold<S>(
+      S initialValue, S Function(S previous, Uint8List element) combine) {
+    return _delegate.fold<S>(initialValue, combine);
+  }
+
+  @override
+  Future<dynamic> forEach(void Function(Uint8List element) action) {
+    return _delegate.forEach(action);
+  }
+
+  @override
+  Stream<Uint8List> handleError(
+    Function onError, {
+    bool Function(dynamic error) test,
+  }) {
+    return _delegate.handleError(onError, test: test);
+  }
+
+  @override
+  bool get isBroadcast => _delegate.isBroadcast;
+
+  @override
+  Future<bool> get isEmpty => _delegate.isEmpty;
+
+  @override
+  Future<String> join([String separator = '']) {
+    return _delegate.join(separator);
+  }
+
+  @override
+  Future<Uint8List> get last => _delegate.last;
+
+  @override
+  Future<Uint8List> lastWhere(
+    bool Function(Uint8List element) test, {
+    List<int> Function() orElse,
+  }) {
+    return _delegate.lastWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Future<int> get length => _delegate.length;
+
+  @override
+  Stream<S> map<S>(S Function(Uint8List event) convert) {
+    return _delegate.map<S>(convert);
+  }
+
+  @override
+  Future<dynamic> pipe(StreamConsumer<List<int>> streamConsumer) {
+    return _delegate.cast<List<int>>().pipe(streamConsumer);
+  }
+
+  @override
+  Future<Uint8List> reduce(
+      List<int> Function(Uint8List previous, Uint8List element) combine) {
+    return _delegate.reduce((p, e) => Uint8List.fromList(combine(p, e)));
+  }
+
+  @override
+  Future<Uint8List> get single => _delegate.single;
+
+  @override
+  Future<Uint8List> singleWhere(bool Function(Uint8List element) test,
+      {List<int> Function() orElse}) {
+    return _delegate.singleWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Stream<Uint8List> skip(int count) {
+    return _delegate.skip(count);
+  }
+
+  @override
+  Stream<Uint8List> skipWhile(bool Function(Uint8List element) test) {
+    return _delegate.skipWhile(test);
+  }
+
+  @override
+  Stream<Uint8List> take(int count) {
+    return _delegate.take(count);
+  }
+
+  @override
+  Stream<Uint8List> takeWhile(bool Function(Uint8List element) test) {
+    return _delegate.takeWhile(test);
+  }
+
+  @override
+  Stream<Uint8List> timeout(
+    Duration timeLimit, {
+    void Function(EventSink<Uint8List> sink) onTimeout,
+  }) {
+    return _delegate.timeout(timeLimit, onTimeout: onTimeout);
+  }
+
+  @override
+  Future<List<Uint8List>> toList() {
+    return _delegate.toList();
+  }
+
+  @override
+  Future<Set<Uint8List>> toSet() {
+    return _delegate.toSet();
+  }
+
+  @override
+  Stream<S> transform<S>(StreamTransformer<List<int>, S> streamTransformer) {
+    return _delegate.cast<List<int>>().transform<S>(streamTransformer);
+  }
+
+  @override
+  Stream<Uint8List> where(bool Function(Uint8List event) test) {
+    return _delegate.where(test);
+  }
 }
 
 /// Server side HTTP response object which delegates IO operations to
