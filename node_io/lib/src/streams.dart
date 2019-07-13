@@ -9,8 +9,12 @@ import 'dart:typed_data';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/stream.dart';
 
+abstract class HasReadable {
+  Readable get nativeInstance;
+}
+
 /// [Stream] wrapper around Node's [Readable] stream.
-class ReadableStream<T> extends Stream<T> {
+class ReadableStream<T> extends Stream<T> implements HasReadable {
   /// Native `Readable` instance wrapped by this stream.
   ///
   /// It is not recommended to interact with this object directly.
