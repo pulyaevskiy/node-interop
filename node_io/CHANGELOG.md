@@ -1,7 +1,7 @@
 ## 1.0.1+2
 
 - More preparation for Uint8List SDK breaking change (dart-lang/sdk#36900).
-  See #61 for details.
+  See #61 and #63 for details.
 
 ## 1.0.1+1
 
