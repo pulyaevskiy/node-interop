@@ -16,9 +16,9 @@ import 'package:node_interop/util.dart';
 import 'file_system_entity.dart';
 import 'streams.dart';
 
-class _ReadStream extends ReadableStream<List<int>> {
+class _ReadStream extends ReadableStream<Uint8List> {
   _ReadStream(ReadStream nativeStream)
-      : super(nativeStream, convert: (chunk) => new List.unmodifiable(chunk));
+      : super(nativeStream, convert: (chunk) => new Uint8List.fromList(chunk));
 }
 
 class _WriteStream extends NodeIOSink {
@@ -259,7 +259,7 @@ class File extends FileSystemEntity implements io.File {
       _RandomAccessFile.open(path, mode);
 
   @override
-  Stream<List<int>> openRead([int start, int end]) {
+  Stream<Uint8List> openRead([int start, int end]) {
     var options = new ReadStreamOptions();
     if (start != null) options.start = start;
     if (end != null) options.end = end;
@@ -296,6 +296,7 @@ class File extends FileSystemEntity implements io.File {
   @override
   Future<List<String>> readAsLines({Encoding encoding: utf8}) {
     return openRead()
+        .cast<List<int>>()
         .transform(encoding.decoder)
         .transform(new LineSplitter())
         .toList();
