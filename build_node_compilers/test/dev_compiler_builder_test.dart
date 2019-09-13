@@ -51,7 +51,7 @@ main() {
         'a|lib/a$jsSourceMapExtension': decodedMatches(contains('a.dart')),
         'a|web/index$jsModuleExtension': decodedMatches(contains('main')),
         'a|web/index$jsSourceMapExtension':
-        decodedMatches(contains('index.dart')),
+            decodedMatches(contains('index.dart')),
       };
       await testBuilder(DevCompilerBuilder(platform: ddcPlatform), assets,
           outputs: expectedOutputs);
@@ -88,7 +88,7 @@ main() {
         expect(
             logs,
             contains(predicate<LogRecord>((record) =>
-            record.level == Level.SEVERE &&
+                record.level == Level.SEVERE &&
                 record.message.contains('String') &&
                 record.message.contains('assigned') &&
                 record.message.contains('int'))));
@@ -122,7 +122,7 @@ main() {
         expect(
             logs,
             contains(predicate<LogRecord>((record) =>
-            record.level == Level.SEVERE &&
+                record.level == Level.SEVERE &&
                 record.message
                     .contains('Unable to find modules for some sources'))));
       });

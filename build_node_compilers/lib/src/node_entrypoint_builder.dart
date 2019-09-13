@@ -72,8 +72,8 @@ class NodeEntrypointBuilder implements Builder {
           'Expected a list for $_dart2jsArgs.');
     }
     var dart2JsArgs = (options.config[_dart2jsArgs] as List)
-        ?.map((arg) => '$arg')
-        ?.toList() ??
+            ?.map((arg) => '$arg')
+            ?.toList() ??
         const <String>[];
 
     return NodeEntrypointBuilder(compiler, dart2JsArgs: dart2JsArgs);

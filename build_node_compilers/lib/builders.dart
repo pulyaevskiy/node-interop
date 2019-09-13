@@ -22,9 +22,9 @@ Builder ddcMetaModuleBuilder(BuilderOptions options) =>
 Builder ddcMetaModuleCleanBuilder(_) => MetaModuleCleanBuilder(ddcPlatform);
 Builder ddcModuleBuilder([_]) => ModuleBuilder(ddcPlatform);
 Builder ddcBuilder(BuilderOptions options) => DevCompilerBuilder(
-  useIncrementalCompiler: _readUseIncrementalCompilerOption(options),
-  platform: ddcPlatform,
-);
+      useIncrementalCompiler: _readUseIncrementalCompilerOption(options),
+      platform: ddcPlatform,
+    );
 const ddcKernelExtension = '.ddc.dill';
 Builder ddcKernelBuilder(BuilderOptions options) => KernelBuilder(
     summaryOnly: true,
@@ -62,10 +62,10 @@ bool _readUseIncrementalCompilerOption(BuilderOptions options) {
     if (!const MapEquality().equals(_previousDdcConfig, options.config)) {
       throw ArgumentError(
           'The build_web_compilers:ddc builder must have the same '
-              'configuration in all packages. Saw $_previousDdcConfig and '
-              '${options.config} which are not equal.\n\n '
-              'Please use the `global_options` section in '
-              '`build.yaml` or the `--define` flag to set global options.');
+          'configuration in all packages. Saw $_previousDdcConfig and '
+          '${options.config} which are not equal.\n\n '
+          'Please use the `global_options` section in '
+          '`build.yaml` or the `--define` flag to set global options.');
     }
   } else {
     _previousDdcConfig = options.config;
