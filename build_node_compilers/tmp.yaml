@@ -1,19 +1,34 @@
 targets:
   $default:
-    sources:
-      - "node/**"
-      - "lib/**"
     builders:
-      build_node_compilers|entrypoint:
+      build_web_compilers|entrypoint:
         options:
           compiler: dart2js
           dart2js_args:
             - -O4
+        enabled: true
         generate_for:
-          - node/**.dart
+          - web/stack_trace_mapper.dart
+      build_web_compilers|_stack_trace_mapper_copy:
+        enabled: true
+      build_web_compilers|sdk_js_copy:
+        enabled: true
+      build_web_compilers|sdk_js_cleanup:
+        enabled: true
 builders:
+  sdk_js_copy:
+    import: "package:build_web_compilers/builders.dart"
+    builder_factories:
+      - sdkJsCopyBuilder
+    build_extensions:
+      $lib$:
+        - lib/src/dev_compiler/dart_sdk.js
+        - lib/src/dev_compiler/require.js
+    is_optional: False
+    auto_apply: none
+    applies_builders: ["build_web_compilers|sdk_js_cleanup"]
   dart2js_modules:
-    import: "package:build_node_compilers/builders.dart"
+    import: "package:build_web_compilers/builders.dart"
     builder_factories:
       - dart2jsMetaModuleBuilder
       - dart2jsMetaModuleCleanBuilder
@@ -29,7 +44,7 @@ builders:
     required_inputs: [".dart", ".module.library"]
     applies_builders: ["build_modules|module_cleanup"]
   ddc_modules:
-    import: "package:build_node_compilers/builders.dart"
+    import: "package:build_web_compilers/builders.dart"
     builder_factories:
       - ddcMetaModuleBuilder
       - ddcMetaModuleCleanBuilder
@@ -45,39 +60,40 @@ builders:
     required_inputs: [".dart", ".module.library"]
     applies_builders: ["build_modules|module_cleanup"]
   ddc:
-    import: "package:build_node_compilers/builders.dart"
+    import: "package:build_web_compilers/builders.dart"
     builder_factories:
       - ddcKernelBuilder
       - ddcBuilder
     build_extensions:
       .ddc.module:
-        - .node.ddc.dill
-        - .node.ddc.js.errors
-        - .node.ddc.js
-        - .node.ddc.js.map
+        - .ddc.dill
+        - .ddc.js.errors
+        - .ddc.js
+        - .ddc.js.map
     is_optional: True
     auto_apply: all_packages
     required_inputs:
       - .ddc.module
     applies_builders:
-      - build_node_compilers|ddc_modules
+      - build_web_compilers|ddc_modules
       # This isn't really the best place to apply these, but it is the only
       # place we can (its the only builder which runs on all packages).
-      - build_node_compilers|dart2js_modules
-      - build_node_compilers|dart_source_cleanup
+      - build_web_compilers|dart2js_modules
+      - build_web_compilers|dart_source_cleanup
   entrypoint:
-    import: "package:build_node_compilers/builders.dart"
+    import: "package:build_web_compilers/builders.dart"
     builder_factories:
-      - nodeEntrypointBuilder
+      - webEntrypointBuilder
     build_extensions:
       .dart:
         - .dart.bootstrap.js
         - .dart.js
         - .dart.js.map
+        - .dart.js.tar.gz
         - .digests
     required_inputs:
       - .dart
-      - .node.ddc.js
+      - .ddc.js
       - .ddc.module
       - .dart2js.module
     build_to: cache
@@ -85,20 +101,45 @@ builders:
     defaults:
       generate_for:
         include:
-          - node/**
+          - web/**
           - test/**.dart.browser_test.dart
           - example/**
+          - benchmark/**
         exclude:
+          - test/**.node_test.dart
           - test/**.vm_test.dart
       options:
         dart2js_args:
           - --minify
       release_options:
         compiler: dart2js
+    applies_builders:
+      - build_web_compilers|dart2js_archive_extractor
+  _stack_trace_mapper_copy:
+    import: "tool/copy_builder.dart"
+    builder_factories:
+        - copyBuilder
+    build_extensions:
+      web/stack_trace_mapper.dart.js:
+        - lib/src/dev_compiler_stack_trace/stack_trace_mapper.dart.js
+    auto_apply: none
+    build_to: source
 post_process_builders:
+  dart2js_archive_extractor:
+    import: "package:build_web_compilers/builders.dart"
+    builder_factory: dart2jsArchiveExtractor
+    defaults:
+      release_options:
+        filter_outputs: true
   dart_source_cleanup:
-    import: "package:build_node_compilers/builders.dart"
+    import: "package:build_web_compilers/builders.dart"
     builder_factory: dartSourceCleanup
+    defaults:
+      release_options:
+        enabled: true
+  sdk_js_cleanup:
+    import: "package:build_web_compilers/builders.dart"
+    builder_factory: sdkJsCleanupBuilder
     defaults:
       release_options:
         enabled: true
