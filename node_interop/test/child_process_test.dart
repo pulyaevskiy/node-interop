@@ -11,8 +11,8 @@ import 'package:test/test.dart';
 void main() {
   group('child_process', () {
     test('exec successful', () {
-      Completer<int> completer = new Completer<int>();
-      childProcess.exec('ls -la', new ExecOptions(),
+      Completer<int> completer = Completer<int>();
+      childProcess.exec('ls -la', ExecOptions(),
           allowInterop((error, stdout, stderr) {
         int result = (error == null) ? 0 : error.code;
         completer.complete(result);

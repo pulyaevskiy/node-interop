@@ -195,9 +195,9 @@ abstract class ServerResponse implements Writable {
   external void setTimeout(num msecs, [callback]);
   external Socket get socket;
   external num get statusCode;
-  external void set statusCode(num value);
+  external set statusCode(num value);
   external String get statusMessage;
-  external void set statusMessage(String value);
+  external set statusMessage(String value);
   @override
   external bool write(chunk, [encodingOrCallback, void callback()]);
   external void writeContinue();

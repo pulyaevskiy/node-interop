@@ -50,7 +50,7 @@ void main() {
 
   test('futureToPromise', () {
     final JsPromises js = require(promises);
-    var future = new Future.value('Yes');
+    var future = Future.value('Yes');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
     expect(promiseToFuture(promise2), completion('YesYesYes'));
@@ -58,7 +58,7 @@ void main() {
 
   test('create promise in Dart', () {
     final JsPromises js = require(promises);
-    var promise = new Promise(allowInterop((resolve, reject) {
+    var promise = Promise(allowInterop((resolve, reject) {
       resolve('Yas');
     }));
     var promise2 = js.receivePromise(promise);
@@ -66,7 +66,7 @@ void main() {
   });
 
   test('reject a Promise', () {
-    var promise = new Promise(allowInterop((resolve, reject) {
+    var promise = Promise(allowInterop((resolve, reject) {
       reject('No');
     }));
     expect(promiseToFuture(promise), throwsA('No'));
@@ -74,7 +74,7 @@ void main() {
 
   test('reject a Future', () {
     final JsPromises js = require(promises);
-    var future = new Future.error('No');
+    var future = Future.error('No');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
     expect(promiseToFuture(promise2), throwsA('NoNoNo'));

@@ -53,7 +53,7 @@ T dartify<T>(Object jsObject) {
   }
 
   var keys = objectKeys(jsObject);
-  var result = new Map<String, dynamic>();
+  var result = Map<String, dynamic>();
   for (var key in keys) {
     result[key] = dartify(js_util.getProperty(jsObject, key));
   }
@@ -91,7 +91,7 @@ bool _isBasicType(value) {
 /// See also:
 ///   - [futureToPromise]
 Future<T> promiseToFuture<T>(Promise promise) {
-  var completer = new Completer<T>.sync();
+  var completer = Completer<T>.sync();
   promise.then(allowInterop((value) {
     completer.complete(value);
   }), allowInterop((error) {
@@ -105,7 +105,7 @@ Future<T> promiseToFuture<T>(Promise promise) {
 /// See also:
 /// - [promiseToFuture]
 Promise futureToPromise<T>(Future<T> future) {
-  return new Promise(allowInterop((Function resolve, Function reject) {
+  return Promise(allowInterop((Function resolve, Function reject) {
     future.then(resolve, onError: reject);
   }));
 }

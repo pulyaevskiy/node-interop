@@ -20,7 +20,7 @@ void main() {
 }
 
 Writable createPrintStream() {
-  return createWritable(new WritableOptions(
+  return createWritable(WritableOptions(
     decodeStrings: false,
     write: allowInterop((String chunk, encoding, Function callback) {
       print(chunk.replaceFirst('\n', ''));

@@ -11,10 +11,10 @@ import 'package:test/test.dart';
 void main() {
   group('stream', () {
     test('integration', () async {
-      var b = new StringBuffer();
+      var b = StringBuffer();
       var r = createStringReadStream();
       var w = createStringBufferStream(b);
-      var completer = new Completer<String>();
+      var completer = Completer<String>();
 
       r.pipe(w).on('finish', allowInterop(() {
         completer.complete(b.toString());
@@ -25,7 +25,7 @@ void main() {
 }
 
 Readable createStringReadStream() {
-  return createReadable(new ReadableOptions(
+  return createReadable(ReadableOptions(
       encoding: 'utf8',
       read: allowInteropCaptureThis((Readable obj, int size) {
         obj.push('Hello world');
@@ -34,7 +34,7 @@ Readable createStringReadStream() {
 }
 
 Writable createStringBufferStream(StringBuffer buffer) {
-  return createWritable(new WritableOptions(
+  return createWritable(WritableOptions(
     decodeStrings: false,
     write: allowInterop((String chunk, encoding, Function callback) {
       buffer.write(chunk);

@@ -10,6 +10,6 @@ import 'package:node_interop/node.dart';
 /// printing out as nicely indented JSON.
 void main() {
   final contents = List<String>.from(fs.readdirSync(process.cwd()));
-  final json = new JsonEncoder.withIndent('  ');
+  final json = JsonEncoder.withIndent('  ');
   print(json.convert(contents));
 }
