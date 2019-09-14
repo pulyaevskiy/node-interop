@@ -42,7 +42,7 @@ main() {
       'a|web/index.dart.js': decodedMatches(contains('world')),
       'a|web/index.dart.js.map': anything,
     };
-    await testBuilder(new NodeEntrypointBuilder(WebCompiler.Dart2Js), assets,
+    await testBuilder(NodeEntrypointBuilder(WebCompiler.Dart2Js), assets,
         outputs: expectedOutputs);
   });
 }

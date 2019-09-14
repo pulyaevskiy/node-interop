@@ -18,8 +18,6 @@ import 'platforms.dart';
 /// Alias `_p.url` to `p`.
 _p.Context get _context => _p.url;
 
-var _modulePartialExtension = _context.withoutExtension(jsModuleExtension);
-
 Future<void> bootstrapDdc(BuildStep buildStep,
     {DartPlatform platform,
     Set<String> skipPlatformCheckPackages = const {}}) async {
@@ -55,20 +53,7 @@ https://github.com/dart-lang/build/blob/master/docs/faq.md#how-can-i-resolve-ski
   var appDigestsOutput =
       dartEntrypointId.changeExtension(digestsEntrypointExtension);
 
-  // The name of the entrypoint dart library within the entrypoint JS module.
-  //
-  // This is used to invoke `main()` from within the bootstrap script.
-  //
-  // TODO(jakemac53): Sane module name creation, this only works in the most
-  // basic of cases.
-  //
-  // See https://github.com/dart-lang/sdk/issues/27262 for the root issue
-  // which will allow us to not rely on the naming schemes that dartdevc uses
-  // internally, but instead specify our own.
-  var oldAppModuleScope = toJSIdentifier(
-      _context.withoutExtension(_context.basename(buildStep.inputId.path)));
-
-  // Like above but with a package-relative entrypoint.
+  // Package-relative entrypoint name within the entrypoint JS module.
   var appModuleScope =
       pathToJSIdentifier(_context.withoutExtension(buildStep.inputId.path));
 
@@ -92,16 +77,7 @@ https://github.com/dart-lang/build/blob/master/docs/faq.md#how-can-i-resolve-ski
       bootstrapId.path,
       from: _context.dirname(dartEntrypointId.path)));
 
-  var primarySourceParts = _context.split(module.primarySource.path);
-  var appModuleUri = _context.joinAll([
-    // Convert to a package: uri for files under lib.
-    if (primarySourceParts.first == 'lib')
-      'package:${module.primarySource.package}',
-    // Strip top-level directory from the path.
-    ...primarySourceParts.skip(1),
-  ]);
-
-  var bootstrapContent = new StringBuffer();
+  var bootstrapContent = StringBuffer();
   bootstrapContent.write(_dartLoaderSetup(modulePaths));
   bootstrapContent.write(_appBootstrap(appModuleName, appModuleScope));
 

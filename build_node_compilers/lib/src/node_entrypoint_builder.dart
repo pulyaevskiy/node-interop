@@ -25,7 +25,7 @@ enum WebCompiler {
 
 /// The top level keys supported for the `options` config for the
 /// [NodeEntrypointBuilder].
-const _supportedOptions = const [
+const _supportedOptions = [
   _compiler,
   _dart2jsArgs,
   _buildRootAppSummary,
