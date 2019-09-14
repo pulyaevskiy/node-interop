@@ -3,7 +3,7 @@ description: End-to-end test for node interop and builders
 version: 0.0.1
 
 environment:
-  sdk: '>=2.0.0-dev <3.0.0'
+  sdk: '>=2.4.0 <3.0.0'
 
 dependencies:
   node_interop:

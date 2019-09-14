@@ -9,3 +9,4 @@ export 'src/dev_compiler_builder.dart'
         jsSourceMapExtension;
 export 'src/node_entrypoint_builder.dart'
     show WebCompiler, NodeEntrypointBuilder, ddcBootstrapExtension;
+export 'src/platforms.dart';
