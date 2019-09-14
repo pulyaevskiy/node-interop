@@ -29,17 +29,17 @@ void main() {
           } else {
             request.response.write('ok');
           }
-          request.response.close();
+          await request.response.close();
         } else if (request.uri.path == '/redirect-to-test') {
           request.response.statusCode = HttpStatus.movedPermanently;
           request.response.headers
               .set(HttpHeaders.locationHeader, 'http://127.0.0.1:8181/test');
-          request.response.close();
+          await request.response.close();
         } else if (request.uri.path == '/redirect-loop') {
           request.response.statusCode = HttpStatus.movedPermanently;
           request.response.headers.set(HttpHeaders.locationHeader,
               'http://127.0.0.1:8181/redirect-loop');
-          request.response.close();
+          await request.response.close();
         }
       });
     });
