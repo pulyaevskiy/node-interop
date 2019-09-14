@@ -8,7 +8,7 @@ import 'dart:js' as js;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/os.dart';
-import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/path.dart' as node_path;
 import 'package:path/path.dart';
 
 import 'file.dart';
@@ -31,7 +31,7 @@ import 'platform.dart';
 /// Create a new Directory object with a pathname to access the specified
 /// directory on the file system from your program.
 ///
-///     var myDir = new Directory('myDir');
+///     var myDir = Directory('myDir');
 ///
 /// Most methods in this class occur in synchronous and asynchronous pairs,
 /// for example, [create] and [createSync].
@@ -49,7 +49,7 @@ import 'platform.dart';
 ///
 ///     void main() {
 ///       // Creates dir/ and dir/subdir/.
-///       new Directory('dir/subdir').create(recursive: true)
+///       Directory('dir/subdir').create(recursive: true)
 ///         // The created directory is returned as a Future.
 ///         .then((Directory directory) {
 ///           print(directory.path);
@@ -87,7 +87,7 @@ class Directory extends FileSystemEntity implements io.Directory {
 
   /// Creates a directory object pointing to the current working
   /// directory.
-  static io.Directory get current => new Directory(process.cwd());
+  static io.Directory get current => Directory(process.cwd());
 
   /// Sets the current working directory of the Dart process including
   /// all running isolates. The new value set can be either a [Directory]
@@ -96,7 +96,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   /// The new value is passed to the OS's system call unchanged, so a
   /// relative path passed as the new working directory will be
   /// resolved by the OS.
-  static void set current(path) {
+  static set current(path) {
     path = (path is io.Directory) ? path.path : path;
     assert(path is String);
     process.chdir(path);
@@ -109,11 +109,11 @@ class Directory extends FileSystemEntity implements io.Directory {
   /// The location of the system temp directory is platform-dependent,
   /// and may be set by an environment variable.
   static io.Directory get systemTemp {
-    return new Directory(os.tmpdir());
+    return Directory(os.tmpdir());
   }
 
   @override
-  io.Directory get absolute => new Directory(nodePath.path.resolve(path));
+  io.Directory get absolute => Directory(node_path.path.resolve(path));
 
   @override
   Future<bool> exists() => FileStat.stat(path)
@@ -124,11 +124,12 @@ class Directory extends FileSystemEntity implements io.Directory {
       FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
-  Future<io.FileSystemEntity> delete({bool recursive: false}) {
-    if (recursive)
-      return new Future.error(new UnsupportedError(
-          'Recursive delete is not supported by Node API'));
-    final completer = new Completer<Directory>();
+  Future<io.FileSystemEntity> delete({bool recursive = false}) {
+    if (recursive) {
+      return Future.error(
+          UnsupportedError('Recursive delete is not supported by Node API'));
+    }
+    final completer = Completer<Directory>();
 
     void callback([error]) {
       if (error == null) {
@@ -144,18 +145,20 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  void deleteSync({bool recursive: false}) {
-    if (recursive)
-      throw new UnsupportedError('Recursive delete is not supported in Node.');
+  void deleteSync({bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive delete is not supported in Node.');
+    }
     fs.rmdirSync(path);
   }
 
   @override
   Stream<FileSystemEntity> list(
-      {bool recursive: false, bool followLinks: true}) {
-    if (recursive)
-      throw new UnsupportedError('Recursive list is not supported in Node.');
-    final controller = new StreamController<FileSystemEntity>();
+      {bool recursive = false, bool followLinks = true}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive list is not supported in Node.');
+    }
+    final controller = StreamController<FileSystemEntity>();
 
     void callback(err, [files]) {
       if (err != null) {
@@ -167,11 +170,11 @@ class Directory extends FileSystemEntity implements io.Directory {
           filePath = join(path, filePath);
           final stat = FileStat.statSync(filePath);
           if (stat.type == io.FileSystemEntityType.file) {
-            controller.add(new File(filePath));
+            controller.add(File(filePath));
           } else if (stat.type == io.FileSystemEntityType.directory) {
-            controller.add(new Directory(filePath));
+            controller.add(Directory(filePath));
           } else {
-            controller.add(new Link(filePath));
+            controller.add(Link(filePath));
           }
         }
         controller.close();
@@ -185,10 +188,10 @@ class Directory extends FileSystemEntity implements io.Directory {
 
   @override
   Future<io.Directory> rename(String newPath) {
-    final completer = new Completer<Directory>();
+    final completer = Completer<Directory>();
     void callback(err) {
       if (err == null) {
-        completer.complete(new Directory(newPath));
+        completer.complete(Directory(newPath));
       } else {
         completer.completeError(err);
       }
@@ -203,17 +206,18 @@ class Directory extends FileSystemEntity implements io.Directory {
   @override
   io.Directory renameSync(String newPath) {
     fs.renameSync(path, newPath);
-    return new Directory(newPath);
+    return Directory(newPath);
   }
 
   @override
-  Future<Directory> create({bool recursive: false}) {
-    if (recursive)
-      throw new UnsupportedError('Recursive create is not supported in Node.');
-    final completer = new Completer<Directory>();
+  Future<Directory> create({bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive create is not supported in Node.');
+    }
+    final completer = Completer<Directory>();
     void callback(err) {
       if (err == null) {
-        completer.complete(new Directory(path));
+        completer.complete(Directory(path));
       } else {
         completer.completeError(err);
       }
@@ -226,9 +230,10 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  void createSync({bool recursive: false}) {
-    if (recursive)
-      throw new UnsupportedError('Recursive create is not supported in Node.');
+  void createSync({bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive create is not supported in Node.');
+    }
     fs.mkdirSync(path);
   }
 
@@ -236,7 +241,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   Future<io.Directory> createTemp([String prefix]) {
     prefix ??= '';
     if (path == '') {
-      throw new ArgumentError("Directory.createTemp called with an empty path. "
+      throw ArgumentError("Directory.createTemp called with an empty path. "
           "To use the system temp directory, use Directory.systemTemp");
     }
     String fullPrefix;
@@ -246,10 +251,10 @@ class Directory extends FileSystemEntity implements io.Directory {
       fullPrefix = "$path${Platform.pathSeparator}$prefix";
     }
 
-    final completer = new Completer<Directory>();
+    final completer = Completer<Directory>();
     void callback(err, result) {
       if (err == null) {
-        completer.complete(new Directory(result));
+        completer.complete(Directory(result));
       } else {
         completer.completeError(err);
       }
@@ -265,7 +270,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   io.Directory createTempSync([String prefix]) {
     prefix ??= '';
     if (path == '') {
-      throw new ArgumentError("Directory.createTemp called with an empty path. "
+      throw ArgumentError("Directory.createTemp called with an empty path. "
           "To use the system temp directory, use Directory.systemTemp");
     }
     String fullPrefix;
@@ -275,14 +280,15 @@ class Directory extends FileSystemEntity implements io.Directory {
       fullPrefix = "$path${Platform.pathSeparator}$prefix";
     }
     final resultPath = fs.mkdtempSync(fullPrefix);
-    return new Directory(resultPath);
+    return Directory(resultPath);
   }
 
   @override
   List<io.FileSystemEntity> listSync(
-      {bool recursive: false, bool followLinks: true}) {
-    if (recursive)
-      throw new UnsupportedError('Recursive list is not supported in Node.js.');
+      {bool recursive = false, bool followLinks = true}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive list is not supported in Node.js.');
+    }
 
     final files = fs.readdirSync(path);
     return files.map((filePath) {
@@ -290,11 +296,11 @@ class Directory extends FileSystemEntity implements io.Directory {
       filePath = join(path, filePath);
       final stat = FileStat.statSync(filePath);
       if (stat.type == io.FileSystemEntityType.file) {
-        return new File(filePath);
+        return File(filePath);
       } else if (stat.type == io.FileSystemEntityType.directory) {
-        return new Directory(filePath);
+        return Directory(filePath);
       } else {
-        return new Link(filePath);
+        return Link(filePath);
       }
     }).toList();
   }

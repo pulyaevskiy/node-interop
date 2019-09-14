@@ -7,7 +7,7 @@ import 'dart:js' as js;
 import 'dart:typed_data';
 
 import 'package:node_interop/fs.dart';
-import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/path.dart' as node_path;
 
 import 'directory.dart';
 import 'file_system_entity.dart';
@@ -21,7 +21,7 @@ class Link extends FileSystemEntity implements io.Link {
 
   factory Link.fromRawPath(Uint8List rawPath) {
     // TODO: implement fromRawPath
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   /// Creates a [Link] object.
@@ -31,7 +31,7 @@ class Link extends FileSystemEntity implements io.Link {
   ///
   /// If [path] is an absolute path, it will be immune to changes to the
   /// current working directory.
-  factory Link.fromUri(Uri uri) => new Link(uri.toFilePath());
+  factory Link.fromUri(Uri uri) => Link(uri.toFilePath());
 
   @override
   Future<bool> exists() async {
@@ -46,17 +46,17 @@ class Link extends FileSystemEntity implements io.Link {
   }
 
   @override
-  Link get absolute => new Link(_absolutePath);
+  Link get absolute => Link(_absolutePath);
 
-  String get _absolutePath => nodePath.path.resolve(path);
+  String get _absolutePath => node_path.path.resolve(path);
 
   @override
-  Future<Link> create(String target, {bool recursive: false}) {
+  Future<Link> create(String target, {bool recursive = false}) {
     if (recursive) {
-      throw new UnsupportedError("Recursive flag not supported by Node.js");
+      throw UnsupportedError("Recursive flag not supported by Node.js");
     }
 
-    final completer = new Completer<Link>();
+    final completer = Completer<Link>();
     void cb([err]) {
       if (err != null) {
         completer.completeError(err);
@@ -71,20 +71,20 @@ class Link extends FileSystemEntity implements io.Link {
   }
 
   @override
-  void createSync(String target, {bool recursive: false}) {
+  void createSync(String target, {bool recursive = false}) {
     if (recursive) {
-      throw new UnsupportedError("Recursive flag not supported by Node.js");
+      throw UnsupportedError("Recursive flag not supported by Node.js");
     }
     fs.symlinkSync(target, path);
   }
 
   @override
-  Future<Link> delete({bool recursive: false}) {
+  Future<Link> delete({bool recursive = false}) {
     if (recursive) {
       return Future.error(
           UnsupportedError('Recursive flag is not supported by Node.js'));
     }
-    final Completer<Link> completer = new Completer<Link>();
+    final Completer<Link> completer = Completer<Link>();
     void callback(err) {
       if (err != null) {
         completer.completeError(err);
@@ -99,7 +99,7 @@ class Link extends FileSystemEntity implements io.Link {
   }
 
   @override
-  void deleteSync({bool recursive: false}) {
+  void deleteSync({bool recursive = false}) {
     if (recursive) {
       throw UnsupportedError('Recursive flag is not supported by Node.js');
     }
@@ -108,12 +108,12 @@ class Link extends FileSystemEntity implements io.Link {
 
   @override
   Future<Link> rename(String newPath) {
-    final completer = new Completer<Link>();
+    final completer = Completer<Link>();
     void cb(err) {
       if (err != null) {
         completer.completeError(err);
       } else {
-        completer.complete(new Link(newPath));
+        completer.complete(Link(newPath));
       }
     }
 
@@ -125,12 +125,12 @@ class Link extends FileSystemEntity implements io.Link {
   @override
   Link renameSync(String newPath) {
     fs.renameSync(path, newPath);
-    return new Link(newPath);
+    return Link(newPath);
   }
 
   @override
   Future<String> target() {
-    final completer = new Completer<String>();
+    final completer = Completer<String>();
     void cb(err, String target) {
       if (err != null) {
         completer.completeError(err);

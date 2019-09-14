@@ -6,31 +6,31 @@ import 'dart:io' as io;
 import 'dart:js' as js;
 
 import 'package:node_interop/fs.dart';
-import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/path.dart' as node_path;
 
 import 'directory.dart';
 import 'platform.dart';
 
 abstract class FileSystemEntity implements io.FileSystemEntity {
   static final RegExp _absoluteWindowsPathPattern =
-      new RegExp(r'^(\\\\|[a-zA-Z]:[/\\])');
+      RegExp(r'^(\\\\|[a-zA-Z]:[/\\])');
 
   @override
-  bool get isAbsolute => nodePath.path.isAbsolute(path);
+  bool get isAbsolute => node_path.path.isAbsolute(path);
 
   @override
   String toString() => "$runtimeType: '$path'";
 
   static final RegExp _parentRegExp = Platform.isWindows
-      ? new RegExp(r'[^/\\][/\\]+[^/\\]')
-      : new RegExp(r'[^/]/+[^/]');
+      ? RegExp(r'[^/\\][/\\]+[^/\\]')
+      : RegExp(r'[^/]/+[^/]');
 
   static String parentOf(String path) {
     int rootEnd = -1;
     if (Platform.isWindows) {
       if (path.startsWith(_absoluteWindowsPathPattern)) {
         // Root ends at first / or \ after the first two characters.
-        rootEnd = path.indexOf(new RegExp(r'[/\\]'), 2);
+        rootEnd = path.indexOf(RegExp(r'[/\\]'), 2);
         if (rootEnd == -1) return path;
       } else if (path.startsWith('\\') || path.startsWith('/')) {
         rootEnd = 0;
@@ -51,11 +51,11 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
   }
 
   @override
-  io.Directory get parent => new Directory(parentOf(path));
+  io.Directory get parent => Directory(parentOf(path));
 
   @override
   Future<String> resolveSymbolicLinks() {
-    var completer = new Completer<String>();
+    var completer = Completer<String>();
     void callback(err, String resolvedPath) {
       if (err == null) {
         completer.complete(resolvedPath);
@@ -80,13 +80,13 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
   FileStat statSync() => FileStat.statSync(path);
 
   @override
-  Uri get uri => new Uri.file(path, windows: Platform.isWindows);
+  Uri get uri => Uri.file(path, windows: Platform.isWindows);
 
   @override
   Stream<io.FileSystemEvent> watch(
-      {int events: io.FileSystemEvent.all, bool recursive: false}) {
+      {int events = io.FileSystemEvent.all, bool recursive = false}) {
     // TODO: implement watch
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 }
 
@@ -132,7 +132,7 @@ class FileStat implements io.FileStat {
     } else if (stats.isSymbolicLink()) {
       type = io.FileSystemEntityType.link;
     }
-    return new FileStat._internal(
+    return FileStat._internal(
       DateTime.parse(stats.ctime.toISOString()),
       DateTime.parse(stats.mtime.toISOString()),
       DateTime.parse(stats.atime.toISOString()),
@@ -149,14 +149,14 @@ class FileStat implements io.FileStat {
   /// [FileStat] object with `.type` set to FileSystemEntityType.notFound and
   /// the other fields invalid.
   static Future<FileStat> stat(String path) {
-    var completer = new Completer<FileStat>();
+    var completer = Completer<FileStat>();
 
     // stats has to be an optional param despite what the documentation says...
     void callback(err, [stats]) {
       if (err == null) {
-        completer.complete(new FileStat._fromNodeStats(stats));
+        completer.complete(FileStat._fromNodeStats(stats));
       } else {
-        completer.complete(new FileStat._internalNotFound());
+        completer.complete(FileStat._internalNotFound());
       }
     }
 
@@ -172,9 +172,9 @@ class FileStat implements io.FileStat {
   /// FileSystemEntityType.notFound and the other fields invalid.
   static FileStat statSync(String path) {
     try {
-      return new FileStat._fromNodeStats(fs.lstatSync(path));
+      return FileStat._fromNodeStats(fs.lstatSync(path));
     } catch (_) {
-      return new FileStat._internalNotFound();
+      return FileStat._internalNotFound();
     }
   }
 

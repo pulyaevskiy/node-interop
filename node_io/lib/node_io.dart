@@ -69,7 +69,7 @@ set exitCode(int value) {
 /// these values are reserved for reporting system errors like crashes.
 void exit([int code]) {
   if (code is! int) {
-    throw new ArgumentError("Integer value for exit code expected");
+    throw ArgumentError("Integer value for exit code expected");
   }
   process.exit(code);
 }

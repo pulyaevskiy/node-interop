@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 void main() {
   group('Directory', () {
     Directory dir(String name) {
-      return new Directory(join(Directory.current.path, name));
+      return Directory(join(Directory.current.path, name));
     }
 
     test('current directory', () {
@@ -99,8 +99,8 @@ void main() {
     });
 
     test('rename', () async {
-      var src = new Directory('src');
-      var dst = new Directory('dst');
+      var src = Directory('src');
+      var dst = Directory('dst');
       try {
         await src.delete();
       } catch (_) {}

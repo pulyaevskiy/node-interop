@@ -19,7 +19,7 @@ void main() {
       server = await HttpServer.bind('127.0.0.1', 8181);
       server.listen((request) async {
         if (request.uri.path == '/redirect') {
-          request.response
+          await request.response
               .redirect(Uri.parse('http://127.0.0.1:8181/redirect-success'));
           return;
         }
@@ -34,7 +34,7 @@ void main() {
         } else {
           request.response.write('ok');
         }
-        request.response.close();
+        await request.response.close();
       });
     });
 
@@ -58,8 +58,8 @@ void main() {
 }
 
 Future<js.IncomingMessage> makeGet(Uri url) {
-  final completer = new Completer<js.IncomingMessage>();
-  final options = new js.RequestOptions(
+  final completer = Completer<js.IncomingMessage>();
+  final options = js.RequestOptions(
     method: 'GET',
     protocol: '${url.scheme}:',
     hostname: url.host,
@@ -75,8 +75,8 @@ Future<js.IncomingMessage> makeGet(Uri url) {
 }
 
 Future<String> makePost(Uri url, String body) {
-  final completer = new Completer<String>();
-  final options = new js.RequestOptions(
+  final completer = Completer<String>();
+  final options = js.RequestOptions(
     method: 'POST',
     protocol: '${url.scheme}:',
     hostname: url.host,
@@ -84,7 +84,7 @@ Future<String> makePost(Uri url, String body) {
   );
   final request = js.http.request(options, allowInterop((response) {
     response.setEncoding('utf8');
-    StringBuffer body = new StringBuffer();
+    StringBuffer body = StringBuffer();
     response.on('data', allowInterop((chunk) {
       body.write(chunk);
     }));

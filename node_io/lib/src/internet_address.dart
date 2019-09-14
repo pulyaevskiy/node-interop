@@ -37,8 +37,9 @@ class InternetAddress implements io.InternetAddress {
 
   InternetAddress._(this.address, [this._host])
       : _inAddr = _inet_pton(address) {
-    if (net.isIP(address) == 0)
-      throw new ArgumentError('${address} is not valid.');
+    if (net.isIP(address) == 0) {
+      throw ArgumentError('${address} is not valid.');
+    }
   }
 
   /// Creates a new [InternetAddress] from a numeric address.
@@ -46,7 +47,7 @@ class InternetAddress implements io.InternetAddress {
   /// If the address in [address] is not a numeric IPv4
   /// (dotted-decimal notation) or IPv6 (hexadecimal representation).
   /// address [ArgumentError] is thrown.
-  factory InternetAddress(String address) => new InternetAddress._(address);
+  factory InternetAddress(String address) => InternetAddress._(address);
 
   /// Lookup a host, returning a Future of a list of
   /// [InternetAddress]s. If [type] is [InternetAddressType.ANY], it
@@ -56,16 +57,16 @@ class InternetAddress implements io.InternetAddress {
   /// specified type. The order of the list can, and most likely will,
   /// change over time.
   static Future<List<io.InternetAddress>> lookup(String host) {
-    Completer<List<io.InternetAddress>> completer = new Completer();
-    var options = new DNSLookupOptions(all: true, verbatim: true);
+    Completer<List<io.InternetAddress>> completer = Completer();
+    var options = DNSLookupOptions(all: true, verbatim: true);
 
     void handleLookup(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
-        final addresses = new List<DNSAddress>.from(result);
+        final addresses = List<DNSAddress>.from(result);
         var list = addresses
-            .map((item) => new InternetAddress._(item.address, host))
+            .map((item) => InternetAddress._(item.address, host))
             .toList(growable: false);
         completer.complete(list);
       }
@@ -86,7 +87,7 @@ class InternetAddress implements io.InternetAddress {
         // Checking for fe80::/10.
         return _inAddr[0] == 0xFE && (_inAddr[1] & 0xB0) == 0x80;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
@@ -101,7 +102,7 @@ class InternetAddress implements io.InternetAddress {
         }
         return _inAddr[_IPV6_ADDR_LENGTH - 1] == 1;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
@@ -115,21 +116,21 @@ class InternetAddress implements io.InternetAddress {
         // Checking for ff00::/8.
         return _inAddr[0] == 0xFF;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
-  Uint8List get rawAddress => new Uint8List.fromList(_inAddr);
+  Uint8List get rawAddress => Uint8List.fromList(_inAddr);
 
   @override
   Future<io.InternetAddress> reverse() {
-    final Completer<io.InternetAddress> completer = new Completer();
+    final Completer<io.InternetAddress> completer = Completer();
     void reverseResult(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
-        final hostnames = new List<String>.from(result);
-        completer.complete(new InternetAddress._(address, hostnames.first));
+        final hostnames = List<String>.from(result);
+        completer.complete(InternetAddress._(address, hostnames.first));
       }
     }
 
@@ -150,7 +151,7 @@ const int _kColon = 58;
 Uint8List _inet_pton(String ip) {
   if (ip.contains(':')) {
     // ipv6
-    final Uint8List result = new Uint8List(16);
+    final Uint8List result = Uint8List(16);
 
     // Special cases:
     if (ip == '::') return result;
@@ -163,7 +164,7 @@ Uint8List _inet_pton(String ip) {
     int singleColons = hasDoubleColon ? (totalColons - 1) : totalColons;
     int skippedSegments = maxSingleColons - singleColons;
 
-    StringBuffer segment = new StringBuffer();
+    StringBuffer segment = StringBuffer();
     int pos = 0;
     for (var i = 0; i < ip.length; i++) {
       if (i > 0 && ip[i] == ':' && ip[i - 1] == ':') {
@@ -190,6 +191,6 @@ Uint8List _inet_pton(String ip) {
     return result;
   } else {
     // ipv4
-    return new Uint8List.fromList(ip.split('.').map(int.parse).toList());
+    return Uint8List.fromList(ip.split('.').map(int.parse).toList());
   }
 }

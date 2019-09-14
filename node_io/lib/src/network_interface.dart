@@ -26,7 +26,7 @@ abstract class NetworkInterface implements io.NetworkInterface {
             entry.key, index++, List<Map>.from(entry.value)))
         .toList(growable: false);
 
-    return new Future.value(result);
+    return Future.value(result);
   }
 }
 
@@ -43,9 +43,9 @@ class _NetworkInterface implements io.NetworkInterface {
   factory _NetworkInterface.fromJS(String name, int index, List<Map> data) {
     final addresses = data
         .map((Map addr) => addr["address"] as String)
-        .map((ip) => new InternetAddress(ip))
+        .map((ip) => InternetAddress(ip))
         .toList(growable: false);
-    return new _NetworkInterface(addresses, index, name);
+    return _NetworkInterface(addresses, index, name);
   }
 
   _NetworkInterface(this.addresses, this.index, this.name);

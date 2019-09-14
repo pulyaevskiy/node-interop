@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 void main() {
   group('BytesBuilder', () {
     test('smoke test', () {
-      var bb = new BytesBuilder();
+      var bb = BytesBuilder();
       bb..addByte(1)..addByte(5)..addByte(7);
       expect(bb.toBytes(), [1, 5, 7]);
     });

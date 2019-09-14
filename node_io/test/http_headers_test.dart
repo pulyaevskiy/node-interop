@@ -49,8 +49,8 @@ void main() {
 
   group('RequestHttpHeaders', () {
     HeadersFixture jsHeaders = require(headersFile);
-    var headers = new RequestHttpHeaders(jsHeaders.request);
-    var emptyHeaders = new RequestHttpHeaders(jsHeaders.minimal);
+    var headers = RequestHttpHeaders(jsHeaders.request);
+    var emptyHeaders = RequestHttpHeaders(jsHeaders.minimal);
 
     test('chunkedTransferEncoding', () async {
       expect(headers.chunkedTransferEncoding, isTrue);

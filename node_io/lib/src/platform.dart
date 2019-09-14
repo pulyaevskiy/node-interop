@@ -69,7 +69,7 @@ abstract class Platform {
 
   /// Get the name of the current locale.
   static String get localeName =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// A string representing the operating system or platform.
   static String get operatingSystem => os.platform();
@@ -117,7 +117,7 @@ abstract class Platform {
   /// all keys to upper case.
   /// On other platforms, keys can be distinguished by case.
   static Map<String, String> get environment =>
-      new Map.unmodifiable(dartify(process.env));
+      Map.unmodifiable(dartify(process.env));
 
   /// The path of the executable used to run the script in this isolate.
   ///
@@ -149,15 +149,15 @@ abstract class Platform {
   /// If the executable environment does not support [script],
   /// the URI is empty.
   static Uri get script =>
-      new Uri.file(process.argv[1], windows: Platform.isWindows);
+      Uri.file(process.argv[1], windows: Platform.isWindows);
 
   /// The flags passed to the executable used to run the script in this isolate.
   ///
   /// These are the command-line flags to the executable that precedes
   /// the script name.
-  /// Provides a new list every time the value is read.
+  /// Provides a list every time the value is read.
   static List<String> get executableArguments =>
-      new List.from(process.execArgv);
+      List.from(process.execArgv);
 
   /// The `--package-root` flag passed to the executable used to run the script
   /// in this isolate.
@@ -165,7 +165,7 @@ abstract class Platform {
   /// If present, it specifies the directory where Dart packages are looked up.
   /// Is `null` if there is no `--package-root` flag.
   static String get packageRoot =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// The `--packages` flag passed to the executable used to run the script
   /// in this isolate.
@@ -173,7 +173,7 @@ abstract class Platform {
   /// If present, it specifies a file describing how Dart packages are looked up.
   /// Is `null` if there is no `--packages` flag.
   static String get packageConfig =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// The version of the current Dart runtime.
   ///
@@ -182,5 +182,5 @@ abstract class Platform {
   /// possibly followed by whitespace and other version and
   /// build details.
   static String get version =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 }

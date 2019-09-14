@@ -14,7 +14,7 @@ void main() {
     test('create', () async {
       var filepath = createFile("link_create_test.txt", 'data');
       var linkpath = createPath("link.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       var created = await link.create(filepath);
       expect(created.exists(), completion(isTrue));
     });
@@ -22,7 +22,7 @@ void main() {
     test('createSync', () {
       var filepath = createFile("link_create_sync_test.txt", 'data');
       var linkpath = createPath("link_sync.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       link.createSync(filepath);
       expect(link.existsSync(), isTrue);
     });
@@ -30,7 +30,7 @@ void main() {
     test('delete', () async {
       var filepath = createFile("link_delete_test.txt", 'data');
       var linkpath = createPath("link_delete.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       var created = await link.create(filepath);
       await created.delete();
       expect(created.exists(), completion(isFalse));
@@ -39,7 +39,7 @@ void main() {
     test('deleteSync', () {
       var filepath = createFile("link_delete_sync_test.txt", 'data');
       var linkpath = createPath("link_delete_sync.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       link.createSync(filepath);
       link.deleteSync();
       expect(link.existsSync(), isFalse);
@@ -48,7 +48,7 @@ void main() {
     test('rename', () async {
       var filepath = createFile("link_rename_test.txt", 'data');
       var linkpath = createPath("link_rename.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       var created = await link.create(filepath);
       var renamed = await created.rename(createPath("link_new_name.txt"));
       expect(renamed.exists(), completion(isTrue));
@@ -58,7 +58,7 @@ void main() {
     test('renameSync', () {
       var filepath = createFile("link_rename_sync_test.txt", 'data');
       var linkpath = createPath("link_rename_sync.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       link.createSync(filepath);
       var renamed = link.renameSync(createPath("link_rename_sync_new.txt"));
       expect(renamed.existsSync(), isTrue);
@@ -68,7 +68,7 @@ void main() {
     test('target and targetSync', () async {
       var filepath = createFile("link_target_test.txt", 'data');
       var linkpath = createPath("link_target.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       var created = await link.create(filepath);
 
       expect(created.target(), completion(filepath));
@@ -80,7 +80,7 @@ void main() {
       var filepath2 = createFile("link_update_new_test.txt", 'data');
       var filepath3 = createFile("link_update_new_sync_test.txt", 'data');
       var linkpath = createPath("link_update.txt");
-      var link = new Link(linkpath);
+      var link = Link(linkpath);
       var created = await link.create(filepath);
 
       var updated = await created.update(filepath2);
