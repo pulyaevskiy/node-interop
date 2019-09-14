@@ -1,4 +1,4 @@
-# 0.3.0
+# 0.2.2
 
 - Upgraded to latest build dependencies and synced with build_web_compilers as a reference implementation.
 
