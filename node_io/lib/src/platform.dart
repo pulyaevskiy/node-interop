@@ -156,8 +156,7 @@ abstract class Platform {
   /// These are the command-line flags to the executable that precedes
   /// the script name.
   /// Provides a list every time the value is read.
-  static List<String> get executableArguments =>
-      List.from(process.execArgv);
+  static List<String> get executableArguments => List.from(process.execArgv);
 
   /// The `--package-root` flag passed to the executable used to run the script
   /// in this isolate.
@@ -181,6 +180,5 @@ abstract class Platform {
   /// string representing the version of the current Dart runtime,
   /// possibly followed by whitespace and other version and
   /// build details.
-  static String get version =>
-      throw UnsupportedError('Not supported in Node.');
+  static String get version => throw UnsupportedError('Not supported in Node.');
 }

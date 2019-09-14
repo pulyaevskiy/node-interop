@@ -62,7 +62,7 @@ class NodeClient extends BaseClient {
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
-    final handler = new _RequestHandler(this, request);
+    final handler = _RequestHandler(this, request);
     return handler.send();
   }
 
@@ -79,7 +79,7 @@ class _RequestHandler {
 
   _RequestHandler(this.client, this.request);
 
-  final List<_RedirectInfo> _redirects = new List();
+  final List<_RedirectInfo> _redirects = List();
 
   List<List<int>> _body;
   var _headers;
@@ -96,7 +96,7 @@ class _RequestHandler {
           response = await redirect(response, method);
           method = _redirects.last.method;
         } else {
-          throw new ClientException('Redirect limit exceeded.');
+          throw ClientException('Redirect limit exceeded.');
         }
       }
     }
@@ -113,7 +113,7 @@ class _RequestHandler {
 
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
-    var options = new RequestOptions(
+    var options = RequestOptions(
       protocol: "${url.scheme}:",
       hostname: url.host,
       port: url.port,
@@ -122,17 +122,17 @@ class _RequestHandler {
       headers: _headers,
       agent: usedAgent,
     );
-    var completer = new Completer<StreamedResponse>();
+    var completer = Completer<StreamedResponse>();
 
     void handleResponse(IncomingMessage response) {
       final rawHeaders = dartify(response.headers) as Map<String, dynamic>;
-      final headers = new Map<String, String>();
+      final headers = Map<String, String>();
       for (var key in rawHeaders.keys) {
         final value = rawHeaders[key];
         headers[key] = (value is List) ? value.join(',') : value;
       }
-      final controller = new StreamController<List<int>>();
-      completer.complete(new StreamedResponse(
+      final controller = StreamController<List<int>>();
+      completer.complete(StreamedResponse(
         controller.stream,
         response.statusCode,
         request: request,
@@ -143,7 +143,7 @@ class _RequestHandler {
 
       response.on('data', allowInterop((Iterable<int> buffer) {
         // buffer is an instance of Node's Buffer.
-        controller.add(new List.unmodifiable(buffer));
+        controller.add(List.unmodifiable(buffer));
       }));
       response.on('end', allowInterop(() {
         controller.close();
@@ -187,21 +187,20 @@ class _RequestHandler {
 
     String location = response.headers[HttpHeaders.locationHeader];
     if (location == null) {
-      throw new StateError("Response has no Location header for redirect.");
+      throw StateError("Response has no Location header for redirect.");
     }
     final url = Uri.parse(location);
 
     if (followLoops != true) {
       for (var redirect in _redirects) {
         if (redirect.location == url) {
-          return new Future.error(
-              new ClientException("Redirect loop detected."));
+          return Future.error(ClientException("Redirect loop detected."));
         }
       }
     }
 
     return _send(url: url, method: method).then((response) {
-      _redirects.add(new _RedirectInfo(response.statusCode, method, url));
+      _redirects.add(_RedirectInfo(response.statusCode, method, url));
       return response;
     });
   }

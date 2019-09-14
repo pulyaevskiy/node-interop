@@ -253,8 +253,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   io.HttpConnectionInfo get connectionInfo {
     var socket = nativeInstance.socket;
     var address = InternetAddress(socket.remoteAddress);
-    return _HttpConnectionInfo(
-        socket.localPort, address, socket.remotePort);
+    return _HttpConnectionInfo(socket.localPort, address, socket.remotePort);
   }
 
   @override
@@ -276,8 +275,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   List<io.Cookie> _cookies;
 
   @override
-  io.HttpHeaders get headers =>
-      _headers ??= RequestHttpHeaders(nativeInstance);
+  io.HttpHeaders get headers => _headers ??= RequestHttpHeaders(nativeInstance);
   io.HttpHeaders _headers;
 
   @override
@@ -327,8 +325,8 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   io.HttpResponse _response; // ignore: close_sinks
 
   @override
-  io.HttpSession get session => throw UnsupportedError(
-      'Sessions are not supported by Node HTTP server.');
+  io.HttpSession get session =>
+      throw UnsupportedError('Sessions are not supported by Node HTTP server.');
 
   @override
   Uri get uri => Uri.parse(nativeInstance.url);
@@ -612,8 +610,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   io.HttpConnectionInfo get connectionInfo {
     var socket = nativeInstance.socket;
     var address = InternetAddress(socket.remoteAddress);
-    return _HttpConnectionInfo(
-        socket.localPort, address, socket.remotePort);
+    return _HttpConnectionInfo(socket.localPort, address, socket.remotePort);
   }
 
   @override

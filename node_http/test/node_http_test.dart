@@ -49,7 +49,7 @@ void main() {
     });
 
     test('make get request', () async {
-      var client = new http.NodeClient();
+      var client = http.NodeClient();
       var response = await client.get('http://127.0.0.1:8181/test');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -61,7 +61,7 @@ void main() {
     });
 
     test('make post request with a body', () async {
-      var client = new http.NodeClient();
+      var client = http.NodeClient();
       var response =
           await client.post('http://127.0.0.1:8181/test', body: 'hello');
       expect(response.statusCode, 200);
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('follows redirects', () async {
-      var client = new http.NodeClient();
+      var client = http.NodeClient();
       var response = await client.get('http://127.0.0.1:8181/redirect-to-test');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -90,7 +90,7 @@ void main() {
     });
 
     test('fails for redirect loops', () async {
-      var client = new http.NodeClient();
+      var client = http.NodeClient();
       var error;
       try {
         await client.get('http://127.0.0.1:8181/redirect-loop');

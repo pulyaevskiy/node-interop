@@ -294,10 +294,7 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<List<String>> readAsLines({Encoding encoding = utf8}) {
-    return encoding.decoder
-        .bind(openRead())
-        .transform(LineSplitter())
-        .toList();
+    return encoding.decoder.bind(openRead()).transform(LineSplitter()).toList();
   }
 
   @override

@@ -107,7 +107,7 @@ Future<String> read(url, {Map<String, String> headers}) =>
     _withClient((client) => client.read(url, headers: headers));
 
 Future<T> _withClient<T>(Future<T> fn(Client client)) async {
-  var client = new NodeClient();
+  var client = NodeClient();
   try {
     return await fn(client);
   } finally {

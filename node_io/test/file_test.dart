@@ -42,8 +42,8 @@ void main() {
     });
 
     test('readAsBytes', () async {
-      var path = createFile(
-          'readAsBytes.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
+      var path =
+          createFile('readAsBytes.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
       var file = File(path);
       expect(file.existsSync(), isTrue);
       var data = await file.readAsBytes();
@@ -94,8 +94,7 @@ void main() {
     });
 
     test('copy', () async {
-      var path =
-          createFile('copy.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
+      var path = createFile('copy.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
       var file = File(path);
       final copyPath = path.replaceFirst('copy.txt', 'copy_copy.txt');
       final result = await file.copy(copyPath);
@@ -105,8 +104,8 @@ void main() {
     });
 
     test('copySync', () async {
-      var path = createFile(
-          'copy_sync.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
+      var path =
+          createFile('copy_sync.txt', String.fromCharCodes([1, 2, 3, 4, 5]));
       var file = File(path);
       final copyPath = path.replaceFirst('copy_sync.txt', 'copy_sync_copy.txt');
       final result = await file.copy(copyPath);
