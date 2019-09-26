@@ -1,3 +1,9 @@
+# 0.2.3
+
+- Fix: Added node_io to list of known packages that can skip platform checks when compiled with
+  dart2js ([#67](https://github.com/pulyaevskiy/node-interop/issues/67)).
+- Internal: fixed all pedantic issues.
+
 # 0.2.2
 
 - Upgraded to latest build dependencies and synced with build_web_compilers as a reference implementation.
