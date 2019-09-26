@@ -6,14 +6,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:build/build.dart';
-import 'package:node_preamble/preamble.dart';
 import 'package:build_modules/build_modules.dart';
 import 'package:crypto/crypto.dart';
-import 'package:scratch_space/scratch_space.dart';
+import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart' as p;
+import 'package:scratch_space/scratch_space.dart';
 
 import 'node_entrypoint_builder.dart';
 import 'platforms.dart';
+
+const _knownPackagesToSkipPlatformCheck = {"node_io"};
 
 Future<void> bootstrapDart2Js(
     BuildStep buildStep, List<String> dart2JsArgs) async {
@@ -28,7 +30,8 @@ Future<void> bootstrapDart2Js(
     List<Module> allDeps;
     try {
       allDeps = (await module.computeTransitiveDependencies(buildStep,
-          throwIfUnsupported: true))
+          throwIfUnsupported: true,
+          skipPlatformCheckPackages: _knownPackagesToSkipPlatformCheck))
         ..add(module);
     } on UnsupportedModules catch (e) {
       var librariesString = (await e.exactLibraries(buildStep).toList())
