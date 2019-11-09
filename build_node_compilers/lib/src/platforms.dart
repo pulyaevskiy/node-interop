@@ -4,7 +4,7 @@
 
 import 'package:build_modules/build_modules.dart';
 
-final ddcPlatform = DartPlatform.register('ddc', [
+final ddcPlatform = DartPlatform.register('ddc_node', [
   'async',
   'collection',
   'convert',
@@ -24,7 +24,7 @@ final ddcPlatform = DartPlatform.register('ddc', [
   '_internal',
 ]);
 
-final dart2jsPlatform = DartPlatform.register('dart2js', [
+final dart2jsPlatform = DartPlatform.register('dart2js_node', [
   'async',
   'collection',
   'convert',

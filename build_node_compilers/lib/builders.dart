@@ -25,12 +25,13 @@ Builder ddcBuilder(BuilderOptions options) => DevCompilerBuilder(
       useIncrementalCompiler: _readUseIncrementalCompilerOption(options),
       platform: ddcPlatform,
     );
-const ddcKernelExtension = '.ddc.dill';
+const ddcKernelExtension = '.ddc_node.dill';
 Builder ddcKernelBuilder(BuilderOptions options) => KernelBuilder(
     summaryOnly: true,
     sdkKernelPath: p.url.join('lib', '_internal', 'ddc_sdk.dill'),
     outputExtension: ddcKernelExtension,
     platform: ddcPlatform,
+    kernelTargetName: 'ddc', // otherwise kernel_worker fails on unknown target
     useIncrementalCompiler: _readUseIncrementalCompilerOption(options));
 //Builder sdkJsCopyBuilder(_) => SdkJsCopyBuilder();
 PostProcessBuilder sdkJsCleanupBuilder(BuilderOptions options) =>
@@ -61,7 +62,7 @@ bool _readUseIncrementalCompilerOption(BuilderOptions options) {
   if (_previousDdcConfig != null) {
     if (!const MapEquality().equals(_previousDdcConfig, options.config)) {
       throw ArgumentError(
-          'The build_web_compilers:ddc builder must have the same '
+          'The build_node_compilers:ddc builder must have the same '
           'configuration in all packages. Saw $_previousDdcConfig and '
           '${options.config} which are not equal.\n\n '
           'Please use the `global_options` section in '
@@ -71,7 +72,7 @@ bool _readUseIncrementalCompilerOption(BuilderOptions options) {
     _previousDdcConfig = options.config;
   }
   validateOptions(options.config, [_useIncrementalCompilerOption],
-      'build_web_compilers:ddc');
+      'build_node_compilers:ddc');
   return options.config[_useIncrementalCompilerOption] as bool ?? true;
 }
 
