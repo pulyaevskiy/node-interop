@@ -1,3 +1,7 @@
+# 0.2.4
+
+- Fixed platform names and file extensions conflicting with build_web_compilers.
+
 # 0.2.3
 
 - Fix: Added node_io to list of known packages that can skip platform checks when compiled with

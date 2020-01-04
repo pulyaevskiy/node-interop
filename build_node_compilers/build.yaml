@@ -20,10 +20,10 @@ builders:
       - dart2jsModuleBuilder
     build_extensions:
       $lib$:
-        - .dart2js.meta_module.raw
-        - .dart2js.meta_module.clean
+        - .dart2js_node.meta_module.raw
+        - .dart2js_node.meta_module.clean
       .dart:
-        - .dart2js.module
+        - .dart2js_node.module
     is_optional: True
     auto_apply: none
     required_inputs: [".dart", ".module.library"]
@@ -36,10 +36,10 @@ builders:
       - ddcModuleBuilder
     build_extensions:
       $lib$:
-        - .ddc.meta_module.raw
-        - .ddc.meta_module.clean
+        - .ddc_node.meta_module.raw
+        - .ddc_node.meta_module.clean
       .dart:
-        - .ddc.module
+        - .ddc_node.module
     is_optional: True
     auto_apply: none
     required_inputs: [".dart", ".module.library"]
@@ -50,15 +50,15 @@ builders:
       - ddcKernelBuilder
       - ddcBuilder
     build_extensions:
-      .ddc.module:
-        - .node.ddc.dill
-        - .node.ddc.js.errors
-        - .node.ddc.js
-        - .node.ddc.js.map
+      .ddc_node.module:
+        - .ddc_node.dill
+        - .ddc_node.js.errors
+        - .ddc_node.js
+        - .ddc_node.js.map
     is_optional: True
     auto_apply: all_packages
     required_inputs:
-      - .ddc.module
+      - .ddc_node.module
     applies_builders:
       - build_node_compilers|ddc_modules
       # This isn't really the best place to apply these, but it is the only
@@ -77,9 +77,9 @@ builders:
         - .digests
     required_inputs:
       - .dart
-      - .node.ddc.js
-      - .ddc.module
-      - .dart2js.module
+      - .ddc_node.js
+      - .ddc_node.module
+      - .dart2js_node.module
     build_to: cache
     auto_apply: root_package
     defaults:

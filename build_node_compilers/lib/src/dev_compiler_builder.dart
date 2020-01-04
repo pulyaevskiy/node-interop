@@ -16,9 +16,9 @@ import '../builders.dart';
 import 'common.dart';
 import 'errors.dart';
 
-const jsModuleErrorsExtension = '.node.ddc.js.errors';
-const jsModuleExtension = '.node.ddc.js';
-const jsSourceMapExtension = '.node.ddc.js.map';
+const jsModuleErrorsExtension = '.ddc_node.js.errors';
+const jsModuleExtension = '.ddc_node.js';
+const jsSourceMapExtension = '.ddc_node.js.map';
 
 /// A builder which can output ddc modules!
 class DevCompilerBuilder implements Builder {

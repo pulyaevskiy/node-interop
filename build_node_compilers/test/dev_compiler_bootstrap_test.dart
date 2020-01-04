@@ -40,10 +40,10 @@ main() {
       'a|web/index.dart.js.map': anything,
       'a|web/index.dart.bootstrap.js': decodedMatches(allOf([
         // Maps non-lib modules to remove the top level dir.
-        contains('"web/index": "index.node.ddc"'),
+        contains('"web/index": "index.ddc_node"'),
         // Maps lib modules to packages path
-        contains('"packages/a/a": "packages/a/a.node.ddc"'),
-        contains('"packages/b/b": "packages/b/b.node.ddc"'),
+        contains('"packages/a/a": "packages/a/a.ddc_node"'),
+        contains('"packages/b/b": "packages/b/b.ddc_node"'),
         // Requires the top level module and dart sdk.
         contains("var Module = require('module');"),
         contains('const dart_sdk = require("dart_sdk");'),
