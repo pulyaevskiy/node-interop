@@ -1,15 +1,14 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+import 'package:build_modules/build_modules.dart';
+import 'package:build_node_compilers/build_node_compilers.dart';
 import 'package:build_test/build_test.dart';
 import 'package:test/test.dart';
 
-import 'package:build_node_compilers/build_node_compilers.dart';
-import 'package:build_modules/build_modules.dart';
-
 import 'util.dart';
 
-main() {
+void main() {
   Map<String, dynamic> assets;
   final platform = dart2jsPlatform;
 

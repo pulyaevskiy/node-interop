@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 
 import 'util.dart';
 
-main() {
+void main() {
   Map<String, dynamic> assets;
 
   setUp(() async {

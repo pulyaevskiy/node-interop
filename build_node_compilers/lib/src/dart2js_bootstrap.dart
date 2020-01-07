@@ -15,8 +15,6 @@ import 'package:scratch_space/scratch_space.dart';
 import 'node_entrypoint_builder.dart';
 import 'platforms.dart';
 
-const _knownPackagesToSkipPlatformCheck = {"node_io"};
-
 Future<void> bootstrapDart2Js(
     BuildStep buildStep, List<String> dart2JsArgs) async {
   var dartEntrypointId = buildStep.inputId;
@@ -29,9 +27,7 @@ Future<void> bootstrapDart2Js(
             as Map<String, dynamic>);
     List<Module> allDeps;
     try {
-      allDeps = (await module.computeTransitiveDependencies(buildStep,
-          throwIfUnsupported: true,
-          skipPlatformCheckPackages: _knownPackagesToSkipPlatformCheck))
+      allDeps = (await module.computeTransitiveDependencies(buildStep))
         ..add(module);
     } on UnsupportedModules catch (e) {
       var librariesString = (await e.exactLibraries(buildStep).toList())
@@ -96,8 +92,8 @@ Future<void> _copyIfExists(
 }
 
 void addNodePreamble(File output) {
-  String preamble = getPreamble(minified: true);
-  String contents = output.readAsStringSync();
+  var preamble = getPreamble(minified: true);
+  var contents = output.readAsStringSync();
   output
     ..writeAsStringSync(preamble)
     ..writeAsStringSync(contents, mode: FileMode.append);
