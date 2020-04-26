@@ -69,13 +69,11 @@ void main() {
       final response =
           await makeGet(Uri.parse('http://127.0.0.1:8181/headers_add_set'));
       final headers = Map<String, dynamic>.from(dartify(response.headers));
-      print(headers);
       expect(headers['add_no_case'], 'test1, test2');
       expect(headers['add_No_case'], isNull);
       expect(headers['set_no_case'], 'test2');
       expect(headers['set_No_case'], isNull);
-      //expect(headers['location'], 'http://127.0.0.1:8181/redirect-success');
-    }, solo: true);
+    });
   });
 }
 
