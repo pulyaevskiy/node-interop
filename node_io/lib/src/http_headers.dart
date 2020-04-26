@@ -271,11 +271,17 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void add(String name, Object value) {
-    List<String> existingValues = this[name];
-    var values = existingValues != null ? List.from(existingValues) : [];
-    values.add(value.toString());
-    _setHeader(name, values);
+  void add(String name, Object value, {bool preserveHeaderCase = false}) {
+    if (preserveHeaderCase ?? false) {
+      // new since 2.8
+      // not supported on node
+      throw UnsupportedError('HttpHeaders.add(preserveHeaderCase: true)');
+    } else {
+      List<String> existingValues = this[name];
+      var values = existingValues != null ? List.from(existingValues) : [];
+      values.add(value.toString());
+      _setHeader(name, values);
+    }
   }
 
   @override
@@ -312,7 +318,13 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void set(String name, Object value) {
-    _setHeader(name, jsify(value));
+  void set(String name, Object value, {bool preserveHeaderCase = false}) {
+    if (preserveHeaderCase ?? false) {
+      // new since 2.8
+      // not supported on node
+      throw UnsupportedError('HttpHeaders.add(preserveHeaderCase: true)');
+    } else {
+      _setHeader(name, jsify(value));
+    }
   }
 }
