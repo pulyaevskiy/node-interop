@@ -241,14 +241,14 @@ class Directory extends FileSystemEntity implements io.Directory {
   Future<io.Directory> createTemp([String prefix]) {
     prefix ??= '';
     if (path == '') {
-      throw ArgumentError("Directory.createTemp called with an empty path. "
-          "To use the system temp directory, use Directory.systemTemp");
+      throw ArgumentError('Directory.createTemp called with an empty path. '
+          'To use the system temp directory, use Directory.systemTemp');
     }
     String fullPrefix;
     if (path.endsWith('/') || (Platform.isWindows && path.endsWith('\\'))) {
-      fullPrefix = "$path$prefix";
+      fullPrefix = '$path$prefix';
     } else {
-      fullPrefix = "$path${Platform.pathSeparator}$prefix";
+      fullPrefix = '$path${Platform.pathSeparator}$prefix';
     }
 
     final completer = Completer<Directory>();
@@ -270,14 +270,14 @@ class Directory extends FileSystemEntity implements io.Directory {
   io.Directory createTempSync([String prefix]) {
     prefix ??= '';
     if (path == '') {
-      throw ArgumentError("Directory.createTemp called with an empty path. "
-          "To use the system temp directory, use Directory.systemTemp");
+      throw ArgumentError('Directory.createTemp called with an empty path. '
+          'To use the system temp directory, use Directory.systemTemp');
     }
     String fullPrefix;
     if (path.endsWith('/') || (Platform.isWindows && path.endsWith('\\'))) {
-      fullPrefix = "$path$prefix";
+      fullPrefix = '$path$prefix';
     } else {
-      fullPrefix = "$path${Platform.pathSeparator}$prefix";
+      fullPrefix = '$path${Platform.pathSeparator}$prefix';
     }
     final resultPath = fs.mkdtempSync(fullPrefix);
     return Directory(resultPath);
@@ -303,5 +303,10 @@ class Directory extends FileSystemEntity implements io.Directory {
         return Link(filePath);
       }
     }).toList();
+  }
+
+  @override
+  String toString() {
+    return "Directory: '$path'";
   }
 }

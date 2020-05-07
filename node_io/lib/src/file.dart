@@ -144,7 +144,7 @@ class File extends FileSystemEntity implements io.File {
 
   @override
   Future<File> copy(String newPath) {
-    final Completer<File> completer = Completer<File>();
+    final completer = Completer<File>();
     void callback(err) {
       if (err != null) {
         completer.completeError(err);
@@ -167,7 +167,7 @@ class File extends FileSystemEntity implements io.File {
   @override
   Future<File> create({bool recursive = false}) {
     // write an empty file
-    final Completer<File> completer = Completer<File>();
+    final completer = Completer<File>();
     void callback(err, [fd]) {
       if (err != null) {
         completer.completeError(err);
@@ -183,13 +183,13 @@ class File extends FileSystemEntity implements io.File {
     }
 
     final jsCallback = js.allowInterop(callback);
-    fs.open(_absolutePath, "w", jsCallback);
+    fs.open(_absolutePath, 'w', jsCallback);
     return completer.future;
   }
 
   @override
   void createSync({bool recursive = false}) {
-    final fd = fs.openSync(_absolutePath, "w");
+    final fd = fs.openSync(_absolutePath, 'w');
     fs.closeSync(fd);
   }
 
@@ -199,7 +199,7 @@ class File extends FileSystemEntity implements io.File {
       return Future.error(
           UnsupportedError('Recursive delete is not supported by Node API'));
     }
-    final Completer<File> completer = Completer<File>();
+    final completer = Completer<File>();
     void callback(err) {
       if (err != null) {
         completer.completeError(err);
@@ -281,10 +281,10 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<Uint8List> readAsBytes() => openRead()
-      .fold(List<int>(),
-          (List<int> previous, List<int> element) => previous..addAll(element))
-      .then((List<int> list) => Uint8List.fromList(list));
+  Future<Uint8List> readAsBytes() => openRead().fold(
+      <int>[],
+      (List<int> previous, List<int> element) => previous
+        ..addAll(element)).then((List<int> list) => Uint8List.fromList(list));
 
   @override
   Uint8List readAsBytesSync() {
@@ -360,7 +360,7 @@ class File extends FileSystemEntity implements io.File {
     atime ??= Date(currentStat.accessed.millisecondsSinceEpoch);
     mtime ??= Date(currentStat.modified.millisecondsSinceEpoch);
 
-    final Completer<void> completer = Completer();
+    final completer = Completer();
     void cb([err]) {
       if (err != null) {
         completer.completeError(err);
@@ -397,7 +397,7 @@ class File extends FileSystemEntity implements io.File {
   void writeAsBytesSync(List<int> bytes,
       {io.FileMode mode = io.FileMode.write, bool flush = false}) {
     var flag = _RandomAccessFile.fileModeToJsFlags(mode);
-    var options = jsify({"flag": flag});
+    var options = jsify({'flag': flag});
     fs.writeFileSync(_absolutePath, Buffer.from(bytes), options);
   }
 
@@ -422,6 +422,11 @@ class File extends FileSystemEntity implements io.File {
       bool flush = false}) {
     fs.writeFileSync(_absolutePath, contents);
   }
+
+  @override
+  String toString() {
+    return "File: '$path'";
+  }
 }
 
 class _RandomAccessFile implements io.RandomAccessFile {
@@ -429,6 +434,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
   final int fd;
 
   /// File path.
+  @override
   final String path;
 
   bool _asyncDispatched = false;
@@ -514,7 +520,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
   @override
   Future<int> length() {
     return _dispatch(() {
-      File file = File(path);
+      final file = File(path);
       return file.stat().then((stat) => stat.size);
     });
   }
@@ -522,20 +528,20 @@ class _RandomAccessFile implements io.RandomAccessFile {
   @override
   int lengthSync() {
     _checkAvailable();
-    File file = File(path);
+    final file = File(path);
     return file.statSync().size;
   }
 
   @override
   Future<io.RandomAccessFile> lock(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    throw UnsupportedError("File locks are not supported by Node.js");
+    throw UnsupportedError('File locks are not supported by Node.js');
   }
 
   @override
   void lockSync(
       [io.FileLock mode = io.FileLock.exclusive, int start = 0, int end = -1]) {
-    throw UnsupportedError("File locks are not supported by Node.js");
+    throw UnsupportedError('File locks are not supported by Node.js');
   }
 
   @override
@@ -615,12 +621,12 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> setPosition(int position) {
-    throw UnsupportedError("Setting position is not supported by Node.js");
+    throw UnsupportedError('Setting position is not supported by Node.js');
   }
 
   @override
   void setPositionSync(int position) {
-    throw UnsupportedError("Setting position is not supported by Node.js");
+    throw UnsupportedError('Setting position is not supported by Node.js');
   }
 
   @override
@@ -649,12 +655,12 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> unlock([int start = 0, int end = -1]) {
-    throw UnsupportedError("File locks are not supported by Node.js");
+    throw UnsupportedError('File locks are not supported by Node.js');
   }
 
   @override
   void unlockSync([int start = 0, int end = -1]) {
-    throw UnsupportedError("File locks are not supported by Node.js");
+    throw UnsupportedError('File locks are not supported by Node.js');
   }
 
   @override
@@ -724,12 +730,13 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   bool _closed = false;
 
-  Future<T> _dispatch<T>(Future<T> request(), {bool markClosed = false}) {
+  Future<T> _dispatch<T>(Future<T> Function() request,
+      {bool markClosed = false}) {
     if (_closed) {
-      return Future.error(io.FileSystemException("File closed", path));
+      return Future.error(io.FileSystemException('File closed', path));
     }
     if (_asyncDispatched) {
-      var msg = "An async operation is currently pending";
+      var msg = 'An async operation is currently pending';
       return Future.error(io.FileSystemException(msg, path));
     }
     if (markClosed) {
@@ -747,10 +754,10 @@ class _RandomAccessFile implements io.RandomAccessFile {
   void _checkAvailable() {
     if (_asyncDispatched) {
       throw io.FileSystemException(
-          "An async operation is currently pending", path);
+          'An async operation is currently pending', path);
     }
     if (_closed) {
-      throw io.FileSystemException("File closed", path);
+      throw io.FileSystemException('File closed', path);
     }
   }
 }

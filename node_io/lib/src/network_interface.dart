@@ -18,9 +18,10 @@ abstract class NetworkInterface implements io.NetworkInterface {
   /// Query the system for [NetworkInterface]s.
   // TODO: Implement all named arguments for this method.
   static Future<List<io.NetworkInterface>> list() {
-    Map<String, Object> data = dartify(os.networkInterfaces());
+    // ignore: omit_local_variable_types
+    final Map<String, Object> data = dartify(os.networkInterfaces());
 
-    int index = 0;
+    var index = 0;
     final result = data.entries
         .map((entry) => _NetworkInterface.fromJS(
             entry.key, index++, List<Map>.from(entry.value)))
@@ -42,7 +43,7 @@ class _NetworkInterface implements io.NetworkInterface {
 
   factory _NetworkInterface.fromJS(String name, int index, List<Map> data) {
     final addresses = data
-        .map((Map addr) => addr["address"] as String)
+        .map((Map addr) => addr['address'] as String)
         .map((ip) => InternetAddress(ip))
         .toList(growable: false);
     return _NetworkInterface(addresses, index, name);
@@ -52,6 +53,6 @@ class _NetworkInterface implements io.NetworkInterface {
 
   @override
   String toString() {
-    return "NetworkInterface #$index($name, $addresses)";
+    return 'NetworkInterface #$index($name, $addresses)';
   }
 }

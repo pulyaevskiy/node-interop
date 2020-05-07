@@ -26,7 +26,7 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
       : RegExp(r'[^/]/+[^/]');
 
   static String parentOf(String path) {
-    int rootEnd = -1;
+    var rootEnd = -1;
     if (Platform.isWindows) {
       if (path.startsWith(_absoluteWindowsPathPattern)) {
         // Root ends at first / or \ after the first two characters.
@@ -40,7 +40,7 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
     }
     // Ignore trailing slashes.
     // All non-trivial cases have separators between two non-separators.
-    int pos = path.lastIndexOf(_parentRegExp);
+    var pos = path.lastIndexOf(_parentRegExp);
     if (pos > rootEnd) {
       return path.substring(0, pos + 1);
     } else if (rootEnd > -1) {
@@ -183,9 +183,9 @@ class FileStat implements io.FileStat {
     var permissions = mode & 0xFFF;
     var codes = const ['---', '--x', '-w-', '-wx', 'r--', 'r-x', 'rw-', 'rwx'];
     var result = [];
-    if ((permissions & 0x800) != 0) result.add("(suid) ");
-    if ((permissions & 0x400) != 0) result.add("(guid) ");
-    if ((permissions & 0x200) != 0) result.add("(sticky) ");
+    if ((permissions & 0x800) != 0) result.add('(suid) ');
+    if ((permissions & 0x400) != 0) result.add('(guid) ');
+    if ((permissions & 0x200) != 0) result.add('(sticky) ');
     result
       ..add(codes[(permissions >> 6) & 0x7])
       ..add(codes[(permissions >> 3) & 0x7])
@@ -194,11 +194,11 @@ class FileStat implements io.FileStat {
   }
 
   @override
-  String toString() => """
+  String toString() => '''
 FileStat: type $type
           changed $changed
           modified $modified
           accessed $accessed
           mode ${modeString()}
-          size $size""";
+          size $size''';
 }

@@ -198,9 +198,9 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
   String serverHeader; // TODO: Implement serverHeader
 
   @override
-  Future<Null> close({bool force = false}) {
+  Future close({bool force = false}) {
     assert(!force, 'Force argument is not supported by Node HTTP server');
-    final Completer<Null> completer = Completer<Null>();
+    final completer = Completer();
     _server.close(allowInterop(([error]) {
       _controller.close();
       if (error != null) {
@@ -221,8 +221,12 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
   io.HttpHeaders get defaultResponseHeaders => throw UnimplementedError();
 
   @override
-  StreamSubscription<io.HttpRequest> listen(void onData(io.HttpRequest event),
-      {Function onError, void onDone(), bool cancelOnError}) {
+  StreamSubscription<io.HttpRequest> listen(
+    void Function(io.HttpRequest event) onData, {
+    Function onError,
+    void Function() onDone,
+    bool cancelOnError,
+  }) {
     return _controller.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
@@ -262,8 +266,8 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   @override
   List<io.Cookie> get cookies {
     if (_cookies != null) return _cookies;
-    _cookies = List<io.Cookie>();
-    List<String> values = headers[io.HttpHeaders.setCookieHeader];
+    _cookies = <io.Cookie>[];
+    final values = headers[io.HttpHeaders.setCookieHeader];
     if (values != null) {
       values.forEach((value) {
         _cookies.add(io.Cookie.fromSetCookieValue(value));
@@ -298,7 +302,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
         scheme = proto.first;
       } else {
         var isSecure = getProperty(socket, 'encrypted') ?? false;
-        scheme = isSecure ? "https" : "http";
+        scheme = isSecure ? 'https' : 'http';
       }
       var hostList = headers['x-forwarded-host'];
       String host;
@@ -309,10 +313,10 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
         if (hostList != null) {
           host = hostList.first;
         } else {
-          host = "${socket.localAddress}:${socket.localPort}";
+          host = '${socket.localAddress}:${socket.localPort}';
         }
       }
-      _requestedUri = Uri.parse("$scheme://$host$uri");
+      _requestedUri = Uri.parse('$scheme://$host$uri');
     }
     return _requestedUri;
   }
@@ -545,6 +549,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
 class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   NodeHttpResponse(_http.ServerResponse nativeResponse) : super(nativeResponse);
 
+  @override
   _http.ServerResponse get nativeInstance => super.nativeInstance;
 
   @override
@@ -581,6 +586,8 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   String get reasonPhrase => nativeInstance.statusMessage;
+
+  @override
   set reasonPhrase(String phrase) {
     if (nativeInstance.headersSent) {
       throw StateError('Headers already sent.');
@@ -616,8 +623,8 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   @override
   List<io.Cookie> get cookies {
     if (_cookies != null) return _cookies;
-    _cookies = List<io.Cookie>();
-    List<String> values = headers[io.HttpHeaders.setCookieHeader];
+    _cookies = <io.Cookie>[];
+    final values = headers[io.HttpHeaders.setCookieHeader];
     if (values != null) {
       values.forEach((value) {
         _cookies.add(io.Cookie.fromSetCookieValue(value));
@@ -641,7 +648,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   @override
   Future redirect(Uri location, {int status = io.HttpStatus.movedTemporarily}) {
     statusCode = status;
-    headers.set("location", "$location");
+    headers.set('location', '$location');
     return close();
   }
 }

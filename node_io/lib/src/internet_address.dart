@@ -57,8 +57,8 @@ class InternetAddress implements io.InternetAddress {
   /// specified type. The order of the list can, and most likely will,
   /// change over time.
   static Future<List<io.InternetAddress>> lookup(String host) {
-    Completer<List<io.InternetAddress>> completer = Completer();
-    var options = DNSLookupOptions(all: true, verbatim: true);
+    final completer = Completer<List<io.InternetAddress>>();
+    final options = DNSLookupOptions(all: true, verbatim: true);
 
     void handleLookup(error, result) {
       if (error != null) {
@@ -97,7 +97,7 @@ class InternetAddress implements io.InternetAddress {
       case io.InternetAddressType.IPv4:
         return _inAddr[0] == 127;
       case io.InternetAddressType.IPv6:
-        for (int i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
+        for (var i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
           if (_inAddr[i] != 0) return false;
         }
         return _inAddr[_IPV6_ADDR_LENGTH - 1] == 1;
@@ -124,7 +124,7 @@ class InternetAddress implements io.InternetAddress {
 
   @override
   Future<io.InternetAddress> reverse() {
-    final Completer<io.InternetAddress> completer = Completer();
+    final completer = Completer<io.InternetAddress>();
     void reverseResult(error, result) {
       if (error != null) {
         completer.completeError(error);
@@ -151,21 +151,21 @@ const int _kColon = 58;
 Uint8List _inet_pton(String ip) {
   if (ip.contains(':')) {
     // ipv6
-    final Uint8List result = Uint8List(16);
+    final result = Uint8List(16);
 
     // Special cases:
     if (ip == '::') return result;
     if (ip == '::1') return result..[15] = 1;
 
-    const int maxSingleColons = 7;
+    const maxSingleColons = 7;
 
-    int totalColons = ip.codeUnits.where((code) => code == _kColon).length;
-    bool hasDoubleColon = ip.contains('::');
-    int singleColons = hasDoubleColon ? (totalColons - 1) : totalColons;
-    int skippedSegments = maxSingleColons - singleColons;
+    final totalColons = ip.codeUnits.where((code) => code == _kColon).length;
+    final hasDoubleColon = ip.contains('::');
+    final singleColons = hasDoubleColon ? (totalColons - 1) : totalColons;
+    final skippedSegments = maxSingleColons - singleColons;
 
-    StringBuffer segment = StringBuffer();
-    int pos = 0;
+    final segment = StringBuffer();
+    var pos = 0;
     for (var i = 0; i < ip.length; i++) {
       if (i > 0 && ip[i] == ':' && ip[i - 1] == ':') {
         /// We don't need to set bytes to zeros as our [result] array is
@@ -174,7 +174,7 @@ Uint8List _inet_pton(String ip) {
         pos += 2 * skippedSegments;
       } else if (ip[i] == ':') {
         if (segment.isEmpty) segment.write('0');
-        int value = int.parse(segment.toString(), radix: 16);
+        final value = int.parse(segment.toString(), radix: 16);
         result[pos] = value ~/ 256;
         result[pos + 1] = value % 256;
         pos += 2;
@@ -185,7 +185,7 @@ Uint8List _inet_pton(String ip) {
     }
     // Don't forget about the last segment:
     if (segment.isEmpty) segment.write('0');
-    int value = int.parse(segment.toString(), radix: 16);
+    final value = int.parse(segment.toString(), radix: 16);
     result[pos] = value ~/ 256;
     result[pos + 1] = value % 256;
     return result;

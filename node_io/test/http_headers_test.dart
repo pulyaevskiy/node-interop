@@ -104,7 +104,7 @@ void main() {
     });
 
     test('forEach', () {
-      Map map = {};
+      final map = {};
       headers.forEach((key, value) {
         map[key] = value;
       });

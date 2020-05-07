@@ -39,8 +39,8 @@ void main() {
       expect(dir('lib').statSync().type, FileSystemEntityType.directory);
     });
 
-    _listContainsPath(List<FileSystemEntity> entities, String path) {
-      bool contains = false;
+    bool _listContainsPath(List<FileSystemEntity> entities, String path) {
+      var contains = false;
       for (var entity in entities) {
         if (entity.path.endsWith(path)) {
           contains = true;
@@ -56,18 +56,18 @@ void main() {
 
     test('list', () async {
       var list = await Directory.current.list().toList();
-      expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
 
       list = await dir('lib').list().toList();
-      expect(_listContainsPath(list, "node_io.dart"), isTrue);
+      expect(_listContainsPath(list, 'node_io.dart'), isTrue);
     });
 
     test('listSync', () async {
       var list = Directory.current.listSync();
-      expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
 
       list = dir('lib').listSync();
-      expect(_listContainsPath(list, "node_io.dart"), isTrue);
+      expect(_listContainsPath(list, 'node_io.dart'), isTrue);
     });
 
     test('createTemp', () async {

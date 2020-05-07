@@ -15,7 +15,7 @@ import 'fs_utils.dart';
 void main() {
   group('File', () {
     test('existsSync', () async {
-      var path = createFile('existsSync.txt', "existsSync");
+      var path = createFile('existsSync.txt', 'existsSync');
       var file = File(path);
       expect(file.existsSync(), isTrue);
     });
@@ -151,7 +151,7 @@ void main() {
 
     test('read_write_bytes', () async {
       var file = File('as_bytes.bin');
-      List<int> bytes = [0, 1, 2, 3];
+      final bytes = <int>[0, 1, 2, 3];
 
       await file.writeAsBytes(bytes, flush: true);
       expect(await file.readAsBytes(), bytes);
@@ -172,8 +172,8 @@ void main() {
     });
 
     test('read_write_string', () async {
-      String text = "test";
-      var file = File('as_text.txt');
+      final text = 'test';
+      final file = File('as_text.txt');
 
       await file.writeAsString(text, flush: true);
       expect(await file.readAsString(), text);
@@ -184,19 +184,20 @@ void main() {
 
       // append
       await file.writeAsString(text, mode: FileMode.append, flush: true);
-      expect(await file.readAsString(), "$text$text");
+      expect(await file.readAsString(), '$text$text');
 
       // cleanup
       await file.delete();
     });
 
     test('add_bytes', () async {
-      File file = File('add_bytes.bin');
+      final file = File('add_bytes.bin');
       var sink = file.openWrite(mode: FileMode.write);
       sink.add([1, 2, 3, 4]);
       sink.add('test'.codeUnits);
       await sink.flush();
       await sink.close();
+      // ignore: prefer_spread_collections
       expect(await file.readAsBytes(), [1, 2, 3, 4]..addAll('test'.codeUnits));
 
       // cleanup

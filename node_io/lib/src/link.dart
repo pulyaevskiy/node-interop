@@ -53,7 +53,7 @@ class Link extends FileSystemEntity implements io.Link {
   @override
   Future<Link> create(String target, {bool recursive = false}) {
     if (recursive) {
-      throw UnsupportedError("Recursive flag not supported by Node.js");
+      throw UnsupportedError('Recursive flag not supported by Node.js');
     }
 
     final completer = Completer<Link>();
@@ -73,7 +73,7 @@ class Link extends FileSystemEntity implements io.Link {
   @override
   void createSync(String target, {bool recursive = false}) {
     if (recursive) {
-      throw UnsupportedError("Recursive flag not supported by Node.js");
+      throw UnsupportedError('Recursive flag not supported by Node.js');
     }
     fs.symlinkSync(target, path);
   }
@@ -84,7 +84,7 @@ class Link extends FileSystemEntity implements io.Link {
       return Future.error(
           UnsupportedError('Recursive flag is not supported by Node.js'));
     }
-    final Completer<Link> completer = Completer<Link>();
+    final completer = Completer<Link>();
     void callback(err) {
       if (err != null) {
         completer.completeError(err);

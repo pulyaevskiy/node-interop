@@ -1,3 +1,8 @@
+## 1.1.0
+
+- Added support for Dart 2.8 (#75)
+- Bumped Dart SDK constraint to 2.2.0
+
 ## 1.0.1+2
 
 - More preparation for Uint8List SDK breaking change (dart-lang/sdk#36900).

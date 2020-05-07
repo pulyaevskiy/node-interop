@@ -4,13 +4,12 @@
 @TestOn('node')
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:js';
+
+import 'package:node_interop/http.dart' as js;
 import 'package:node_interop/util.dart';
 import 'package:node_io/node_io.dart';
-import 'package:node_interop/http.dart' as js;
 import 'package:test/test.dart';
-import 'package:path/path.dart';
 
 void main() {
   group('HttpServer', () {
@@ -34,7 +33,7 @@ void main() {
           return;
         }
 
-        String body = await request.map(utf8.decode).join();
+        final body = await request.map(utf8.decode).join();
         request.response.headers.contentType = ContentType.text;
         request.response.headers.set('X-Foo', 'bar');
         request.response.statusCode = 200;
@@ -53,7 +52,7 @@ void main() {
     });
 
     test('request with body', () async {
-      String response =
+      final response =
           await makePost(Uri.parse('http://127.0.0.1:8181'), '{"pi": 3.14}');
       expect(response, '{"pi":3.14}');
     });
@@ -104,7 +103,7 @@ Future<String> makePost(Uri url, String body) {
   );
   final request = js.http.request(options, allowInterop((response) {
     response.setEncoding('utf8');
-    StringBuffer body = StringBuffer();
+    final body = StringBuffer();
     response.on('data', allowInterop((chunk) {
       body.write(chunk);
     }));

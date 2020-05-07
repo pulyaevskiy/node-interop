@@ -37,7 +37,7 @@ class ResponseHttpHeaders extends HttpHeaders {
   bool _mutable = true;
 
   /// Collection of header names set in native response object.
-  final Set<String> _headerNames = Set<String>();
+  final Set<String> _headerNames = <String>{};
 
   void finalize() {
     _mutable = false;
@@ -187,9 +187,9 @@ abstract class HttpHeaders implements io.HttpHeaders {
   @override
   set host(String host) {
     var hostAndPort = host;
-    int _port = this.port;
+    var _port = port;
     if (_port != null) {
-      hostAndPort = "$host:$_port";
+      hostAndPort = '$host:$_port';
     }
     _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
@@ -208,7 +208,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   set port(int value) {
     var hostAndPort = host;
     if (value != null) {
-      hostAndPort = "$host:$value";
+      hostAndPort = '$host:$value';
     }
     _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
@@ -262,10 +262,10 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   String value(String name) {
-    List<String> values = this[name];
+    final values = this[name];
     if (values == null) return null;
     if (values.length > 1) {
-      throw io.HttpException("More than one value for header $name");
+      throw io.HttpException('More than one value for header $name');
     }
     return values[0];
   }
@@ -277,7 +277,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
       // not supported on node
       throw UnsupportedError('HttpHeaders.add(preserveHeaderCase: true)');
     } else {
-      List<String> existingValues = this[name];
+      final existingValues = this[name];
       var values = existingValues != null ? List.from(existingValues) : [];
       values.add(value.toString());
       _setHeader(name, values);
@@ -293,7 +293,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void forEach(void f(String name, List<String> values)) {
+  void forEach(void Function(String name, List<String> values) f) {
     var names = _getHeaderNames();
     names.forEach((String name) {
       f(name, this[name]);
@@ -302,14 +302,14 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   void noFolding(String name) {
-    throw UnsupportedError("Folding is not supported for Node.");
+    throw UnsupportedError('Folding is not supported for Node.');
   }
 
   @override
   void remove(String name, Object value) {
     // TODO: this could actually be implemented on our side now.
     throw UnsupportedError(
-        "Removing individual values not supported for Node.");
+        'Removing individual values not supported for Node.');
   }
 
   @override
