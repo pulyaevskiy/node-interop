@@ -322,7 +322,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
     if (preserveHeaderCase ?? false) {
       // new since 2.8
       // not supported on node
-      throw UnsupportedError('HttpHeaders.add(preserveHeaderCase: true)');
+      throw UnsupportedError('HttpHeaders.set(preserveHeaderCase: true)');
     } else {
       _setHeader(name, jsify(value));
     }
