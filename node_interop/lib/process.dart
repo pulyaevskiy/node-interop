@@ -55,7 +55,7 @@ abstract class Process implements EventEmitter {
   external String get platform;
   external int get ppid;
   external Release get release;
-  external bool send(message, [sendHandle, options, void callback()]);
+  external bool send(message, [sendHandle, options, void Function() callback]);
   external void setegid(id);
   external void seteuid(id);
   external void setgid(id);

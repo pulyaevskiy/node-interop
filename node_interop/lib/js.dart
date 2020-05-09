@@ -8,12 +8,16 @@ library node_interop.js;
 import 'package:js/js.dart';
 
 @JS()
-external get undefined;
+external dynamic get undefined;
 
 @JS()
 abstract class Promise {
-  external factory Promise(executor(resolve(value), reject(error)));
-  external Promise then(dynamic onFulfilled(value), [onRejected(error)]);
+  external factory Promise(
+      Function(dynamic Function(dynamic value) resolve,
+              dynamic Function(dynamic error) reject)
+          executor);
+  external Promise then(dynamic Function(dynamic value) onFulfilled,
+      [dynamic Function(dynamic error) onRejected]);
 }
 
 @JS()

@@ -12,8 +12,8 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 
-import 'node.dart';
 import 'http.dart';
+import 'node.dart';
 import 'tls.dart';
 
 export 'http.dart'
@@ -49,11 +49,11 @@ abstract class HTTPS {
   /// [request] is that it sets the method to GET and calls req.end()
   /// automatically.
   external ClientRequest get(dynamic urlOrOptions,
-      [callback(IncomingMessage response)]);
+      [void Function(IncomingMessage response) callback]);
 
   /// Makes a request to a secure web server.
   external ClientRequest request(RequestOptions options,
-      [callback(IncomingMessage response)]);
+      [void Function(IncomingMessage response) callback]);
 
   /// Global instance of [HttpsAgent] for all HTTPS client requests.
   external HttpAgent get globalAgent;
@@ -72,11 +72,11 @@ abstract class HttpsAgent implements HttpAgent {}
 @JS()
 @anonymous
 abstract class HttpsServer implements TLSServer, HttpServer {
-  external HttpsServer close([void callback()]);
+  external HttpsServer close([void Function() callback]);
   @override
   external void listen([arg1, arg2, arg3, arg4]);
   @override
-  external void setTimeout([num msecs, void callback()]);
+  external void setTimeout([num msecs, void Function() callback]);
   @override
   external num get timeout;
   @override

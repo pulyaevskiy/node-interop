@@ -7,8 +7,8 @@ library node_interop.util_test;
 
 import 'package:js/js.dart';
 import 'package:node_interop/node.dart';
-import 'package:node_interop/util.dart';
 import 'package:node_interop/test.dart';
+import 'package:node_interop/util.dart';
 import 'package:test/test.dart';
 
 const fixturesJS = '''
@@ -48,7 +48,7 @@ void main() {
   group('dartify', () {
     test('it handles js primitives', () {
       final Fixtures js = require(fixture);
-      expect(dartify(js.stringVal), "node");
+      expect(dartify(js.stringVal), 'node');
       expect(dartify(js.numVal), 3.1415);
       expect(dartify(js.boolVal), isTrue);
       expect(dartify(js.nullVal), isNull);
@@ -56,13 +56,13 @@ void main() {
 
     test('it handles POJOs', () {
       final Fixtures js = require(fixture);
-      Map<String, dynamic> result = dartify(js.pojoVal);
-      expect(result, {"propKey": "propValue"});
+      final result = dartify(js.pojoVal) as Map<String, dynamic>;
+      expect(result, {'propKey': 'propValue'});
     });
 
     test('it handles arrays', () {
       final Fixtures js = require(fixture);
-      expect(dartify(js.arrayVal), [1, "two"]);
+      expect(dartify(js.arrayVal), [1, 'two']);
     });
 
     test('it DOES handle JS functions with properties', () {

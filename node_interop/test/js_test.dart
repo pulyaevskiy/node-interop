@@ -22,6 +22,6 @@ void main() {
   });
 }
 
-returnsUndefined() {
+dynamic returnsUndefined() {
   return;
 }

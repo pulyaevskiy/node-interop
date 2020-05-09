@@ -6,6 +6,7 @@
 library node_interop.dns;
 
 import 'package:js/js.dart';
+
 import 'node.dart';
 import 'util.dart';
 
@@ -78,26 +79,32 @@ Resolver createDNSResolver() {
 @JS()
 @anonymous
 abstract class Resolver {
-  external void resolve(
-      String hostname, String rrtype, callback(error, records));
+  external void resolve(String hostname, String rrtype,
+      void Function(dynamic error, dynamic records) callback);
   external void resolve4(String hostname, optionsOrCallback,
-      [callback(error, addresses)]);
+      [void Function(dynamic error, dynamic addresses) callback]);
   external void resolve6(String hostname, optionsOrCallback,
-      [callback(error, addresses)]);
-  external void resolveAny(String hostname, callback(error, List ret));
+      [void Function(dynamic error, dynamic addresses) callback]);
+  external void resolveAny(
+      String hostname, void Function(dynamic error, List ret) callback);
   external void resolveCname(
-      String hostname, callback(error, List<String> ret));
-  external void resolveMx(String hostname, callback(error, List addresses));
-  external void resolveNaptr(String hostname, callback(error, List addresses));
-  external void resolveNs(
-      String hostname, callback(error, List<String> addresses));
-  external void resolvePtr(
-      String hostname, callback(error, List<String> addresses));
-  external void resolveSoa(String hostname, callback(error, address));
-  external void resolveSrv(String hostname, callback(error, List addresses));
-  external void resolveTxt(
-      String hostname, callback(error, List<List<String>> records));
-  external void reverse(String ip, callback(error, List<String> hostnames));
+      String hostname, void Function(dynamic error, List<String> ret) callback);
+  external void resolveMx(
+      String hostname, void Function(dynamic error, List addresses) callback);
+  external void resolveNaptr(
+      String hostname, void Function(dynamic error, List addresses) callback);
+  external void resolveNs(String hostname,
+      void Function(dynamic error, List<String> addresses) callback);
+  external void resolvePtr(String hostname,
+      void Function(dynamic error, List<String> addresses) callback);
+  external void resolveSoa(
+      String hostname, void Function(dynamic error, dynamic address) callback);
+  external void resolveSrv(
+      String hostname, void Function(dynamic error, List addresses) callback);
+  external void resolveTxt(String hostname,
+      void Function(dynamic error, List<List<String>> records) callback);
+  external void reverse(
+      String ip, void Function(dynamic error, List<String> hostnames) callback);
   external List<String> getServers();
   external void setServers(List<String> servers);
   external void cancel();

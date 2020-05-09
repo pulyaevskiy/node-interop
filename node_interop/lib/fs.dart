@@ -24,95 +24,111 @@ abstract class FS {
   external void accessSync(path, [int mode]);
   external void appendFile(file, data, [options, callback]);
   external void appendFileSync(file, data, [options]);
-  external void chmod(path, int mode, callback(error));
+  external void chmod(path, int mode, void Function(dynamic error) callback);
   external void chmodSync(path, int mode);
-  external void chown(path, int uid, gid, callback(error));
+  external void chown(
+      path, int uid, gid, void Function(dynamic error) callback);
   external void chownSync(path, int uid, gid);
-  external void close(int fd, void callback(error));
+  external void close(int fd, void Function(dynamic error) callback);
   external void closeSync(int fd);
-  external void copyFile(src, dest, num flags, void callback(error));
+  external void copyFile(
+      src, dest, num flags, void Function(dynamic error) callback);
   external void copyFileSync(src, dest, num flags);
   external ReadStream createReadStream(path, [ReadStreamOptions options]);
   external WriteStream createWriteStream(path, [WriteStreamOptions options]);
   @deprecated
-  external void exists(path, callback(bool exists));
+  external void exists(path, void Function(bool exists) callback);
   external bool existsSync(path);
-  external void fchmod(int fd, int mode, callback(error));
+  external void fchmod(int fd, int mode, void Function(dynamic error) callback);
   external void fchmodSync(int fd, int mode);
-  external void fchown(int fd, int uid, gid, callback(error));
+  external void fchown(
+      int fd, int uid, gid, void Function(dynamic error) callback);
   external void fchownSync(int fd, int uid, gid);
-  external void fdatasync(int fd, callback(error));
+  external void fdatasync(int fd, void Function(dynamic error) callback);
   external void fdatasyncSync(int fd);
-  external void fstat(int fd, void callback(error, Stats stats));
+  external void fstat(
+      int fd, void Function(dynamic error, Stats stats) callback);
   external Stats fstatSync(int fd);
-  external void fsync(int fd, void callback(error));
+  external void fsync(int fd, void Function(dynamic error) callback);
   external void fsyncSync(int fd);
   external void ftruncate(int fd, [lenOrCallback, callback]);
   external void ftruncateSync(int fd, [len]);
-  external void futimes(int fd, atime, mtime, callback(error));
+  external void futimes(
+      int fd, atime, mtime, void Function(dynamic error) callback);
   external void futimesSync(int fd, atime, mtime);
-  external void lchmod(path, int mode, callback(error));
+  external void lchmod(path, int mode, void Function(dynamic error) callback);
   external void lchmodSync(path, int mode);
-  external void lchown(path, int uid, gid, callback(error));
+  external void lchown(
+      path, int uid, gid, void Function(dynamic error) callback);
   external void lchownSync(path, int uid, gid);
-  external void link(existingPath, newPath, callback(error));
+  external void link(
+      existingPath, newPath, void Function(dynamic error) callback);
   external void linkSync(existingPath, newPath);
-  external void lstat(path, void callback(error, Stats stats));
+  external void lstat(path, void Function(dynamic error, Stats stats) callback);
   external Stats lstatSync(path);
-  external void mkdir(path, [modeOrCallback, void callback(error)]);
+  external void mkdir(path,
+      [modeOrCallback, void Function(dynamic error) callback]);
   external void mkdirSync(path, [int mode]);
   external void mkdtemp(String prefix,
-      [optionsOrCallback, void callback(error, String folder)]);
+      [optionsOrCallback,
+      void Function(dynamic error, String folder) callback]);
   external String mkdtempSync(prefix, [options]);
-  external void open(path, flags, [modeOrCallback, void callback(err, int fd)]);
+  external void open(path, flags,
+      [modeOrCallback, void Function(dynamic err, int fd) callback]);
   external int openSync(path, flags, [int mode]);
-  external read(int fd, buffer, int offset, int length, int position,
-      callback(error, int bytesRead, Buffer buffer));
+  external void read(int fd, buffer, int offset, int length, int position,
+      void Function(dynamic error, int bytesRead, Buffer buffer) callback);
   external void readdir(path,
-      [optionsOrCallback, void callback(err, List files)]);
+      [optionsOrCallback, void Function(dynamic err, List files) callback]);
   external List readdirSync(path, [options]);
-  external void readFile(path, [optionsOrCallback, callback(error, data)]);
+  external void readFile(path,
+      [optionsOrCallback, void Function(dynamic error, dynamic data) callback]);
   external dynamic readFileSync(path, [options]);
   external void readlink(path,
-      [optionsOrCallback, callback(error, linkString)]);
+      [optionsOrCallback,
+      void Function(dynamic error, dynamic linkString) callback]);
   external dynamic readlinkSync(path, [options]);
   external int readSync(int fd, buffer, int offset, int length, int position);
   external void realpath(path,
-      [optionsOrCallback, void callback(error, resolvedPath)]);
+      [optionsOrCallback,
+      void Function(dynamic error, dynamic resolvedPath) callback]);
   // TODO: realpath.native(path[, options], callback)
   external String realpathSync(path, [options]);
   // TODO: realpathSync.native(path[, options])
-  external void rename(oldPath, newPath, void callback(error));
+  external void rename(oldPath, newPath, void Function(dynamic error) callback);
   external void renameSync(oldPath, newPath);
-  external void rmdir(path, void callback(error));
+  external void rmdir(path, void Function(dynamic error) callback);
   external void rmdirSync(path);
-  external void stat(path, void callback(error, Stats stats));
+  external void stat(path, void Function(dynamic error, Stats stats) callback);
   external Stats statSync(path);
-  external void symlink(target, path, [typeOrCallback, void callback(error)]);
+  external void symlink(target, path,
+      [typeOrCallback, void Function(dynamic error) callback]);
   external void symlinkSync(target, path, [type]);
 
   external void truncate(path, [lenOrCallback, callback]);
   external void truncateSync(path, [int len]);
 
-  external void unlink(path, [void callback(error)]);
+  external void unlink(path, [void Function(dynamic error) callback]);
   external void unlinkSync(path);
 
   external void unwatchFile(filename, [Function listener]);
-  external void utimes(path, atime, mtime, callback(error));
+  external void utimes(
+      path, atime, mtime, void Function(dynamic error) callback);
   external void utimesSync(path, atime, mtime);
 
   external void watch(filename,
-      [options, void listener(String eventType, filename)]);
+      [options, void Function(String eventType, dynamic filename) listener]);
 
   external void watchFile(filename,
-      [optionsOrListener, void listener(Stats current, Stats previous)]);
+      [optionsOrListener,
+      void Function(Stats current, Stats previous) listener]);
 
   /// See official documentation on all possible argument combinations:
   /// - https://nodejs.org/api/fs.html#fs_fs_write_fd_buffer_offset_length_position_callback
   external void write(int fd, data, [arg1, arg2, arg3, Function callback]);
 
   external void writeFile(file, data,
-      [optionsOrCallback, void callback(error)]);
+      [optionsOrCallback, void Function(dynamic error) callback]);
   external void writeFileSync(file, data, [options]);
 
   /// See official documentation on all possible argument combinations:

@@ -13,8 +13,8 @@ import 'package:js/js.dart';
 
 import 'buffer.dart';
 import 'net.dart';
-import 'stream.dart';
 import 'node.dart';
+import 'stream.dart';
 
 TLS get tls => _tls ??= require('tls');
 TLS _tls;
@@ -52,11 +52,12 @@ abstract class TLSServer implements NetServer {
   @override
   external NetAddress address();
   @override
-  external TLSServer close([void callback()]);
+  external TLSServer close([void Function() callback]);
   external Buffer getTicketKeys();
 
-  /// See oficial documentation on possible signatures:
+  /// See official documentation on possible signatures:
   /// - https://nodejs.org/api/net.html#net_server_listen
+  @override
   external void listen([arg1, arg2, arg3, arg4]);
   external void setTicketKeys(Buffer keys);
 }
@@ -177,17 +178,17 @@ abstract class TLSSecureContextOptions {
     String secureProtocol,
     String sessionIdContext,
   });
-  external get pfx;
-  external get key;
+  external dynamic get pfx;
+  external dynamic get key;
   external String get passphrase;
-  external get cert;
-  external get ca;
+  external dynamic get cert;
+  external dynamic get ca;
   external String get ciphers;
   external bool get honorCipherOrder;
   external String get ecdhCurve;
   external String get clientCertEngine;
-  external get crl;
-  external get dhparam;
+  external dynamic get crl;
+  external dynamic get dhparam;
   external num get secureOptions;
   external String get secureProtocol;
   external String get sessionIdContext;

@@ -31,7 +31,7 @@ HttpAgent createHttpAgent([HttpAgentOptions options]) {
 ///
 /// See also:
 ///   - [HTTP.createServer]
-typedef void HttpRequestListener(
+typedef HttpRequestListener = void Function(
     IncomingMessage request, ServerResponse response);
 
 /// Main entry point to Node's "http" module functionality.
@@ -63,14 +63,14 @@ abstract class HTTP {
   /// [request] is that it sets the method to GET and calls req.end()
   /// automatically.
   external ClientRequest get(dynamic urlOrOptions,
-      [callback(IncomingMessage response)]);
+      [void Function(IncomingMessage response) callback]);
 
   /// Global instance of Agent which is used as the default for all HTTP client
   /// requests.
   external HttpAgent get globalAgent;
 
   external ClientRequest request(RequestOptions options,
-      [callback(IncomingMessage response)]);
+      [void Function(IncomingMessage response) callback]);
 
   /// Reference to constructor function of [HttpAgent] class.
   ///
@@ -82,7 +82,8 @@ abstract class HTTP {
 @JS()
 @anonymous
 abstract class HttpAgent {
-  external Socket createConnection(options, [void callback(error, stream)]);
+  external Socket createConnection(options,
+      [void Function(dynamic error, dynamic stream) callback]);
   external void keepSocketAlive(Socket socket);
   external void reuseSocket(Socket socket, ClientRequest request);
   external void destroy();
@@ -150,28 +151,30 @@ abstract class ClientRequest implements Writable {
   external int get aborted;
   external Socket get connection;
   @override
-  external void end([data, encodingOrCallback, void callback()]);
+  external void end([data, encodingOrCallback, void Function() callback]);
   external void flushHeaders();
   external String getHeader(String name);
   external void removeHeader(String name);
   external void setHeader(String name, dynamic value);
   external void setNoDelay(bool noDelay);
   external void setSocketKeepAlive([bool enable, num initialDelay]);
-  external void setTimeout(num msecs, [void callback()]);
+  external void setTimeout(num msecs, [void Function() callback]);
   external Socket get socket;
   @override
-  external ClientRequest write(chunk, [encodingOrCallback, void callback()]);
+  external ClientRequest write(chunk,
+      [encodingOrCallback, void Function() callback]);
 }
 
 @JS()
 abstract class HttpServer implements NetServer {
   @override
-  external HttpServer close([void callback()]);
+  external HttpServer close([void Function() callback]);
   @override
   external void listen([arg1, arg2, arg3, arg4]);
+  @override
   external bool get listening;
   external num get maxHeadersCount;
-  external void setTimeout([num msecs, void callback()]);
+  external void setTimeout([num msecs, void Function() callback]);
   external num get timeout;
   external num get keepAliveTimeout;
 }
@@ -182,7 +185,7 @@ abstract class ServerResponse implements Writable {
   external void addTrailers(headers);
   external Socket get connection;
   @override
-  external void end([data, encodingOrCallback, void callback()]);
+  external void end([data, encodingOrCallback, void Function() callback]);
   external bool get finished;
   external dynamic getHeader(String name);
   external List<String> getHeaderNames();
@@ -199,7 +202,7 @@ abstract class ServerResponse implements Writable {
   external String get statusMessage;
   external set statusMessage(String value);
   @override
-  external bool write(chunk, [encodingOrCallback, void callback()]);
+  external bool write(chunk, [encodingOrCallback, void Function() callback]);
   external void writeContinue();
   external void writeHead(num statusCode, [String statusMessage, headers]);
 }
@@ -207,13 +210,14 @@ abstract class ServerResponse implements Writable {
 @JS()
 @anonymous
 abstract class IncomingMessage implements Readable {
+  @override
   external void destroy([error]);
   external dynamic get headers;
   external String get httpVersion;
   external String get method;
   external List<String> get rawHeaders;
   external List<String> get rawTrailers;
-  external void setTimeout(num msecs, void callback());
+  external void setTimeout(num msecs, void Function() callback);
   external Socket get socket;
   external num get statusCode;
   external String get statusMessage;

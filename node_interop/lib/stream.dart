@@ -62,12 +62,13 @@ abstract class Readable implements EventEmitter {
 @anonymous
 abstract class Writable implements EventEmitter {
   external void cork();
-  external void end([data, encodingOrCallback, void callback()]);
+  external void end([data, encodingOrCallback, void Function() callback]);
   external void setDefaultEncoding(String encoding);
   external void uncork();
   external int get writableHighWaterMark;
   external int get writableLength;
-  external /*bool*/ write(chunk, [encodingOrCallback, void callback()]);
+  external /*bool*/ dynamic write(chunk,
+      [encodingOrCallback, void Function() callback]);
   external Writable destroy([error]);
 }
 

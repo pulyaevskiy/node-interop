@@ -11,9 +11,9 @@ import 'package:test/test.dart';
 void main() {
   group('Timers', () {
     test('setImmediate', () async {
-      StringBuffer buffer = StringBuffer();
+      var buffer = StringBuffer();
 
-      writesToBuffer(StringBuffer buffer) async {
+      void writesToBuffer(StringBuffer buffer) async {
         buffer.writeln('before');
         await setImmediateFuture(buffer);
         buffer.writeln('after');
@@ -26,7 +26,7 @@ void main() {
 }
 
 Future setImmediateFuture(StringBuffer buffer) {
-  final Completer<String> completer = Completer();
+  final completer = Completer<String>();
   setImmediate(allowInterop((StringBuffer value) {
     value.writeln('hello world');
     completer.complete();
