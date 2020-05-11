@@ -30,7 +30,7 @@ void main() {
       expect(run.exitCode, 0);
       expect(run.stdout, 'Hello world\n');
       // 3.1514934010709914
-    });
+    }, skip: 'dartdevc support is very fragile');
 
     test('exports', () {
       final run =
@@ -39,7 +39,7 @@ void main() {
       expect(run.stdout, contains('slowPi(100): 3.1514934010709914\n'));
       expect(run.stdout, contains('fastPi: 3.1514934010709914\n'));
       expect(run.stdout, contains('defaultAccuracy: 100\n'));
-    });
+    }, skip: 'dartdevc support is very fragile');
   });
 
   group('dart2js', () {
