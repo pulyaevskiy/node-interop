@@ -18,7 +18,7 @@ void main() {
       server = await HttpServer.bind('127.0.0.1', 8181);
       server.listen((request) async {
         if (request.uri.path == '/test') {
-          String body = await request.map(utf8.decode).join();
+          final body = await request.map(utf8.decode).join();
           request.response.headers.contentType = ContentType.text;
           request.response.headers.set('X-Foo', 'bar');
           request.response.headers.set('set-cookie',

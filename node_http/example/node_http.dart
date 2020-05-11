@@ -1,6 +1,6 @@
 import 'package:node_http/node_http.dart' as http;
 
-main() async {
+void main() async {
   // For one-off requests.
   final response = await http.get('https://example.com/');
   print(response.body);

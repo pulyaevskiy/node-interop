@@ -79,7 +79,7 @@ class _RequestHandler {
 
   _RequestHandler(this.client, this.request);
 
-  final List<_RedirectInfo> _redirects = List();
+  final List<_RedirectInfo> _redirects = [];
 
   List<List<int>> _body;
   var _headers;
@@ -88,9 +88,9 @@ class _RequestHandler {
     _headers = jsify(request.headers);
     _body = await request.finalize().toList();
 
-    StreamedResponse response = await _send();
+    var response = await _send();
     if (request.followRedirects && response.isRedirect) {
-      String method = request.method;
+      var method = request.method;
       while (response.isRedirect) {
         if (_redirects.length < request.maxRedirects) {
           response = await redirect(response, method);
@@ -114,7 +114,7 @@ class _RequestHandler {
     var pathWithQuery =
         url.hasQuery ? [url.path, '?', url.query].join() : url.path;
     var options = RequestOptions(
-      protocol: "${url.scheme}:",
+      protocol: '${url.scheme}:',
       hostname: url.host,
       port: url.port,
       method: method,
@@ -126,7 +126,7 @@ class _RequestHandler {
 
     void handleResponse(IncomingMessage response) {
       final rawHeaders = dartify(response.headers) as Map<String, dynamic>;
-      final headers = Map<String, String>();
+      final headers = <String, String>{};
       for (var key in rawHeaders.keys) {
         final value = rawHeaders[key];
         headers[key] = (value is List) ? value.join(',') : value;
@@ -167,12 +167,12 @@ class _RequestHandler {
 
   bool isRedirect(IncomingMessage message, String method) {
     final statusCode = message.statusCode;
-    if (method == "GET" || method == "HEAD") {
+    if (method == 'GET' || method == 'HEAD') {
       return statusCode == HttpStatus.movedPermanently ||
           statusCode == HttpStatus.found ||
           statusCode == HttpStatus.seeOther ||
           statusCode == HttpStatus.temporaryRedirect;
-    } else if (method == "POST") {
+    } else if (method == 'POST') {
       return statusCode == HttpStatus.seeOther;
     }
     return false;
@@ -181,20 +181,20 @@ class _RequestHandler {
   Future<StreamedResponse> redirect(StreamedResponse response,
       [String method, bool followLoops]) {
     // Set method as defined by RFC 2616 section 10.3.4.
-    if (response.statusCode == HttpStatus.seeOther && method == "POST") {
-      method = "GET";
+    if (response.statusCode == HttpStatus.seeOther && method == 'POST') {
+      method = 'GET';
     }
 
-    String location = response.headers[HttpHeaders.locationHeader];
+    final location = response.headers[HttpHeaders.locationHeader];
     if (location == null) {
-      throw StateError("Response has no Location header for redirect.");
+      throw StateError('Response has no Location header for redirect.');
     }
     final url = Uri.parse(location);
 
     if (followLoops != true) {
       for (var redirect in _redirects) {
         if (redirect.location == url) {
-          return Future.error(ClientException("Redirect loop detected."));
+          return Future.error(ClientException('Redirect loop detected.'));
         }
       }
     }
