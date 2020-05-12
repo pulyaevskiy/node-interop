@@ -1,6 +1,7 @@
 ## 1.1.0
 
-- Added bindings for Node.js `tty` module.
+- Added bindings for Node.js `tty` module as well as updated Process bindings for `stdout`,
+  `stdin` and `stderr` to return TTY stream types instead of `Writable` and `Readable`.
 
 ## 1.0.3
 
