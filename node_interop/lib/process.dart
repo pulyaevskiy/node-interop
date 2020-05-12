@@ -2,6 +2,12 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 /// Node.js "process" module bindings.
+///
+/// The `process` object is a global that provides information about, and
+/// control over, the current Node.js process.
+///
+/// As a global, it is always available to Node.js applications without using
+/// `require()`.
 @JS()
 library node_interop.process;
 
@@ -9,7 +15,9 @@ import 'package:js/js.dart';
 
 import 'events.dart';
 import 'module.dart';
+import 'net.dart';
 import 'stream.dart';
+import 'tty.dart';
 
 @JS()
 @anonymous
@@ -62,9 +70,24 @@ abstract class Process implements EventEmitter {
   external void setgroups(List groups);
   external void setuid(id);
   external void setUncaughtExceptionCaptureCallback(Function fn);
-  external Writable get stderr;
-  external Readable get stdin;
-  external Writable get stdout;
+
+  /// Stream connected to `stderr` (fd `2`).
+  ///
+  /// It is a [Socket] (which is a [Duplex] stream) unless fd `2` refers to a
+  /// file, in which case it is a [Writable] stream.
+  external TTYWriteStream get stderr;
+
+  /// Stream connected to `stdin` (fd `0`).
+  ///
+  /// It is a [Socket] (which is a [Duplex] stream) unless fd `0` refers to a
+  /// file, in which case it is a [Readable] stream.
+  external TTYReadStream get stdin;
+
+  /// Stream connected to `stdout` (fd `1`).
+  ///
+  /// It is a [Socket] (which is a [Duplex] stream) unless fd `1` refers to a
+  /// file, in which case it is a [Writable] stream.
+  external TTYWriteStream get stdout;
   external bool get throwDeprecation;
   external String get title;
   external bool get traceDeprecation;

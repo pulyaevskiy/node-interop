@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Added bindings for Node.js `tty` module.
+
 ## 1.0.3
 
 - Removed generic annotations from Process methods per #56 (not supported by Dart yet).
