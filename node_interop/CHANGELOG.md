@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Added missing method definitions for TTYWriteStream.
+
 ## 1.1.0
 
 - Added bindings for Node.js `tty` module as well as updated Process bindings for `stdout`,

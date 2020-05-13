@@ -97,10 +97,50 @@ abstract class TTYWriteStream extends Socket {
   /// otherwise returns true.
   external bool cursorTo(num x, [num y, void Function() callback]);
 
+  /// Use this to determine what colors the terminal supports.
+  ///
+  /// Due to the nature of colors in terminals it is possible to either have
+  /// false positives or false negatives. It depends on process information and
+  /// the environment variables that may lie about what terminal is used. It is
+  /// possible to pass in an env object to simulate the usage of a specific
+  /// terminal. This can be useful to check how specific environment settings
+  /// behave.
+  ///
+  /// The optional [env] argument can be used to pass environment variables to
+  /// check. This enables simulating the usage of a specific terminal.
+  /// Default: `process.env`.
+  external num getColorDepth([dynamic env]);
+
+  /// Returns the size of the TTY corresponding to this stream.
+  ///
+  /// The returned array is of the type [numColumns, numRows] where numColumns
+  /// and numRows represent the number of columns and rows in the corresponding
+  /// TTY.
+  external List<num> getWindowSize();
+
+  /// Returns true if this stream supports at least as many colors as provided
+  /// in count.
+  ///
+  /// Minimum support is 2 (black and white).
+  ///
+  /// This has the same false positives and negatives as described in
+  /// [getColorDepth].
+  external bool hasColors([dynamic count, dynamic env]);
+
+  /// A boolean that is always `true` for this stream.
+  external bool get isTTY;
+
+  /// Moves this stream's cursor relative to its current position.
+  ///
+  /// Returns `false` if the stream wishes for the calling code to wait for
+  /// the 'drain' event to be emitted before continuing to write additional
+  /// data; otherwise `true`.
+  ///
+  /// Optional [callback] function is invoked once the operation completes.
+  external bool moveCursor(num dx, num dy, [void Function() callback]);
+
   /// A number specifying the number of rows the TTY currently has.
   ///
   /// This property is updated whenever the 'resize' event is emitted.
   external int get rows;
-
-  external bool get isTTY;
 }
