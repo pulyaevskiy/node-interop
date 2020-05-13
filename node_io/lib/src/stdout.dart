@@ -3,30 +3,32 @@
 
 import 'dart:io' as io;
 
-import 'package:node_interop/stream.dart';
+import 'package:node_interop/tty.dart';
 
 import 'streams.dart';
 
 class Stdout extends NodeIOSink implements io.Stdout {
-  Stdout(Writable nativeStream) : super(nativeStream);
+  Stdout(TTYWriteStream nativeStream) : super(nativeStream);
 
   @override
-  // TODO: implement hasTerminal
-  bool get hasTerminal => null;
+  TTYWriteStream get nativeInstance => super.nativeInstance;
 
   @override
-  // TODO: implement nonBlocking
-  io.IOSink get nonBlocking => null;
+  bool get hasTerminal => nativeInstance.isTTY;
 
   @override
-  // TODO: implement supportsAnsiEscapes
-  bool get supportsAnsiEscapes => null;
+  io.IOSink get nonBlocking =>
+      throw UnsupportedError('Not supported by Node.js');
 
   @override
-  // TODO: implement terminalColumns
-  int get terminalColumns => null;
+  // This is not strictly accurate but Dart's own implementation is a
+  // best-effort solution as well, so we allow ourselves a bit of a slack here
+  // too.
+  bool get supportsAnsiEscapes => nativeInstance.getColorDepth() > 1;
 
   @override
-  // TODO: implement terminalLines
-  int get terminalLines => null;
+  int get terminalColumns => nativeInstance.columns;
+
+  @override
+  int get terminalLines => nativeInstance.rows;
 }

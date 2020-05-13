@@ -1,3 +1,8 @@
+## 1.1.1
+
+- Implemented `stdout` and `stderr` library-level properties.
+- `Platform.isIOS` and `Platform.isFuchsia` now throw `UnsupportedError`.
+
 ## 1.1.0
 
 - Added support for Dart 2.8 (#75)

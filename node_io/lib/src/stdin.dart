@@ -2,14 +2,17 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
-
-import 'package:node_interop/stream.dart';
-
-import 'streams.dart';
 import 'dart:io' as io;
 
+import 'package:node_interop/tty.dart';
+
+import 'streams.dart';
+
 class Stdin extends ReadableStream<List<int>> implements io.Stdin {
-  Stdin(Readable nativeInstance) : super(nativeInstance);
+  Stdin(TTYReadStream nativeInstance) : super(nativeInstance);
+
+  @override
+  TTYReadStream get nativeInstance => super.nativeInstance;
 
   @override
   bool echoMode;
@@ -18,12 +21,10 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
   bool lineMode;
 
   @override
-  // TODO: implement hasTerminal
-  bool get hasTerminal => null;
+  bool get hasTerminal => nativeInstance.isTTY;
 
   @override
   int readByteSync() {
-    // TODO: implement readByteSync
     return null;
   }
 

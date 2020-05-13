@@ -10,6 +10,8 @@ library node_io;
 
 import 'package:node_interop/node.dart';
 
+import 'src/stdout.dart';
+
 export 'dart:io'
     show
         BytesBuilder,
@@ -31,6 +33,7 @@ export 'src/internet_address.dart';
 export 'src/link.dart';
 export 'src/network_interface.dart';
 export 'src/platform.dart';
+export 'src/stdout.dart';
 
 /// Get the global exit code for the current process.
 ///
@@ -76,3 +79,13 @@ void exit([int code]) {
 
 /// Returns the PID of the current process.
 int get pid => process.pid;
+
+/// The standard output stream of errors written by this program.
+Stdout get stderr {
+  return Stdout(process.stderr);
+}
+
+/// The standard output stream of data written by this program.
+Stdout get stdout {
+  return Stdout(process.stdout);
+}

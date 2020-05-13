@@ -102,11 +102,13 @@ abstract class Platform {
 
   /// Whether the operating system is a version of
   /// [iOS](https://en.wikipedia.org/wiki/IOS).
-  static final bool isIOS = (operatingSystem == 'ios');
+  static bool get isIOS =>
+      throw UnsupportedError('iOS is not supported by Node.js.');
 
   /// Whether the operating system is a version of
   /// [Fuchsia](https://en.wikipedia.org/wiki/Google_Fuchsia).
-  static final bool isFuchsia = (operatingSystem == 'fuchsia');
+  static bool get isFuchsia =>
+      throw UnsupportedError('Fuchsia is not supported by Node.js.');
 
   /// The environment for this process as a map from string key to string value.
   ///

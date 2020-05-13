@@ -5,4 +5,6 @@ void main() {
   print('Current directory exists: ${Directory.current.existsSync()}');
   print('Current directory contents: ');
   Directory.current.list().listen(print);
+
+  stderr.writeln('This is error');
 }
