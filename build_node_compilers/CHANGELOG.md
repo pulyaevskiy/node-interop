@@ -1,3 +1,35 @@
+# 0.2.4
+
+- Fixed platform names and file extensions conflicting with build_web_compilers.
+
+# 0.2.3
+
+- Fix: Added node_io to list of known packages that can skip platform checks when compiled with
+  dart2js ([#67](https://github.com/pulyaevskiy/node-interop/issues/67)).
+- Internal: fixed all pedantic issues.
+
+# 0.2.2
+
+- Upgraded to latest build dependencies and synced with build_web_compilers as a reference implementation.
+
+# 0.2.1
+
+- Added dart_source_cleanup option (#51)
+- Upgraded dependencies
+
+# 0.2.0
+
+- Breaking changes: upgraded to build_runner 1.0.0, build_modules 0.4.0
+
+# 0.1.12
+
+- Fixed function responsible for resolving module paths for dartdevc to support symlinked
+  entrypoints.
+
+# 0.1.11
+
+- Upgraded to latest build_runner (fixes dependency resolution with Dart 2 stable).
+
 # 0.1.10
 
 - Handle entrypoints inside `lib/` folder.

@@ -17,7 +17,7 @@ void main() {
 }
 
 Writable createPrintStream() {
-  return createWritable(new WritableOptions(
+  return createWritable(WritableOptions(
     decodeStrings: false,
     write: allowInterop((String chunk, encoding, Function callback) {
       // Removes extra line-break added by `console.log`.

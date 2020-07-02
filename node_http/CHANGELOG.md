@@ -1,3 +1,18 @@
+## 1.0.0
+
+- Upgraded dependency on `http` package to `^0.12.0`.
+
+## 1.0.0-dev.10.0
+
+- Added `httpOptions` and `httpsOptions` arguments to NodeClient constructor to allow full
+  customization of Node.js HTTP agents used by the client.
+- Exposed `HttpAgentOptions` and `HttpsAgentOptions` from node_interop package.
+- Deprecated `NodeClient.keepAlive` and `NodeClient.keepAliveMsecs` getters. To be removed in 1.0.0.
+
+## 1.0.0-dev.9.0
+
+- Upgraded to build_node_compilers 0.2.0
+
 ## 1.0.0-dev.8.0
 
 - Fixed analysis warnings with latest Pub and Dart SDK.

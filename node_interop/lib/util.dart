@@ -1,7 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Utitily functions for Dart <> JS interoperability.
+/// Utility functions for Dart <> JS interoperability.
 @JS()
 library node_interop.util;
 
@@ -9,11 +9,24 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:js/js.dart';
-import 'package:js/js_util.dart' as util;
+import 'package:js/js_util.dart' as js_util;
 
 import 'node.dart';
 
 export 'package:js/js_util.dart' hide jsify;
+
+Util get util => _util ??= require('util');
+Util _util;
+
+@JS()
+@anonymous
+abstract class Util {
+  /// Possible signatures:
+  ///
+  /// inspect(object[, options])
+  /// inspect(object[, showHidden[, depth[, colors]]])
+  external dynamic inspect(object, [arg1, arg2, arg3]);
+}
 
 /// Returns Dart representation from JS Object.
 ///
@@ -21,6 +34,12 @@ export 'package:js/js_util.dart' hide jsify;
 /// are converted into `List` instances. JS objects are converted into
 /// `Map` instances. Both arrays and objects are traversed recursively
 /// converting nested values.
+///
+/// Converting JS objects always results in a `Map<String, dynamic>` meaning
+/// even if original object had an integer key set, it will be converted into
+/// a `String`. This is different from JS semantics where you are allowed to
+/// access a key by passing its int value, e.g. `obj[1]` would work in JS,
+/// but fail in Dart.
 ///
 /// See also:
 /// - [jsify]
@@ -34,9 +53,9 @@ T dartify<T>(Object jsObject) {
   }
 
   var keys = objectKeys(jsObject);
-  var result = new Map<String, dynamic>();
+  var result = <String, dynamic>{};
   for (var key in keys) {
-    result[key] = dartify(util.getProperty(jsObject, key));
+    result[key] = dartify(js_util.getProperty(jsObject, key));
   }
 
   return result as T;
@@ -54,11 +73,11 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
-  return util.jsify(dartObject);
+  return js_util.jsify(dartObject);
 }
 
-/// Returns [:true:] if the [value] is a very basic built-in type - e.g.
-/// [null], [num], [bool] or [String]. It returns [:false:] in the other case.
+/// Returns `true` if the [value] is a very basic built-in type - e.g.
+/// [null], [num], [bool] or [String]. It returns `false` in the other case.
 bool _isBasicType(value) {
   if (value == null || value is num || value is bool || value is String) {
     return true;
@@ -72,7 +91,7 @@ bool _isBasicType(value) {
 /// See also:
 ///   - [futureToPromise]
 Future<T> promiseToFuture<T>(Promise promise) {
-  var completer = new Completer<T>();
+  var completer = Completer<T>.sync();
   promise.then(allowInterop((value) {
     completer.complete(value);
   }), allowInterop((error) {
@@ -86,7 +105,7 @@ Future<T> promiseToFuture<T>(Promise promise) {
 /// See also:
 /// - [promiseToFuture]
 Promise futureToPromise<T>(Future<T> future) {
-  return new Promise(allowInterop((Function resolve, Function reject) {
+  return Promise(allowInterop((Function resolve, Function reject) {
     future.then(resolve, onError: reject);
   }));
 }

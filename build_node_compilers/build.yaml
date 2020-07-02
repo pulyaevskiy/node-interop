@@ -1,30 +1,104 @@
+targets:
+  $default:
+    sources:
+      - "node/**"
+      - "lib/**"
+    builders:
+      build_node_compilers|entrypoint:
+        options:
+          compiler: dart2js
+          dart2js_args:
+            - -O4
+        generate_for:
+          - node/**.dart
 builders:
-  ddc:
-    target: "build_node_compilers"
+  dart2js_modules:
     import: "package:build_node_compilers/builders.dart"
     builder_factories:
-      - devCompilerBuilder
+      - dart2jsMetaModuleBuilder
+      - dart2jsMetaModuleCleanBuilder
+      - dart2jsModuleBuilder
     build_extensions:
+      $lib$:
+        - .dart2js_node.meta_module.raw
+        - .dart2js_node.meta_module.clean
       .dart:
-        - .node.ddc.js.errors
-        - .node.ddc.js
-        - .node.ddc.js.map
+        - .dart2js_node.module
+    is_optional: True
+    auto_apply: none
+    required_inputs: [".dart", ".module.library"]
+    applies_builders: ["build_modules|module_cleanup"]
+  ddc_modules:
+    import: "package:build_node_compilers/builders.dart"
+    builder_factories:
+      - ddcMetaModuleBuilder
+      - ddcMetaModuleCleanBuilder
+      - ddcModuleBuilder
+    build_extensions:
+      $lib$:
+        - .ddc_node.meta_module.raw
+        - .ddc_node.meta_module.clean
+      .dart:
+        - .ddc_node.module
+    is_optional: True
+    auto_apply: none
+    required_inputs: [".dart", ".module.library"]
+    applies_builders: ["build_modules|module_cleanup"]
+  ddc:
+    import: "package:build_node_compilers/builders.dart"
+    builder_factories:
+      - ddcKernelBuilder
+      - ddcBuilder
+    build_extensions:
+      .ddc_node.module:
+        - .ddc_node.dill
+        - .ddc_node.js.errors
+        - .ddc_node.js
+        - .ddc_node.js.map
     is_optional: True
     auto_apply: all_packages
-    required_inputs: [".dart"]
+    required_inputs:
+      - .ddc_node.module
+    applies_builders:
+      - build_node_compilers|ddc_modules
+      # This isn't really the best place to apply these, but it is the only
+      # place we can (its the only builder which runs on all packages).
+      - build_node_compilers|dart2js_modules
+      - build_node_compilers|dart_source_cleanup
   entrypoint:
-    target: "build_node_compilers"
     import: "package:build_node_compilers/builders.dart"
-    builder_factories: ["nodeEntrypointBuilder"]
+    builder_factories:
+      - nodeEntrypointBuilder
     build_extensions:
       .dart:
         - .dart.bootstrap.js
         - .dart.js
         - .dart.js.map
-    required_inputs:  [".dart", ".node.ddc.js", ".module"]
+        - .digests
+    required_inputs:
+      - .dart
+      - .ddc_node.js
+      - .ddc_node.module
+      - .dart2js_node.module
     build_to: cache
     auto_apply: root_package
     defaults:
       generate_for:
-        include: ["node/**", "lib/**", "example/**", "test/**.node_test.dart"]
-        exclude: ["test/**.vm_test.dart"]
+        include:
+          - node/**
+          - test/**.dart.browser_test.dart
+          - example/**
+        exclude:
+          - test/**.vm_test.dart
+      options:
+        dart2js_args:
+          - --minify
+      release_options:
+        compiler: dart2js
+post_process_builders:
+  dart_source_cleanup:
+    import: "package:build_node_compilers/builders.dart"
+    builder_factory: dartSourceCleanup
+    defaults:
+      release_options:
+        enabled: true

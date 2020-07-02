@@ -3,17 +3,26 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:js';
+import 'dart:typed_data';
 
 import 'package:node_interop/dns.dart';
 import 'package:node_interop/net.dart';
 
 export 'dart:io' show InternetAddressType;
 
+/// An internet address.
+///
+/// This object holds an internet address. If this internet address
+/// is the result of a DNS lookup, the address also holds the hostname
+/// used to make the lookup.
+/// An Internet address combined with a port number represents an
+/// endpoint to which a socket can connect or a listening socket can
+/// bind.
 class InternetAddress implements io.InternetAddress {
   static const int _IPV6_ADDR_LENGTH = 16;
 
   final String _host;
-  final List<int> _inAddr;
+  final Uint8List _inAddr;
 
   @override
   final String address;
@@ -26,30 +35,38 @@ class InternetAddress implements io.InternetAddress {
       ? io.InternetAddressType.IPv4
       : io.InternetAddressType.IPv6;
 
-  // This probably shouldn't have been in the interface because dart:io
-  // version does not implement this setter.
-  set type(io.InternetAddressType value) =>
-      throw new UnsupportedError('Setting address type is not allowed.');
-
   InternetAddress._(this.address, [this._host])
       : _inAddr = _inet_pton(address) {
-    if (net.isIP(address) == 0)
-      throw new ArgumentError('${address} is not valid.');
+    if (net.isIP(address) == 0) {
+      throw ArgumentError('${address} is not valid.');
+    }
   }
 
-  factory InternetAddress(String address) => new InternetAddress._(address);
+  /// Creates a new [InternetAddress] from a numeric address.
+  ///
+  /// If the address in [address] is not a numeric IPv4
+  /// (dotted-decimal notation) or IPv6 (hexadecimal representation).
+  /// address [ArgumentError] is thrown.
+  factory InternetAddress(String address) => InternetAddress._(address);
 
+  /// Lookup a host, returning a Future of a list of
+  /// [InternetAddress]s. If [type] is [InternetAddressType.ANY], it
+  /// will lookup both IP version 4 (IPv4) and IP version 6 (IPv6)
+  /// addresses. If [type] is either [InternetAddressType.IPv4] or
+  /// [InternetAddressType.IPv6] it will only lookup addresses of the
+  /// specified type. The order of the list can, and most likely will,
+  /// change over time.
   static Future<List<io.InternetAddress>> lookup(String host) {
-    Completer<List<io.InternetAddress>> completer = new Completer();
-    var options = new DNSLookupOptions(all: true, verbatim: true);
+    final completer = Completer<List<io.InternetAddress>>();
+    final options = DNSLookupOptions(all: true, verbatim: true);
 
     void handleLookup(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
-        final addresses = new List<DNSAddress>.from(result);
+        final addresses = List<DNSAddress>.from(result);
         var list = addresses
-            .map((item) => new InternetAddress._(item.address, host))
+            .map((item) => InternetAddress._(item.address, host))
             .toList(growable: false);
         completer.complete(list);
       }
@@ -70,7 +87,7 @@ class InternetAddress implements io.InternetAddress {
         // Checking for fe80::/10.
         return _inAddr[0] == 0xFE && (_inAddr[1] & 0xB0) == 0x80;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
@@ -80,12 +97,12 @@ class InternetAddress implements io.InternetAddress {
       case io.InternetAddressType.IPv4:
         return _inAddr[0] == 127;
       case io.InternetAddressType.IPv6:
-        for (int i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
+        for (var i = 0; i < _IPV6_ADDR_LENGTH - 1; i++) {
           if (_inAddr[i] != 0) return false;
         }
         return _inAddr[_IPV6_ADDR_LENGTH - 1] == 1;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
@@ -99,21 +116,21 @@ class InternetAddress implements io.InternetAddress {
         // Checking for ff00::/8.
         return _inAddr[0] == 0xFF;
     }
-    throw new StateError('Unreachable');
+    throw StateError('Unreachable');
   }
 
   @override
-  List<int> get rawAddress => new List.from(_inAddr);
+  Uint8List get rawAddress => Uint8List.fromList(_inAddr);
 
   @override
   Future<io.InternetAddress> reverse() {
-    final Completer<io.InternetAddress> completer = new Completer();
+    final completer = Completer<io.InternetAddress>();
     void reverseResult(error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {
-        final hostnames = new List<String>.from(result);
-        completer.complete(new InternetAddress._(address, hostnames.first));
+        final hostnames = List<String>.from(result);
+        completer.complete(InternetAddress._(address, hostnames.first));
       }
     }
 
@@ -131,24 +148,24 @@ const int _kColon = 58;
 ///
 /// This implementation assumes that [ip] address has been validated for
 /// correctness.
-List<int> _inet_pton(String ip) {
+Uint8List _inet_pton(String ip) {
   if (ip.contains(':')) {
     // ipv6
-    final List<int> result = new List<int>.filled(16, 0);
+    final result = Uint8List(16);
 
     // Special cases:
     if (ip == '::') return result;
     if (ip == '::1') return result..[15] = 1;
 
-    const int maxSingleColons = 7;
+    const maxSingleColons = 7;
 
-    int totalColons = ip.codeUnits.where((code) => code == _kColon).length;
-    bool hasDoubleColon = ip.contains('::');
-    int singleColons = hasDoubleColon ? (totalColons - 1) : totalColons;
-    int skippedSegments = maxSingleColons - singleColons;
+    final totalColons = ip.codeUnits.where((code) => code == _kColon).length;
+    final hasDoubleColon = ip.contains('::');
+    final singleColons = hasDoubleColon ? (totalColons - 1) : totalColons;
+    final skippedSegments = maxSingleColons - singleColons;
 
-    StringBuffer segment = new StringBuffer();
-    int pos = 0;
+    final segment = StringBuffer();
+    var pos = 0;
     for (var i = 0; i < ip.length; i++) {
       if (i > 0 && ip[i] == ':' && ip[i - 1] == ':') {
         /// We don't need to set bytes to zeros as our [result] array is
@@ -157,7 +174,7 @@ List<int> _inet_pton(String ip) {
         pos += 2 * skippedSegments;
       } else if (ip[i] == ':') {
         if (segment.isEmpty) segment.write('0');
-        int value = int.parse(segment.toString(), radix: 16);
+        final value = int.parse(segment.toString(), radix: 16);
         result[pos] = value ~/ 256;
         result[pos + 1] = value % 256;
         pos += 2;
@@ -168,12 +185,12 @@ List<int> _inet_pton(String ip) {
     }
     // Don't forget about the last segment:
     if (segment.isEmpty) segment.write('0');
-    int value = int.parse(segment.toString(), radix: 16);
+    final value = int.parse(segment.toString(), radix: 16);
     result[pos] = value ~/ 256;
     result[pos + 1] = value % 256;
     return result;
   } else {
     // ipv4
-    return ip.split('.').map(int.parse).toList(growable: false);
+    return Uint8List.fromList(ip.split('.').map(int.parse).toList());
   }
 }

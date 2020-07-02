@@ -1,6 +1,11 @@
 targets:
   $default:
     sources:
+      - "$package$"
       - "example/**"
       - "lib/**"
       - "test/**"
+    builders:
+      build_node_compilers|entrypoint:
+        options:
+          compiler: dart2js

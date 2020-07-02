@@ -1,3 +1,46 @@
+## 1.1.1
+
+- Implemented `stdout` and `stderr` library-level properties.
+- `Platform.isIOS` and `Platform.isFuchsia` now throw `UnsupportedError`.
+
+## 1.1.0
+
+- Added support for Dart 2.8 (#75)
+- Bumped Dart SDK constraint to 2.2.0
+
+## 1.0.1+2
+
+- More preparation for Uint8List SDK breaking change (dart-lang/sdk#36900).
+  See #61 and #63 for details.
+
+## 1.0.1+1
+
+- Prepare for Uint8List SDK breaking change (dart-lang/sdk#36900).
+  See #59 and #60 for details.
+
+## 1.0.1
+
+- Server side `NodeHttpRequest` and `NodeHttpResponse` are now available in public interface.
+
+## 1.0.0
+
+First stable release of this library which implements subset of `dart:io` interfaces,
+including File System objects, HttpServer, Platform and other common classes.
+
+Not all `dart:io` interfaces are covered yet. Feel free to file an issue on Github if you need
+a specific class implemented in node_io.
+
+- Complete file system implementations for `Directory`, `File`, `RandomAccessFile`, `Link`.
+- Added `STATUS.md` which reflects coverage of already implemented or exported `dart:io` APIs.
+
+## 1.0.0-dev.10.0
+
+- Fixed `NodeHttpResponse.redirect` failing to convert `Uri` to string.
+
+## 1.0.0-dev.9.0
+
+- Upgraded to latest build_node_compilers (0.2.0)
+
 ## 1.0.0-dev.8.0
 
 - Fixed: analysis warnings with latest Pub and Dart SDK.

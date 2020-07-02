@@ -1,4 +1,4 @@
-# Node Interop [![Build Status](https://img.shields.io/travis-ci/pulyaevskiy/node-interop.svg?branch=master&style=flat-square)](https://travis-ci.org/pulyaevskiy/node-interop) [![Pub](https://img.shields.io/pub/v/node_interop.svg?style=flat-square)](https://pub.dartlang.org/packages/node_interop) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-c73061.svg?style=flat-square)](https://gitter.im/pulyaevskiy/node-interop)
+# Node Interop [![Build Status](https://img.shields.io/travis/pulyaevskiy/node-interop.svg?branch=master&style=flat-square)](https://travis-ci.org/pulyaevskiy/node-interop) [![Pub](https://img.shields.io/pub/v/node_interop.svg?style=flat-square)](https://pub.dartlang.org/packages/node_interop) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-c73061.svg?style=flat-square)](https://gitter.im/pulyaevskiy/node-interop)
 
 Write applications in Dart, run in NodeJS.
 
@@ -6,6 +6,8 @@ Write applications in Dart, run in NodeJS.
 * [Example](#example)
 * [Structure](#structure)
 * [Status](#status)
+
+**Looking for latest updates? Make sure to check the most recent `1.0.0-dev.*` release!**
 
 ## What is this?
 
@@ -131,7 +133,8 @@ Writable createWritable(WritableOptions options) {
 
 ## Status
 
-While 1.0.0 is still in `dev` mode breaking changes are likely to occur.
+Version 1.0.0 is considered stable though not feature complete. It is recommended to check
+`1.0.0-dev.*` versions for latest updates and bug fixes.
 
 Make sure to checkout [CHANGELOG.md][changelog] after every release, all 
 notable changes and upgrade instructions will be described there.

@@ -20,11 +20,11 @@ abstract class Modules {
 @anonymous
 abstract class Module {
   external List<Module> get children;
-  external get exports;
+  external dynamic get exports;
   external String get filename;
   external String get id;
   external bool get loaded;
   external Module get parent;
   external List<String> get paths;
-  external require(String id);
+  external dynamic require(String id);
 }

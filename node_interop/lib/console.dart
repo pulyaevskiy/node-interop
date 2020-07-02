@@ -38,20 +38,19 @@ abstract class Console {
 
   // Unsupported: "assert" is a reserved word in Dart.
   // external void assert(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
-  external void debug(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void debug(data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
   external void dir(object, [options]);
   external void dirxml([arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
-  external void error(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void error(data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
   external void group([label1, label2, label3, label4, label5, label6]);
   external void groupCollapsed();
   external void groupEnd();
-  external void info(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
-  external void log(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void info(data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void log(data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
   external void time(String label);
   external void timeEnd(String label);
-  external void trace(String message,
-      [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
-  external void warn(String data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void trace(message, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
+  external void warn(data, [arg1, arg2, arg3, arg4, arg5, arg6, arg7]);
   // Inspector only methods:
   external void markTimeline(String label);
   external void profile([String label]);

@@ -1,6 +1,7 @@
 language: dart
 
 dart:
+- stable
 - dev
 
 before_install:

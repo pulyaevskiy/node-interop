@@ -232,6 +232,7 @@ abstract class Buffer {
 
   /// Decodes this buffer to a string according to the specified character
   /// [encoding].
+  @override
   external String toString([String encoding, int start, int end]);
 
   /// Creates and returns an iterator for this buffer values (bytes).

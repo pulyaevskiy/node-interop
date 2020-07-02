@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 void main() {
   group('Directory', () {
     Directory dir(String name) {
-      return new Directory(join(Directory.current.path, name));
+      return Directory(join(Directory.current.path, name));
     }
 
     test('current directory', () {
@@ -39,8 +39,8 @@ void main() {
       expect(dir('lib').statSync().type, FileSystemEntityType.directory);
     });
 
-    _listContainsPath(List<FileSystemEntity> entities, String path) {
-      bool contains = false;
+    bool _listContainsPath(List<FileSystemEntity> entities, String path) {
+      var contains = false;
       for (var entity in entities) {
         if (entity.path.endsWith(path)) {
           contains = true;
@@ -50,12 +50,40 @@ void main() {
       return contains;
     }
 
+    test('systemTemp', () {
+      expect(Directory.systemTemp.path, isNotEmpty);
+    });
+
     test('list', () async {
       var list = await Directory.current.list().toList();
-      expect(_listContainsPath(list, "pubspec.yaml"), isTrue);
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
 
       list = await dir('lib').list().toList();
-      expect(_listContainsPath(list, "node_io.dart"), isTrue);
+      expect(_listContainsPath(list, 'node_io.dart'), isTrue);
+    });
+
+    test('listSync', () async {
+      var list = Directory.current.listSync();
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
+
+      list = dir('lib').listSync();
+      expect(_listContainsPath(list, 'node_io.dart'), isTrue);
+    });
+
+    test('createTemp', () async {
+      final dir = Directory.systemTemp;
+      final tmp = await dir.createTemp('createTemp_');
+      expect(tmp.existsSync(), true);
+      expect(tmp.path, contains('createTemp_'));
+      await tmp.delete(); // just for cleanup
+    });
+
+    test('createTemp', () {
+      final dir = Directory.systemTemp;
+      final tmp = dir.createTempSync('createTempSync_');
+      expect(tmp.existsSync(), true);
+      expect(tmp.path, contains('createTempSync_'));
+      tmp.deleteSync(); // just for cleanup
     });
 
     test('create_delete', () async {
@@ -71,8 +99,8 @@ void main() {
     });
 
     test('rename', () async {
-      var src = new Directory('src');
-      var dst = new Directory('dst');
+      var src = Directory('src');
+      var dst = Directory('dst');
       try {
         await src.delete();
       } catch (_) {}

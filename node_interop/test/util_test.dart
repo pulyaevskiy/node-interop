@@ -7,8 +7,8 @@ library node_interop.util_test;
 
 import 'package:js/js.dart';
 import 'package:node_interop/node.dart';
-import 'package:node_interop/util.dart';
 import 'package:node_interop/test.dart';
+import 'package:node_interop/util.dart';
 import 'package:test/test.dart';
 
 const fixturesJS = '''
@@ -43,35 +43,35 @@ abstract class Fixtures {
 }
 
 void main() {
-  createFile('fixtures.js', fixturesJS);
+  final fixture = createFile('fixtures.js', fixturesJS);
 
   group('dartify', () {
     test('it handles js primitives', () {
-      final Fixtures js = require('./fixtures.js');
-      expect(dartify(js.stringVal), "node");
+      final Fixtures js = require(fixture);
+      expect(dartify(js.stringVal), 'node');
       expect(dartify(js.numVal), 3.1415);
       expect(dartify(js.boolVal), isTrue);
       expect(dartify(js.nullVal), isNull);
     });
 
     test('it handles POJOs', () {
-      final Fixtures js = require('./fixtures.js');
-      Map<String, dynamic> result = dartify(js.pojoVal);
-      expect(result, {"propKey": "propValue"});
+      final Fixtures js = require(fixture);
+      final result = dartify(js.pojoVal) as Map<String, dynamic>;
+      expect(result, {'propKey': 'propValue'});
     });
 
     test('it handles arrays', () {
-      final Fixtures js = require('./fixtures.js');
-      expect(dartify(js.arrayVal), [1, "two"]);
+      final Fixtures js = require(fixture);
+      expect(dartify(js.arrayVal), [1, 'two']);
     });
 
     test('it DOES handle JS functions with properties', () {
-      final Fixtures js = require('./fixtures.js');
+      final Fixtures js = require(fixture);
       expect(dartify(js.funcVal), {'isFruit': true});
     });
 
     test('it handles objects with prototypes', () {
-      final Fixtures js = require('./fixtures.js');
+      final Fixtures js = require(fixture);
       expect(dartify(js.objectVal), {'color': 'red', 'origin': 'Japan'});
     });
   });

@@ -3,12 +3,16 @@
 
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:js' as js;
 import 'dart:typed_data';
 
-import 'package:node_interop/path.dart' as nodePath;
+import 'package:node_interop/fs.dart';
+import 'package:node_interop/path.dart' as node_path;
 
+import 'directory.dart';
 import 'file_system_entity.dart';
 
+/// Link objects are references to filesystem links.
 class Link extends FileSystemEntity implements io.Link {
   @override
   final String path;
@@ -16,7 +20,8 @@ class Link extends FileSystemEntity implements io.Link {
   Link(this.path);
 
   factory Link.fromRawPath(Uint8List rawPath) {
-    throw new UnimplementedError();
+    // TODO: implement fromRawPath
+    throw UnimplementedError();
   }
 
   /// Creates a [Link] object.
@@ -26,7 +31,7 @@ class Link extends FileSystemEntity implements io.Link {
   ///
   /// If [path] is an absolute path, it will be immune to changes to the
   /// current working directory.
-  factory Link.fromUri(Uri uri) => new Link(uri.toFilePath());
+  factory Link.fromUri(Uri uri) => Link(uri.toFilePath());
 
   @override
   Future<bool> exists() async {
@@ -41,67 +46,117 @@ class Link extends FileSystemEntity implements io.Link {
   }
 
   @override
-  Link get absolute => new Link(_absolutePath);
+  Link get absolute => Link(_absolutePath);
 
-  String get _absolutePath => nodePath.path.resolve(path);
+  String get _absolutePath => node_path.path.resolve(path);
 
   @override
-  Future<Link> create(String target, {bool recursive: false}) {
-    // TODO: implement create
-    throw new UnimplementedError();
+  Future<Link> create(String target, {bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive flag not supported by Node.js');
+    }
+
+    final completer = Completer<Link>();
+    void cb([err]) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(this);
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.symlink(target, path, jsCallback);
+    return completer.future;
   }
 
   @override
-  void createSync(String target, {bool recursive: false}) {
-    // TODO: implement createSync
-    throw new UnimplementedError();
+  void createSync(String target, {bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive flag not supported by Node.js');
+    }
+    fs.symlinkSync(target, path);
   }
 
   @override
-  Future<FileSystemEntity> delete({bool recursive: false}) {
-    // TODO: implement delete
-    throw new UnimplementedError();
+  Future<Link> delete({bool recursive = false}) {
+    if (recursive) {
+      return Future.error(
+          UnsupportedError('Recursive flag is not supported by Node.js'));
+    }
+    final completer = Completer<Link>();
+    void callback(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(this);
+      }
+    }
+
+    final jsCallback = js.allowInterop(callback);
+    fs.unlink(_absolutePath, jsCallback);
+    return completer.future;
   }
 
   @override
-  void deleteSync({bool recursive: false}) {
-    // TODO: implement deleteSync
-    throw new UnimplementedError();
+  void deleteSync({bool recursive = false}) {
+    if (recursive) {
+      throw UnsupportedError('Recursive flag is not supported by Node.js');
+    }
+    fs.unlinkSync(_absolutePath);
   }
 
   @override
   Future<Link> rename(String newPath) {
-    // TODO: implement rename
-    throw new UnimplementedError();
+    final completer = Completer<Link>();
+    void cb(err) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(Link(newPath));
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.rename(path, newPath, jsCallback);
+    return completer.future;
   }
 
   @override
   Link renameSync(String newPath) {
-    // TODO: implement renameSync
-    throw new UnimplementedError();
+    fs.renameSync(path, newPath);
+    return Link(newPath);
   }
 
   @override
   Future<String> target() {
-    // TODO: implement target
-    throw new UnimplementedError();
+    final completer = Completer<String>();
+    void cb(err, String target) {
+      if (err != null) {
+        completer.completeError(err);
+      } else {
+        completer.complete(target);
+      }
+    }
+
+    final jsCallback = js.allowInterop(cb);
+    fs.readlink(path, jsCallback);
+    return completer.future;
   }
 
   @override
   String targetSync() {
-    // TODO: implement targetSync
-    throw new UnimplementedError();
+    return fs.readlinkSync(path);
   }
 
   @override
   Future<Link> update(String target) {
-    // TODO: implement update
-    throw new UnimplementedError();
+    return delete().then((link) => link.create(target));
   }
 
   @override
   void updateSync(String target) {
-    // TODO: implement updateSync
-    throw new UnimplementedError();
+    deleteSync();
+    createSync(target);
   }
 }

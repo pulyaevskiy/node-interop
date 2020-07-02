@@ -30,7 +30,7 @@ void main() {
       expect(stat.mode, isNotNull);
 
       // missing directory
-      stat = await FileStat.stat(join(Directory.current.path, "__dummy__"));
+      stat = await FileStat.stat(join(Directory.current.path, '__dummy__'));
       expect(stat.type, FileSystemEntityType.notFound);
     });
   });

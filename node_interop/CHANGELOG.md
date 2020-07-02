@@ -1,3 +1,53 @@
+## 1.1.1
+
+- Added missing method definitions for TTYWriteStream.
+
+## 1.1.0
+
+- Added bindings for Node.js `tty` module as well as updated Process bindings for `stdout`,
+  `stdin` and `stderr` to return TTY stream types instead of `Writable` and `Readable`.
+
+## 1.0.3
+
+- Removed generic annotations from Process methods per #56 (not supported by Dart yet).
+- Added `util.inspect` binding.
+
+## 1.0.2
+
+- Clarified documentation of `dartify` regarding conversion of JS object keys (#52).
+
+## 1.0.1
+
+- Fixed declaration of `fs.writeSync` and `fs.readSync` to return `int` instead of `void`.
+
+## 1.0.0
+
+No functional changes in this version, it is published to replace obsolete `0.0.7` version on the
+Pub's package homepage to improve discoverability.
+
+Ongoing work will continue in `1.0.0-dev.*` branch until it's considered stable and feature complete.
+Make sure to checkout recent dev version for latest updates.
+
+Non-breaking changes may be published to the stable track periodically.
+
+## 1.0.0-dev.13.0
+
+- Added `HttpsAgentOptions` with basic TLS/SSL parameters.
+- Breaking: createHttpsAgent() now expects instance of `HttpsAgentOptions` instead of `HttpAgentOptions`.
+
+## 1.0.0-dev.12.0
+
+- Fixed Console method bindings to not force `String` arguments and allow any type.
+- Breaking: Updated `JsError` constructor definition to match Node.js documentation.
+
+## 1.0.0-dev.11.0
+
+- Upgraded to build_node_compilers 0.2.0
+
+## 1.0.0-dev.10.0
+
+- Internal changes.
+
 ## 1.0.0-dev.9.0
 
 - Fixed analysis warnings.

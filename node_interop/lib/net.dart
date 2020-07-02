@@ -25,7 +25,7 @@ abstract class Net {
   /// See official documentation for possible signatures:
   /// - https://nodejs.org/api/net.html#net_net_createconnection
   external Socket createConnection(arg1, [arg2, arg3]);
-  external Socket createServer([options, void connectionListener()]);
+  external Socket createServer([options, void Function() connectionListener]);
   external num isIP(String input);
   external bool isIPv4(String input);
   external bool isIPv6(String input);
@@ -43,23 +43,29 @@ abstract class Socket implements Duplex, EventEmitter {
   /// - https://nodejs.org/api/net.html#net_socket_connect
   external Socket connect(arg1, [arg2, arg3]);
   external bool get connecting;
+  @override
   external Socket destroy([exception]);
   external bool get destroyed;
+  @override
   external Socket end([data, encoding, unused]);
   external String get localAddress;
   external String get localFamily;
   external int get localPort;
+  @override
   external Socket pause();
   external Socket ref();
   external String get remoteAddress;
   external String get remoteFamily;
   external int get remotePort;
+  @override
   external Socket resume();
+  @override
   external Socket setEncoding([encoding]);
   external Socket setKeepAlive([bool enable, initialDelay]);
   external Socket setNoDelay([bool noDelay]);
-  external Socket setTimeout(timeout, [void callback()]);
+  external Socket setTimeout(timeout, [void Function() callback]);
   external Socket unref();
+  @override
   external bool write(chunk, [encodingOrCallback, callback]);
 }
 
@@ -75,10 +81,11 @@ abstract class NetAddress {
 @anonymous
 abstract class NetServer implements EventEmitter {
   external NetAddress address();
-  external NetServer close([void callback()]);
-  external void getConnections([void callback(error, int count)]);
+  external NetServer close([void Function() callback]);
+  external void getConnections(
+      [void Function(dynamic error, int count) callback]);
 
-  /// See oficial documentation on possible signatures:
+  /// See official documentation on possible signatures:
   /// - https://nodejs.org/api/net.html#net_server_listen
   external void listen([arg1, arg2, arg3, arg4]);
   external bool get listening;

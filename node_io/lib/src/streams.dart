@@ -9,11 +9,16 @@ import 'dart:typed_data';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/stream.dart';
 
+abstract class HasReadable {
+  Readable get nativeInstance;
+}
+
 /// [Stream] wrapper around Node's [Readable] stream.
-class ReadableStream<T> extends Stream<T> {
+class ReadableStream<T> extends Stream<T> implements HasReadable {
   /// Native `Readable` instance wrapped by this stream.
   ///
   /// It is not recommended to interact with this object directly.
+  @override
   final Readable nativeInstance;
   final Function _convert;
   StreamController<T> _controller;
@@ -25,9 +30,9 @@ class ReadableStream<T> extends Stream<T> {
   /// send to the listener. This allows implementations to convert raw
   /// JavaScript data in to desired Dart representation. If no convert
   /// function is provided then data is send to the listener unchanged.
-  ReadableStream(this.nativeInstance, {T convert(dynamic data)})
+  ReadableStream(this.nativeInstance, {T Function(dynamic data) convert})
       : _convert = convert {
-    _controller = new StreamController(
+    _controller = StreamController(
         onPause: _onPause, onResume: _onResume, onCancel: _onCancel);
     nativeInstance.on('error', allowInterop(_errorHandler));
   }
@@ -51,8 +56,8 @@ class ReadableStream<T> extends Stream<T> {
   }
 
   @override
-  StreamSubscription<T> listen(void onData(T event),
-      {Function onError, void onDone(), bool cancelOnError}) {
+  StreamSubscription<T> listen(void Function(T event) onData,
+      {Function onError, void Function() onDone, bool cancelOnError}) {
     nativeInstance.on('data', allowInterop((chunk) {
       assert(chunk != null);
       var data = (_convert == null) ? chunk : _convert(chunk);
@@ -77,14 +82,14 @@ class WritableStream<S> implements StreamSink<S> {
 
   Completer _drainCompleter;
 
-  /// Creates new [WritableStream] which wraps [nativeInstance] of `Writable`
+  /// Creates [WritableStream] which wraps [nativeInstance] of `Writable`
   /// type.
   ///
   /// The [convert] hook is called for each element of this stream sink before
   /// it's added to the [nativeInstance]. This allows implementations to convert
   /// Dart objects in to values accepted by JavaScript streams. If no convert
   /// function is provided then data is sent to target unchanged.
-  WritableStream(this.nativeInstance, {dynamic convert(S data)})
+  WritableStream(this.nativeInstance, {dynamic Function(S data) convert})
       : _convert = convert {
     nativeInstance.on('error', allowInterop(_errorHandler));
   }
@@ -101,7 +106,7 @@ class WritableStream<S> implements StreamSink<S> {
 
   /// Writes [data] to nativeStream.
   void _write(S data) {
-    var completer = new Completer();
+    var completer = Completer();
     void _flush([JsError error]) {
       if (completer.isCompleted) return;
       if (error != null) {
@@ -128,7 +133,7 @@ class WritableStream<S> implements StreamSink<S> {
     if (_drainCompleter != null && !_drainCompleter.isCompleted) {
       return _drainCompleter.future;
     }
-    return new Future.value();
+    return Future.value();
   }
 
   @override
@@ -143,13 +148,13 @@ class WritableStream<S> implements StreamSink<S> {
 
   @override
   Future addStream(Stream<S> stream) {
-    throw new UnimplementedError();
+    throw UnimplementedError();
   }
 
   @override
   Future close() {
     if (_closeCompleter != null) return _closeCompleter.future;
-    _closeCompleter = new Completer();
+    _closeCompleter = Completer();
     void end() {
       if (!_closeCompleter.isCompleted) _closeCompleter.complete();
     }
@@ -169,14 +174,14 @@ class WritableStream<S> implements StreamSink<S> {
 class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   static dynamic _nodeIoSinkConvert(List<int> data) {
     if (data is! Uint8List) {
-      data = new Uint8List.fromList(data);
+      data = Uint8List.fromList(data);
     }
     return Buffer.from(data);
   }
 
   Encoding _encoding;
 
-  NodeIOSink(Writable nativeStream, {Encoding encoding: utf8})
+  NodeIOSink(Writable nativeStream, {Encoding encoding = utf8})
       : super(nativeStream, convert: _nodeIoSinkConvert) {
     _encoding = encoding;
   }
@@ -198,18 +203,18 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   }
 
   @override
-  void writeAll(Iterable objects, [String separator = ""]) {
+  void writeAll(Iterable objects, [String separator = '']) {
     var data = objects.map((obj) => obj.toString()).join(separator);
     _write(encoding.encode(data));
   }
 
   @override
   void writeCharCode(int charCode) {
-    _write(encoding.encode(new String.fromCharCode(charCode)));
+    _write(encoding.encode(String.fromCharCode(charCode)));
   }
 
   @override
-  void writeln([Object obj = ""]) {
-    _write(encoding.encode("$obj\n"));
+  void writeln([Object obj = '']) {
+    _write(encoding.encode('$obj\n'));
   }
 }

@@ -8,7 +8,7 @@ import 'package:node_interop/js.dart';
 import 'package:node_interop/util.dart';
 
 /// List of HTTP header names which can only have single value.
-const _singleValueHttpHeaders = const [
+const _singleValueHttpHeaders = [
   'age',
   'authorization',
   'content-length',
@@ -37,15 +37,16 @@ class ResponseHttpHeaders extends HttpHeaders {
   bool _mutable = true;
 
   /// Collection of header names set in native response object.
-  final Set<String> _headerNames = new Set<String>();
+  final Set<String> _headerNames = <String>{};
 
   void finalize() {
     _mutable = false;
   }
 
   void _checkMutable() {
-    if (_mutable == false)
-      throw new io.HttpException('HTTP headers are not mutable.');
+    if (_mutable == false) {
+      throw io.HttpException('HTTP headers are not mutable.');
+    }
   }
 
   @override
@@ -80,15 +81,15 @@ class RequestHttpHeaders extends HttpHeaders {
 
   @override
   void _setHeader(String name, dynamic value) =>
-      throw new io.HttpException('HTTP headers are not mutable.');
+      throw io.HttpException('HTTP headers are not mutable.');
 
   @override
   void _removeHeader(String name) =>
-      throw new io.HttpException('HTTP headers are not mutable.');
+      throw io.HttpException('HTTP headers are not mutable.');
 
   @override
   Iterable<String> _getHeaderNames() =>
-      new List<String>.from(objectKeys(_request.headers));
+      List<String>.from(objectKeys(_request.headers));
 }
 
 /// Proxy to native JavaScript HTTP headers.
@@ -105,7 +106,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
       _getHeader(io.HttpHeaders.transferEncodingHeader) == 'chunked';
 
   @override
-  void set chunkedTransferEncoding(bool chunked) {
+  set chunkedTransferEncoding(bool chunked) {
     if (chunked) {
       _setHeader(io.HttpHeaders.transferEncodingHeader, 'chunked');
     } else {
@@ -186,9 +187,9 @@ abstract class HttpHeaders implements io.HttpHeaders {
   @override
   set host(String host) {
     var hostAndPort = host;
-    int _port = this.port;
+    var _port = port;
     if (_port != null) {
-      hostAndPort = "$host:$_port";
+      hostAndPort = '$host:$_port';
     }
     _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
@@ -207,7 +208,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   set port(int value) {
     var hostAndPort = host;
     if (value != null) {
-      hostAndPort = "$host:$value";
+      hostAndPort = '$host:$value';
     }
     _setHeader(io.HttpHeaders.hostHeader, hostAndPort);
   }
@@ -253,7 +254,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
       } else {
         // Node.js treats `set-cookie` differently from other headers and
         // composes all values in an array.
-        return new List.unmodifiable(value);
+        return List.unmodifiable(value);
       }
     }
     return null;
@@ -261,20 +262,26 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   String value(String name) {
-    List<String> values = this[name];
+    final values = this[name];
     if (values == null) return null;
     if (values.length > 1) {
-      throw new io.HttpException("More than one value for header $name");
+      throw io.HttpException('More than one value for header $name');
     }
     return values[0];
   }
 
   @override
-  void add(String name, Object value) {
-    List<String> existingValues = this[name];
-    var values = existingValues != null ? new List.from(existingValues) : [];
-    values.add(value.toString());
-    _setHeader(name, values);
+  void add(String name, Object value, {bool preserveHeaderCase = false}) {
+    if (preserveHeaderCase ?? false) {
+      // new since 2.8
+      // not supported on node
+      throw UnsupportedError('HttpHeaders.add(preserveHeaderCase: true)');
+    } else {
+      final existingValues = this[name];
+      var values = existingValues != null ? List.from(existingValues) : [];
+      values.add(value.toString());
+      _setHeader(name, values);
+    }
   }
 
   @override
@@ -286,7 +293,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void forEach(void f(String name, List<String> values)) {
+  void forEach(void Function(String name, List<String> values) f) {
     var names = _getHeaderNames();
     names.forEach((String name) {
       f(name, this[name]);
@@ -295,14 +302,14 @@ abstract class HttpHeaders implements io.HttpHeaders {
 
   @override
   void noFolding(String name) {
-    throw new UnsupportedError("Folding is not supported for Node.");
+    throw UnsupportedError('Folding is not supported for Node.');
   }
 
   @override
   void remove(String name, Object value) {
     // TODO: this could actually be implemented on our side now.
-    throw new UnsupportedError(
-        "Removing individual values not supported for Node.");
+    throw UnsupportedError(
+        'Removing individual values not supported for Node.');
   }
 
   @override
@@ -311,7 +318,13 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void set(String name, Object value) {
-    _setHeader(name, jsify(value));
+  void set(String name, Object value, {bool preserveHeaderCase = false}) {
+    if (preserveHeaderCase ?? false) {
+      // new since 2.8
+      // not supported on node
+      throw UnsupportedError('HttpHeaders.set(preserveHeaderCase: true)');
+    } else {
+      _setHeader(name, jsify(value));
+    }
   }
 }

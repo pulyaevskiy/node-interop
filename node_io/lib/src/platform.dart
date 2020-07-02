@@ -6,6 +6,59 @@ import 'package:node_interop/os.dart';
 import 'package:node_interop/path.dart';
 import 'package:node_interop/util.dart';
 
+/// Information about the environment in which the current program is running.
+///
+/// Platform provides information such as the operating system,
+/// the hostname of the computer, the value of environment variables,
+/// the path to the running program,
+/// and so on.
+///
+/// ## Get the URI to the current Dart script
+///
+/// Use the [script] getter to get the URI to the currently running
+/// Dart script.
+///
+///     import 'dart:io' show Platform;
+///
+///     void main() {
+///       // Get the URI of the script being run.
+///       var uri = Platform.script;
+///       // Convert the URI to a path.
+///       var path = uri.toFilePath();
+///     }
+///
+/// ## Get the value of an environment variable
+///
+/// The [environment] getter returns a the names and values of environment
+/// variables in a [Map] that contains key-value pairs of strings. The Map is
+/// unmodifiable. This sample shows how to get the value of the `PATH`
+/// environment variable.
+///
+///     import 'dart:io' show Platform;
+///
+///     void main() {
+///       Map<String, String> envVars = Platform.environment;
+///       print(envVars['PATH']);
+///     }
+///
+/// ## Determine the OS
+///
+/// You can get the name of the operating system as a string with the
+/// [operatingSystem] getter. You can also use one of the static boolean
+/// getters: [isMacOS], [isLinux], and [isWindows].
+///
+///     import 'dart:io' show Platform, stdout;
+///
+///     void main() {
+///       // Get the operating system as a string.
+///       String os = Platform.operatingSystem;
+///       // Or, use a predicate getter.
+///       if (Platform.isMacOS) {
+///         print('is a Mac');
+///       } else {
+///         print('is not a Mac');
+///       }
+///     }
 abstract class Platform {
   /// The number of individual execution units of the machine.
   static int get numberOfProcessors => os.cpus().length;
@@ -16,7 +69,7 @@ abstract class Platform {
 
   /// Get the name of the current locale.
   static String get localeName =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// A string representing the operating system or platform.
   static String get operatingSystem => os.platform();
@@ -33,27 +86,29 @@ abstract class Platform {
   /// This value is `false` if the operating system is a specialized
   /// version of Linux that identifies itself by a different name,
   /// for example Android (see [isAndroid]).
-  static final bool isLinux = (operatingSystem == "linux");
+  static final bool isLinux = (operatingSystem == 'linux');
 
   /// Whether the operating system is a version of
   /// [macOS](https://en.wikipedia.org/wiki/MacOS).
-  static final bool isMacOS = (operatingSystem == "darwin");
+  static final bool isMacOS = (operatingSystem == 'darwin');
 
   /// Whether the operating system is a version of
   /// [Microsoft Windows](https://en.wikipedia.org/wiki/Microsoft_Windows).
-  static final bool isWindows = (operatingSystem == "win32");
+  static final bool isWindows = (operatingSystem == 'win32');
 
   /// Whether the operating system is a version of
   /// [Android](https://en.wikipedia.org/wiki/Android_%28operating_system%29).
-  static final bool isAndroid = (operatingSystem == "android");
+  static final bool isAndroid = (operatingSystem == 'android');
 
   /// Whether the operating system is a version of
   /// [iOS](https://en.wikipedia.org/wiki/IOS).
-  static final bool isIOS = (operatingSystem == "ios");
+  static bool get isIOS =>
+      throw UnsupportedError('iOS is not supported by Node.js.');
 
   /// Whether the operating system is a version of
   /// [Fuchsia](https://en.wikipedia.org/wiki/Google_Fuchsia).
-  static final bool isFuchsia = (operatingSystem == "fuchsia");
+  static bool get isFuchsia =>
+      throw UnsupportedError('Fuchsia is not supported by Node.js.');
 
   /// The environment for this process as a map from string key to string value.
   ///
@@ -64,7 +119,7 @@ abstract class Platform {
   /// all keys to upper case.
   /// On other platforms, keys can be distinguished by case.
   static Map<String, String> get environment =>
-      new Map.unmodifiable(dartify(process.env));
+      Map.unmodifiable(dartify(process.env));
 
   /// The path of the executable used to run the script in this isolate.
   ///
@@ -96,15 +151,14 @@ abstract class Platform {
   /// If the executable environment does not support [script],
   /// the URI is empty.
   static Uri get script =>
-      new Uri.file(process.argv[1], windows: Platform.isWindows);
+      Uri.file(process.argv[1], windows: Platform.isWindows);
 
   /// The flags passed to the executable used to run the script in this isolate.
   ///
   /// These are the command-line flags to the executable that precedes
   /// the script name.
-  /// Provides a new list every time the value is read.
-  static List<String> get executableArguments =>
-      new List.from(process.execArgv);
+  /// Provides a list every time the value is read.
+  static List<String> get executableArguments => List.from(process.execArgv);
 
   /// The `--package-root` flag passed to the executable used to run the script
   /// in this isolate.
@@ -112,7 +166,7 @@ abstract class Platform {
   /// If present, it specifies the directory where Dart packages are looked up.
   /// Is `null` if there is no `--package-root` flag.
   static String get packageRoot =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// The `--packages` flag passed to the executable used to run the script
   /// in this isolate.
@@ -120,7 +174,7 @@ abstract class Platform {
   /// If present, it specifies a file describing how Dart packages are looked up.
   /// Is `null` if there is no `--packages` flag.
   static String get packageConfig =>
-      throw new UnsupportedError('Not supported in Node.');
+      throw UnsupportedError('Not supported in Node.');
 
   /// The version of the current Dart runtime.
   ///
@@ -128,6 +182,5 @@ abstract class Platform {
   /// string representing the version of the current Dart runtime,
   /// possibly followed by whitespace and other version and
   /// build details.
-  static String get version =>
-      throw new UnsupportedError('Not supported in Node.');
+  static String get version => throw UnsupportedError('Not supported in Node.');
 }

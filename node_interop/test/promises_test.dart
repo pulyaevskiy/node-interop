@@ -39,26 +39,26 @@ abstract class JsPromises {
 }
 
 void main() {
-  createFile('promises.js', promisesJS);
+  final promises = createFile('promises.js', promisesJS);
 
   test('promiseToFuture', () async {
-    final JsPromises js = require('./promises.js');
-    Promise promise = js.createPromise('Futures are better than Promises');
-    Future<String> future = promiseToFuture(promise);
+    final JsPromises js = require(promises);
+    var promise = js.createPromise('Futures are better than Promises');
+    var future = promiseToFuture(promise);
     expect(future, completion('Futures are better than Promises'));
   });
 
   test('futureToPromise', () {
-    final JsPromises js = require('./promises.js');
-    var future = new Future.value('Yes');
+    final JsPromises js = require(promises);
+    var future = Future.value('Yes');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
     expect(promiseToFuture(promise2), completion('YesYesYes'));
   });
 
   test('create promise in Dart', () {
-    final JsPromises js = require('./promises.js');
-    var promise = new Promise(allowInterop((resolve, reject) {
+    final JsPromises js = require(promises);
+    var promise = Promise(allowInterop((resolve, reject) {
       resolve('Yas');
     }));
     var promise2 = js.receivePromise(promise);
@@ -66,15 +66,15 @@ void main() {
   });
 
   test('reject a Promise', () {
-    var promise = new Promise(allowInterop((resolve, reject) {
+    var promise = Promise(allowInterop((resolve, reject) {
       reject('No');
     }));
     expect(promiseToFuture(promise), throwsA('No'));
   });
 
   test('reject a Future', () {
-    final JsPromises js = require('./promises.js');
-    var future = new Future.error('No');
+    final JsPromises js = require(promises);
+    var future = Future.error('No');
     var promise = futureToPromise(future);
     var promise2 = js.receivePromise(promise);
     expect(promiseToFuture(promise2), throwsA('NoNoNo'));

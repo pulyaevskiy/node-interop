@@ -15,17 +15,17 @@ void main() {
 
     test('keys()', () {
       final buffer = Buffer.from([1, 2, 3]);
-      expect(new List.from(buffer.keys()), [0, 1, 2]);
+      expect(List.from(buffer.keys()), [0, 1, 2]);
     }, skip: 'Broken in dart2js');
 
     test('values()', () {
       final buffer = Buffer.from([1, 2, 3]);
-      expect(new List.from(buffer.values()), [1, 2, 3]);
+      expect(List.from(buffer.values()), [1, 2, 3]);
     }, skip: 'Broken in dart2js');
 
     test('entries()', () {
       final buffer = Buffer.from([1, 2, 3]);
-      expect(new List.from(buffer.entries()), [
+      expect(List.from(buffer.entries()), [
         [0, 1],
         [1, 2],
         [2, 3]

@@ -11,7 +11,7 @@ import 'package:js/js.dart';
 import 'package:node_interop/http.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/test.dart';
-import 'package:node_io/node_io.dart';
+import 'package:node_io/src/http_headers.dart';
 import 'package:test/test.dart';
 
 const headersJS = '''
@@ -45,12 +45,12 @@ abstract class HeadersFixture {
 }
 
 void main() {
-  createFile('headers.js', headersJS);
+  final headersFile = createFile('headers.js', headersJS);
 
   group('RequestHttpHeaders', () {
-    HeadersFixture jsHeaders = require('./headers.js');
-    var headers = new RequestHttpHeaders(jsHeaders.request);
-    var emptyHeaders = new RequestHttpHeaders(jsHeaders.minimal);
+    HeadersFixture jsHeaders = require(headersFile);
+    var headers = RequestHttpHeaders(jsHeaders.request);
+    var emptyHeaders = RequestHttpHeaders(jsHeaders.minimal);
 
     test('chunkedTransferEncoding', () async {
       expect(headers.chunkedTransferEncoding, isTrue);
@@ -104,7 +104,7 @@ void main() {
     });
 
     test('forEach', () {
-      Map map = {};
+      final map = {};
       headers.forEach((key, value) {
         map[key] = value;
       });
