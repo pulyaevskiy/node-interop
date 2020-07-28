@@ -98,7 +98,8 @@ abstract class Platform {
 
   /// Whether the operating system is a version of
   /// [Android](https://en.wikipedia.org/wiki/Android_%28operating_system%29).
-  static final bool isAndroid = (operatingSystem == 'android');
+  static bool get isAndroid =>
+      throw UnsupportedError('Android is not supported by Node.js.');
 
   /// Whether the operating system is a version of
   /// [iOS](https://en.wikipedia.org/wiki/IOS).

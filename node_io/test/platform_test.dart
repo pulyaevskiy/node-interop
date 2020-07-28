@@ -31,9 +31,9 @@ void main([String scriptName = 'platform_test.dart']) {
     });
 
     test('unsupported platforms', () {
-      expect(Platform.isAndroid, isFalse);
-      expect(Platform.isFuchsia, isFalse);
-      expect(Platform.isIOS, isFalse);
+      expect(() => Platform.isAndroid, throwsUnsupportedError);
+      expect(() => Platform.isFuchsia, throwsUnsupportedError);
+      expect(() => Platform.isIOS, throwsUnsupportedError);
     });
 
     test('isMacOS', () {
