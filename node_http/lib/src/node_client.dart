@@ -85,8 +85,8 @@ class _RequestHandler {
   var _headers;
 
   Future<StreamedResponse> send() async {
-    _headers = jsify(request.headers);
     _body = await request.finalize().toList();
+    _headers = jsify(request.headers);
 
     var response = await _send();
     if (request.followRedirects && response.isRedirect) {
