@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Fixed: some headers could be missing for certain request types (#77)
+
 ## 1.0.0
 
 - Upgraded dependency on `http` package to `^0.12.0`.
