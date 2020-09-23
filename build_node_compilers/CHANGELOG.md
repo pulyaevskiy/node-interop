@@ -1,3 +1,14 @@
+# 0.3.0
+
+- Upgraded to latest build dependencies which allow Dart SDK 2.9.x branch. To upgrade use following
+  version constraint in your projects:
+
+```yaml
+dev_dependencies:
+  build_runner: ">=1.10.0 <1.10.2"
+  build_node_compilers: ^0.3.0
+```
+
 # 0.2.4
 
 - Fixed platform names and file extensions conflicting with build_web_compilers.
