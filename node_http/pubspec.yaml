@@ -13,8 +13,8 @@ dependencies:
   node_io: ^1.0.0
 
 dev_dependencies:
-  build_runner: ^1.0.0
-  build_node_compilers: ^0.2.0
-  build_test:
+  build_runner: ">=1.10.0 <1.10.2"
+  build_node_compilers: ^0.3.0
+  build_test: ^1.0.0
   pedantic: ^1.0.0
   test: ^1.0.0
