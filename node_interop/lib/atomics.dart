@@ -29,7 +29,7 @@ external bool isLockFree(int size);
 external int load(List<int> typedArray, int index);
 
 @JS('Atomics.notify')
-external int notify(List<int> typedArray, int index, int count);
+external int notify(List<int> typedArray, int index, [int count]);
 
 @JS('Atomics.or')
 external int or(List<int> typedArray, int index, int value);
