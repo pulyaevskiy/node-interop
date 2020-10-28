@@ -24,7 +24,7 @@ abstract class WorkerThreadsModule {
   external bool get isMainThread;
   external void markAsUntransferable(Object object);
   external WorkerMessagePort get parentPort;
-  external Object receiveMessageOnPort(WorkerMessagePort port);
+  external ReceivedMessage receiveMessageOnPort(WorkerMessagePort port);
   external ResourceLimits get resourceLimits;
   external Object get SHARE_ENV;
   external int get threadId;
@@ -47,6 +47,10 @@ MessageChannel createMessageChannel() =>
 /// Creates a [Worker] using `new Worker().
 Worker createWorker(String filename, [WorkerOptions options]) =>
     callConstructor(worker.Worker, [filename, options]);
+
+abstract class ReceivedMessage {
+  Object get message;
+}
 
 @JS()
 @anonymous
