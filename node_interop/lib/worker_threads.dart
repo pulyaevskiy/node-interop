@@ -70,11 +70,19 @@ abstract class MessageChannel {
   external WorkerMessagePort get port2;
 }
 
+/// An interface for the common message-passing methods between
+/// [WorkerMessagePort] and [Worker].
+abstract class MessagePasser implements EventEmitter {
+  void postMessage(Object value, [List<Object> transferList]);
+  void ref();
+  void unref():
+}
+
 // This can't be called `MessagePort` or we run into problems with
 // dart-lang/sdk#26818.
 @JS()
 @anonymous
-abstract class WorkerMessagePort implements EventEmitter {
+abstract class WorkerMessagePort implements MessagePasser {
   external void close();
   external void postMessage(Object value, [List<Object> transferList]);
   external void ref();
@@ -84,7 +92,7 @@ abstract class WorkerMessagePort implements EventEmitter {
 
 @JS()
 @anonymous
-abstract class Worker implements EventEmitter {
+abstract class Worker implements MessagePasser {
   external Promise getHeapSnapshot();
   external void postMessage(Object value, [List<Object> transferList]);
   external void ref();
