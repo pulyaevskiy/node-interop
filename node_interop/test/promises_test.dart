@@ -56,6 +56,14 @@ void main() {
     expect(promiseToFuture(promise2), completion('YesYesYes'));
   });
 
+  test('futureToPromise', () {
+    final JsPromises js = require(promises);
+    var future = Future.value('Yes');
+    var promise = futureToPromise(future);
+    var promise2 = js.receivePromise(promise);
+    expect(promiseToFuture(promise2), completion('YesYesYes'));
+  });
+
   test('create promise in Dart', () {
     final JsPromises js = require(promises);
     var promise = Promise(allowInterop((resolve, reject) {
