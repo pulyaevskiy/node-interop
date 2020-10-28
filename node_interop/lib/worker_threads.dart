@@ -79,7 +79,7 @@ abstract class MessageChannel {
 abstract class MessagePasser implements EventEmitter {
   void postMessage(Object value, [List<Object> transferList]);
   void ref();
-  void unref():
+  void unref();
 }
 
 // This can't be called `MessagePort` or we run into problems with
