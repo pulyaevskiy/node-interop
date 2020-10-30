@@ -1,3 +1,8 @@
+## 1.2.0
+
+- Added worker_threads module bindings (#84)
+- Added interop for Atomics (#85)
+
 ## 1.1.1
 
 - Added missing method definitions for TTYWriteStream.
