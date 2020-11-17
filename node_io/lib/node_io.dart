@@ -8,8 +8,10 @@
 /// working without any additional modifications.
 library node_io;
 
+import 'package:file/file.dart' as file;
 import 'package:node_interop/node.dart';
 
+import 'src/file_system.dart';
 import 'src/stdout.dart';
 
 export 'dart:io'
@@ -89,3 +91,6 @@ Stdout get stderr {
 Stdout get stdout {
   return Stdout(process.stdout);
 }
+
+/// A `file` package filesystem backed by Node.js's `fs` API.
+const file.FileSystem nodeFileSystem = const NodeFileSystem();

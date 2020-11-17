@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:js' as js;
 
+import 'package:file/file.dart' as file;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/os.dart';
@@ -79,7 +80,7 @@ import 'platform.dart';
 ///           print(entity.path);
 ///         });
 ///     }
-class Directory extends FileSystemEntity implements io.Directory {
+class Directory extends FileSystemEntity implements file.Directory {
   @override
   final String path;
 
@@ -87,7 +88,7 @@ class Directory extends FileSystemEntity implements io.Directory {
 
   /// Creates a directory object pointing to the current working
   /// directory.
-  static io.Directory get current => Directory(process.cwd());
+  static file.Directory get current => Directory(process.cwd());
 
   /// Sets the current working directory of the Dart process including
   /// all running isolates. The new value set can be either a [Directory]
@@ -97,7 +98,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   /// relative path passed as the new working directory will be
   /// resolved by the OS.
   static set current(path) {
-    path = (path is io.Directory) ? path.path : path;
+    path = (path is file.Directory) ? path.path : path;
     assert(path is String);
     process.chdir(path);
   }
@@ -108,12 +109,12 @@ class Directory extends FileSystemEntity implements io.Directory {
   /// temporary files and directories in.
   /// The location of the system temp directory is platform-dependent,
   /// and may be set by an environment variable.
-  static io.Directory get systemTemp {
+  static file.Directory get systemTemp {
     return Directory(os.tmpdir());
   }
 
   @override
-  io.Directory get absolute => Directory(node_path.path.resolve(path));
+  file.Directory get absolute => Directory(node_path.path.resolve(path));
 
   @override
   Future<bool> exists() => FileStat.stat(path)
@@ -124,7 +125,7 @@ class Directory extends FileSystemEntity implements io.Directory {
       FileStat.statSync(path).type == io.FileSystemEntityType.directory;
 
   @override
-  Future<io.FileSystemEntity> delete({bool recursive = false}) {
+  Future<file.FileSystemEntity> delete({bool recursive = false}) {
     if (recursive) {
       return Future.error(
           UnsupportedError('Recursive delete is not supported by Node API'));
@@ -187,7 +188,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Future<io.Directory> rename(String newPath) {
+  Future<file.Directory> rename(String newPath) {
     final completer = Completer<Directory>();
     void callback(err) {
       if (err == null) {
@@ -204,7 +205,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  io.Directory renameSync(String newPath) {
+  file.Directory renameSync(String newPath) {
     fs.renameSync(path, newPath);
     return Directory(newPath);
   }
@@ -238,7 +239,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  Future<io.Directory> createTemp([String prefix]) {
+  Future<file.Directory> createTemp([String prefix]) {
     prefix ??= '';
     if (path == '') {
       throw ArgumentError('Directory.createTemp called with an empty path. '
@@ -267,7 +268,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  io.Directory createTempSync([String prefix]) {
+  file.Directory createTempSync([String prefix]) {
     prefix ??= '';
     if (path == '') {
       throw ArgumentError('Directory.createTemp called with an empty path. '
@@ -284,7 +285,7 @@ class Directory extends FileSystemEntity implements io.Directory {
   }
 
   @override
-  List<io.FileSystemEntity> listSync(
+  List<file.FileSystemEntity> listSync(
       {bool recursive = false, bool followLinks = true}) {
     if (recursive) {
       throw UnsupportedError('Recursive list is not supported in Node.js.');
@@ -304,6 +305,16 @@ class Directory extends FileSystemEntity implements io.Directory {
       }
     }).toList();
   }
+
+  @override
+  file.Directory childDirectory(String basename) =>
+      Directory(join(path, basename));
+
+  @override
+  file.File childFile(String basename) => File(join(path, basename));
+
+  @override
+  file.Link childLink(String basename) => Link(join(path, basename));
 
   @override
   String toString() {

@@ -5,15 +5,27 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:js' as js;
 
+import 'package:file/file.dart' as file;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/path.dart' as node_path;
+import 'package:path/path.dart' as p;
 
 import 'directory.dart';
+import 'file_system.dart';
 import 'platform.dart';
 
-abstract class FileSystemEntity implements io.FileSystemEntity {
+abstract class FileSystemEntity implements file.FileSystemEntity {
   static final RegExp _absoluteWindowsPathPattern =
       RegExp(r'^(\\\\|[a-zA-Z]:[/\\])');
+
+  @override
+  file.FileSystem get fileSystem => const NodeFileSystem();
+
+  @override
+  String get basename => p.basename(path);
+
+  @override
+  String get dirname => p.dirname(path);
 
   @override
   bool get isAbsolute => node_path.path.isAbsolute(path);
@@ -51,7 +63,7 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
   }
 
   @override
-  io.Directory get parent => Directory(parentOf(path));
+  file.Directory get parent => Directory(parentOf(path));
 
   @override
   Future<String> resolveSymbolicLinks() {
@@ -88,6 +100,9 @@ abstract class FileSystemEntity implements io.FileSystemEntity {
     // TODO: implement watch
     throw UnimplementedError();
   }
+
+  @override
+  Future<file.FileSystemEntity> delete({bool recursive = false});
 }
 
 /// A FileStat object represents the result of calling the POSIX stat() function

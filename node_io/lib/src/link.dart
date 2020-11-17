@@ -6,6 +6,7 @@ import 'dart:io' as io;
 import 'dart:js' as js;
 import 'dart:typed_data';
 
+import 'package:file/file.dart' as file;
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/path.dart' as node_path;
 
@@ -13,7 +14,7 @@ import 'directory.dart';
 import 'file_system_entity.dart';
 
 /// Link objects are references to filesystem links.
-class Link extends FileSystemEntity implements io.Link {
+class Link extends FileSystemEntity implements file.Link {
   @override
   final String path;
 

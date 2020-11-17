@@ -1,3 +1,11 @@
+## 1.2.0
+
+- Added a `nodeFileSystem` top-level field that implements the `file` package's
+  `FileSystem` API.
+- Added `file` package members to instance types, including
+  `FileSystemEntity.fileSystem`, `.basename`, and `.dirname` as well as
+  `Directory.childDirectory()`, `.childFile()`, and `.childLink()`.
+
 ## 1.1.1
 
 - Implemented `stdout` and `stderr` library-level properties.

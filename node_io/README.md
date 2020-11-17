@@ -24,6 +24,15 @@ void main() {
 }
 ```
 
+## FileSystem API
+
+This package provides a [`nodeFileSystem`] field that implements the `file`
+package's [`FileSystem`] API. This makes it possible to configure APIs written
+to work with generic filesystems to work with `node_io` in particular.
+
+[`nodeFileSystem`]: https://pub.dev/documentation/node_io/latest/node_io/nodeFileSystem.html
+[`FileSystem`]: https://pub.dev/documentation/file/latest/file/FileSystem-class.html
+
 ## Configuration and build
 
 Add `build_node_compilers` and `build_runner` to `dev_dependencies` section 
