@@ -88,9 +88,12 @@ abstract class MessagePasser implements EventEmitter {
 @anonymous
 abstract class WorkerMessagePort implements MessagePasser {
   external void close();
+  @override
   external void postMessage(Object value, [List<Object> transferList]);
+  @override
   external void ref();
   external void start();
+  @override
   external void unref();
 }
 
@@ -98,7 +101,9 @@ abstract class WorkerMessagePort implements MessagePasser {
 @anonymous
 abstract class Worker implements MessagePasser {
   external Promise getHeapSnapshot();
+  @override
   external void postMessage(Object value, [List<Object> transferList]);
+  @override
   external void ref();
   external ResourceLimits get resourceLimits;
   external Readable get stderr;
@@ -106,6 +111,7 @@ abstract class Worker implements MessagePasser {
   external Readable get stdout;
   external Promise terminate();
   external int get threadId;
+  @override
   external void unref();
 }
 
