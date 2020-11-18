@@ -1,3 +1,7 @@
+# 0.3.1
+
+- Upgraded dependency on build_modules to `2.11.3` to fix issues with Dart SDK constraint.
+
 # 0.3.0
 
 - Upgraded to latest build dependencies which allow Dart SDK 2.9.x branch. To upgrade use following
