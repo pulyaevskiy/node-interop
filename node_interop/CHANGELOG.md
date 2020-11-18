@@ -1,3 +1,8 @@
+## 1.2.1
+
+- Add `util.callbackToCompleter()`, `util.invokeAsync0()`, and `util.invokeAsync1()`
+  helpers to make it easier to work with Node-style callbacks.
+
 ## 1.2.0
 
 - Added worker_threads module bindings (#84)
