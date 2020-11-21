@@ -93,4 +93,4 @@ Stdout get stdout {
 }
 
 /// A `file` package filesystem backed by Node.js's `fs` API.
-const file.FileSystem nodeFileSystem = const NodeFileSystem();
+const file.FileSystem nodeFileSystem = NodeFileSystem();

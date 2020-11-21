@@ -133,7 +133,8 @@ Future<T> invokeAsync0<T>(void Function(void Function(Object, T)) function) {
 
 /// Invokes a single-argument Node.js-style asynchronous function and
 /// encapsulates the result in a `Future`.
-Future<T> invokeAsync1<S, T>(void Function(S, void Function(Object, T)) function, S arg1) {
+Future<T> invokeAsync1<S, T>(
+    void Function(S, void Function(Object, T)) function, S arg1) {
   var completer = Completer<T>();
   function(arg1, callbackToCompleter(completer));
   return completer.future;
