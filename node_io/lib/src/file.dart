@@ -7,6 +7,7 @@ import 'dart:io' as io;
 import 'dart:js' as js;
 import 'dart:typed_data';
 
+import 'package:file/file.dart' as file;
 import 'package:node_interop/buffer.dart';
 import 'package:node_interop/fs.dart';
 import 'package:node_interop/js.dart';
@@ -131,7 +132,7 @@ class _WriteStream extends NodeIOSink {
 ///       // Close the IOSink to free system resources.
 ///       sink.close();
 ///     }
-class File extends FileSystemEntity implements io.File {
+class File extends FileSystemEntity implements file.File {
   @override
   final String path;
 
@@ -194,7 +195,7 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<io.FileSystemEntity> delete({bool recursive = false}) {
+  Future<file.FileSystemEntity> delete({bool recursive = false}) {
     if (recursive) {
       return Future.error(
           UnsupportedError('Recursive delete is not supported by Node API'));
@@ -382,7 +383,7 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<io.File> writeAsBytes(List<int> bytes,
+  Future<file.File> writeAsBytes(List<int> bytes,
       {io.FileMode mode = io.FileMode.write, bool flush = false}) async {
     var sink = openWrite(mode: mode);
     sink.add(bytes);
@@ -402,7 +403,7 @@ class File extends FileSystemEntity implements io.File {
   }
 
   @override
-  Future<io.File> writeAsString(String contents,
+  Future<file.File> writeAsString(String contents,
       {io.FileMode mode = io.FileMode.write,
       Encoding encoding = utf8,
       bool flush = false}) async {
