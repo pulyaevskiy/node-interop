@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   file: ^5.0.0
-  node_interop: ^1.2.0
+  node_interop: ^1.2.1
   path: ^1.6.2
 
 dev_dependencies:
