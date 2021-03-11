@@ -47,7 +47,9 @@ class NodeEntrypointBuilder implements Builder {
   final WebCompiler webCompiler;
   final List<String> dart2JsArgs;
 
-  const NodeEntrypointBuilder(this.webCompiler, {this.dart2JsArgs = const []});
+  // TODO: Remove --no-sound-null-safety after migrating to nnbd.
+  const NodeEntrypointBuilder(this.webCompiler,
+      {this.dart2JsArgs = const ['--no-sound-null-safety']});
 
   factory NodeEntrypointBuilder.fromOptions(BuilderOptions options) {
     validateOptions(

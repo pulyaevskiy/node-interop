@@ -1,5 +1,6 @@
 # 0.3.2
 
+- Allowed Dart2JS to run in unsound null-safety mode.
 - Removed dependency on deprecated analyzer packages.
 
 # 0.3.1
