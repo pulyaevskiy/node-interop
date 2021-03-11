@@ -25,12 +25,12 @@ export 'http.dart'
         ServerResponse;
 
 HTTPS get https => _https ??= require('https');
-HTTPS _https;
+HTTPS? _https;
 
 /// Convenience method for creating instances of "https" module's Agent class.
 ///
 /// This is equivalent of Node's `new https.Agent([options])`.
-HttpsAgent createHttpsAgent([HttpsAgentOptions options]) {
+HttpsAgent createHttpsAgent([HttpsAgentOptions? options]) {
   var args = (options == null) ? [] : [options];
   return callConstructor(https.Agent, args);
 }

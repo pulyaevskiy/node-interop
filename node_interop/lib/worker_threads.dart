@@ -45,7 +45,7 @@ MessageChannel createMessageChannel() =>
     callConstructor(worker.MessageChannel, []);
 
 /// Creates a [Worker] using `new Worker().
-Worker createWorker(String filename, [WorkerOptions options]) =>
+Worker createWorker(String filename, [WorkerOptions? options]) =>
     callConstructor(worker.Worker, [filename, options]);
 
 abstract class ReceivedMessage {

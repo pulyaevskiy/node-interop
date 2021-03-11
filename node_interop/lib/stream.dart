@@ -14,7 +14,7 @@ import 'node.dart';
 
 /// The "stream" module's object as returned from [require] call.
 StreamModule get stream => _stream ??= require('stream');
-StreamModule _stream;
+StreamModule? _stream;
 
 @JS()
 @anonymous

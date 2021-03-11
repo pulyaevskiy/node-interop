@@ -13,9 +13,9 @@ import 'stream.dart';
 import 'node.dart';
 
 ConsoleModule get console => _console ??= require('console');
-ConsoleModule _console;
+ConsoleModule? _console;
 
-Console createConsole(Writable stdout, [Writable stderr]) {
+Console createConsole(Writable stdout, [Writable? stderr]) {
   if (stderr == null) {
     return callConstructor(console.Console, [stdout]);
   } else {

@@ -14,7 +14,7 @@ import 'node.dart';
 import 'stream.dart';
 
 FS get fs => _fs ??= require('fs');
-FS _fs;
+FS? _fs;
 
 @JS()
 @anonymous

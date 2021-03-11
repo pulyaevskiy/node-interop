@@ -12,7 +12,7 @@ import 'package:js/js.dart';
 import 'node.dart';
 
 QueryString get querystring => _querystring ??= require('querystring');
-QueryString _querystring;
+QueryString? _querystring;
 
 @JS()
 @anonymous
