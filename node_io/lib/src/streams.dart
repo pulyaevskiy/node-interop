@@ -179,20 +179,11 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
     return Buffer.from(data);
   }
 
-  Encoding _encoding;
-
-  NodeIOSink(Writable nativeStream, {Encoding encoding = utf8})
-      : super(nativeStream, convert: _nodeIoSinkConvert) {
-    _encoding = encoding;
-  }
+  NodeIOSink(Writable nativeStream, {this.encoding = utf8})
+      : super(nativeStream, convert: _nodeIoSinkConvert);
 
   @override
-  Encoding get encoding => _encoding;
-
-  @override
-  set encoding(Encoding value) {
-    _encoding = value;
-  }
+  Encoding encoding;
 
   @override
   Future flush() => drain;

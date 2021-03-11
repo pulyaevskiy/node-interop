@@ -1,6 +1,7 @@
 targets:
   $default:
     sources:
+      - $package$
       - "lib/**"
       - "node/**"
     builders:

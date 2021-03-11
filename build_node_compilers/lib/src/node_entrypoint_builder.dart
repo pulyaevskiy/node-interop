@@ -3,8 +3,8 @@
 
 import 'dart:async';
 
-// ignore: deprecated_member_use
-import 'package:analyzer/analyzer.dart';
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:build/build.dart';
 import 'package:build_modules/build_modules.dart';
 
@@ -113,14 +113,15 @@ Future<bool> _isAppEntryPoint(AssetId dartId, AssetReader reader) async {
   // Skip reporting errors here, dartdevc will report them later with nicer
   // formatting.
   // ignore: deprecated_member_use
-  var parsed = parseCompilationUnit(await reader.readAsString(dartId),
-      suppressErrors: true);
+  var parsed = parseString(
+      content: await reader.readAsString(dartId), throwIfDiagnostics: false);
+
   // Allow two or fewer arguments so that entrypoints intended for use with
   // [spawnUri] get counted.
   //
   // TODO: This misses the case where a Dart file doesn't contain main(),
   // but has a part that does, or it exports a `main` from another library.
-  return parsed.declarations.any((node) {
+  return parsed.unit.declarations.any((node) {
     return node is FunctionDeclaration &&
         node.name.name == 'main' &&
         node.functionExpression.parameters.parameters.length <= 2;

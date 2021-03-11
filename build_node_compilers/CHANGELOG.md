@@ -1,3 +1,7 @@
+# 0.3.2
+
+- Removed dependency on deprecated analyzer packages.
+
 # 0.3.1
 
 - Upgraded dependency on build_modules to `2.11.3` to fix issues with Dart SDK constraint.

@@ -38,7 +38,7 @@ class InternetAddress implements io.InternetAddress {
   InternetAddress._(this.address, [this._host])
       : _inAddr = _inet_pton(address) {
     if (net.isIP(address) == 0) {
-      throw ArgumentError('${address} is not valid.');
+      throw ArgumentError('$address is not valid.');
     }
   }
 
