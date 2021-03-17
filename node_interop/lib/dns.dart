@@ -11,7 +11,7 @@ import 'node.dart';
 import 'util.dart';
 
 DNS get dns => _dns ??= require('dns');
-DNS _dns;
+DNS? _dns;
 
 /// Main entry point to Node's "dns" module functionality.
 ///
@@ -68,7 +68,7 @@ abstract class DNSAddress {
 }
 
 Resolver createDNSResolver() {
-  return callConstructor(dns.Resolver, null);
+  return callConstructor(dns.Resolver, []);
 }
 
 /// An independent resolver for DNS requests.

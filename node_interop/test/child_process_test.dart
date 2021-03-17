@@ -6,6 +6,7 @@ import 'dart:js';
 
 @TestOn('node')
 import 'package:node_interop/child_process.dart';
+import 'package:node_interop/node.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -13,8 +14,8 @@ void main() {
     test('exec successful', () {
       final completer = Completer<int>();
       childProcess.exec('ls -la', ExecOptions(),
-          allowInterop((error, stdout, stderr) {
-        int result = (error == null) ? 0 : error.code;
+          allowInterop((NodeJsError? error, stdout, stderr) {
+        var result = (error == null) ? 0 : int.parse(error.code);
         completer.complete(result);
       }));
       expect(completer.future, completion(0));

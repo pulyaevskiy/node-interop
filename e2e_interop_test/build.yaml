@@ -1,6 +1,7 @@
 targets:
   $default:
     sources:
+      - $package$
       - "lib/**"
       - "node/**"
     builders:
@@ -8,4 +9,6 @@ targets:
         options:
           compiler: dart2js
           dart2js_args:
+            # TODO: Remove after migrating build_node_compilers to nnbd.
+            - --no-sound-null-safety
             - -O4

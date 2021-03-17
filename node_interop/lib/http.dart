@@ -17,12 +17,12 @@ import 'node.dart';
 import 'stream.dart';
 
 HTTP get http => _http ??= require('http');
-HTTP _http;
+HTTP? _http;
 
 /// Convenience method for creating instances of "http" module's Agent class.
 ///
 /// This is equivalent of Node's `new http.Agent([options])`.
-HttpAgent createHttpAgent([HttpAgentOptions options]) {
+HttpAgent createHttpAgent([HttpAgentOptions? options]) {
   var args = (options == null) ? [] : [options];
   return callConstructor(http.Agent, args);
 }

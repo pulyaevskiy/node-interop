@@ -14,7 +14,7 @@ import 'node.dart';
 import 'stream.dart';
 
 Net get net => _net ??= require('net');
-Net _net;
+Net? _net;
 
 @JS()
 @anonymous

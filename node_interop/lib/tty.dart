@@ -33,7 +33,7 @@ import 'net.dart';
 import 'node.dart';
 
 TTY get tty => _tty ??= require('tls');
-TTY _tty;
+TTY? _tty;
 
 @JS()
 @anonymous

@@ -16,7 +16,7 @@ import 'node.dart';
 export 'package:js/js_util.dart' hide jsify;
 
 Util get util => _util ??= require('util');
-Util _util;
+Util? _util;
 
 @JS()
 @anonymous
@@ -43,7 +43,7 @@ abstract class Util {
 ///
 /// See also:
 /// - [jsify]
-T dartify<T>(Object jsObject) {
+T dartify<T>(dynamic jsObject) {
   if (_isBasicType(jsObject)) {
     return jsObject as T;
   }
@@ -106,7 +106,7 @@ Future<T> promiseToFuture<T>(Promise promise) {
 /// - [promiseToFuture]
 Promise futureToPromise<T>(Future<T> future) {
   return Promise(allowInterop((Function resolve, Function reject) {
-    future.then(resolve, onError: reject);
+    future.then((result) => resolve(result), onError: reject);
   }));
 }
 
@@ -114,7 +114,7 @@ Promise futureToPromise<T>(Future<T> future) {
 /// callback that will complete [completer] with that callback's error or
 /// success result.
 void Function(Object, T) callbackToCompleter<T>(Completer<T> completer) {
-  return allowInterop((error, [value]) {
+  return allowInterop((Object? error, [T? value]) {
     if (error != null) {
       completer.completeError(error);
     } else {

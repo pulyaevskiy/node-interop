@@ -1,3 +1,7 @@
+## 2.0.0-null-safety.0
+
+- Migrated to null-safety (requires \>=Dart 2.12).
+
 ## 1.2.1
 
 - Add `util.callbackToCompleter()`, `util.invokeAsync0()`, and `util.invokeAsync1()`

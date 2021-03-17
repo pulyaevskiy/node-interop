@@ -13,7 +13,7 @@ import 'package:js/js.dart';
 import 'node.dart';
 
 BufferModule get buffer => _buffer ??= require('buffer');
-BufferModule _buffer;
+BufferModule? _buffer;
 
 @JS()
 @anonymous

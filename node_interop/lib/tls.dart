@@ -17,7 +17,7 @@ import 'node.dart';
 import 'stream.dart';
 
 TLS get tls => _tls ??= require('tls');
-TLS _tls;
+TLS? _tls;
 
 @JS()
 @anonymous

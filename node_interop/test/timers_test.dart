@@ -13,7 +13,7 @@ void main() {
     test('setImmediate', () async {
       var buffer = StringBuffer();
 
-      void writesToBuffer(StringBuffer buffer) async {
+      Future<void> writesToBuffer(StringBuffer buffer) async {
         buffer.writeln('before');
         await setImmediateFuture(buffer);
         buffer.writeln('after');
@@ -26,7 +26,7 @@ void main() {
 }
 
 Future setImmediateFuture(StringBuffer buffer) {
-  final completer = Completer<String>();
+  final completer = Completer();
   setImmediate(allowInterop((StringBuffer value) {
     value.writeln('hello world');
     completer.complete();

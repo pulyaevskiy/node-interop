@@ -15,7 +15,7 @@ import 'stream.dart';
 
 ChildProcessModule get childProcess =>
     _childProcess ??= require('child_process');
-ChildProcessModule _childProcess;
+ChildProcessModule? _childProcess;
 
 @JS()
 @anonymous
