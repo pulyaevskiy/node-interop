@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Enable null-safety (requires \>=Dart 2.12).
+
 ## 2.0.0-nullsafety.0
 
 - Migrated to null-safety (requires \>=Dart 2.12).
