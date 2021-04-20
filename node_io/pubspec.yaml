@@ -9,11 +9,8 @@ environment:
 
 dependencies:
   file: ^6.1.0
-  node_interop: #^2.0.0
-    path: ../node_interop
+  node_interop: ^2.0.1
   path: ^1.8.0
-
-publish_to: none
 
 dev_dependencies:
   js: ^0.6.0
