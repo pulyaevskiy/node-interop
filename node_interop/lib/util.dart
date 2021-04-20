@@ -113,7 +113,7 @@ Promise futureToPromise<T>(Future<T> future) {
 /// Returns a function that can be passed to a Node.js-style asynchronous
 /// callback that will complete [completer] with that callback's error or
 /// success result.
-void Function(Object, T) callbackToCompleter<T>(Completer<T> completer) {
+void Function(Object?, T) callbackToCompleter<T>(Completer<T> completer) {
   return allowInterop((Object? error, [T? value]) {
     if (error != null) {
       completer.completeError(error);
@@ -125,7 +125,7 @@ void Function(Object, T) callbackToCompleter<T>(Completer<T> completer) {
 
 /// Invokes a zero-argument Node.js-style asynchronous function and encapsulates
 /// the result in a `Future`.
-Future<T> invokeAsync0<T>(void Function(void Function(Object, T)) function) {
+Future<T> invokeAsync0<T>(void Function(void Function(Object?, T)) function) {
   var completer = Completer<T>();
   function(callbackToCompleter(completer));
   return completer.future;
@@ -134,7 +134,7 @@ Future<T> invokeAsync0<T>(void Function(void Function(Object, T)) function) {
 /// Invokes a single-argument Node.js-style asynchronous function and
 /// encapsulates the result in a `Future`.
 Future<T> invokeAsync1<S, T>(
-    void Function(S, void Function(Object, T)) function, S arg1) {
+    void Function(S, void Function(Object?, T)) function, S arg1) {
   var completer = Completer<T>();
   function(arg1, callbackToCompleter(completer));
   return completer.future;
