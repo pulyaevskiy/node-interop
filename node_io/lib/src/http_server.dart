@@ -181,8 +181,7 @@ class _HttpServer extends Stream<io.HttpRequest> implements HttpServer {
     assert(!shared, 'Shared is not implemented yet');
 
     if (address is String) {
-      List<InternetAddress> list = await (InternetAddress.lookup(address)
-          as FutureOr<List<InternetAddress>>);
+      var list = await InternetAddress.lookup(address);
       address = list.first;
     }
     var server = _HttpServer._(address, port);
