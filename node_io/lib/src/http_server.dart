@@ -417,9 +417,12 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
     bool Function(Uint8List element) test, {
     List<int> Function() orElse,
   }) {
-    return _delegate.firstWhere(test, orElse: () {
-      return Uint8List.fromList(orElse());
-    });
+    return _delegate.firstWhere(test,
+        orElse: orElse == null
+            ? null
+            : () {
+                return Uint8List.fromList(orElse());
+              });
   }
 
   @override
@@ -460,9 +463,12 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
     bool Function(Uint8List element) test, {
     List<int> Function() orElse,
   }) {
-    return _delegate.lastWhere(test, orElse: () {
-      return Uint8List.fromList(orElse());
-    });
+    return _delegate.lastWhere(test,
+        orElse: orElse == null
+            ? null
+            : () {
+                return Uint8List.fromList(orElse());
+              });
   }
 
   @override
@@ -490,9 +496,12 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   @override
   Future<Uint8List> singleWhere(bool Function(Uint8List element) test,
       {List<int> Function() orElse}) {
-    return _delegate.singleWhere(test, orElse: () {
-      return Uint8List.fromList(orElse());
-    });
+    return _delegate.singleWhere(test,
+        orElse: orElse == null
+            ? null
+            : () {
+                return Uint8List.fromList(orElse());
+              });
   }
 
   @override
@@ -596,7 +605,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
   }
 
   @override
-  int get statusCode => nativeInstance.statusCode;
+  int get statusCode => nativeInstance.statusCode.floor();
 
   @override
   set statusCode(int code) {
@@ -608,7 +617,7 @@ class NodeHttpResponse extends NodeIOSink implements io.HttpResponse {
 
   @override
   Future close() {
-    ResponseHttpHeaders responseHeaders = headers;
+    var responseHeaders = headers as ResponseHttpHeaders;
     responseHeaders.finalize();
     return super.close();
   }

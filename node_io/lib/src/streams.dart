@@ -14,14 +14,14 @@ abstract class HasReadable {
 }
 
 /// [Stream] wrapper around Node's [Readable] stream.
-class ReadableStream<T> extends Stream<T> implements HasReadable {
+class ReadableStream<T> extends Stream<T /*!*/ > implements HasReadable {
   /// Native `Readable` instance wrapped by this stream.
   ///
   /// It is not recommended to interact with this object directly.
   @override
   final Readable nativeInstance;
   final Function _convert;
-  StreamController<T> _controller;
+  /*late final*/ StreamController<T /*!*/ > _controller;
 
   /// Creates new [ReadableStream] which wraps [nativeInstance] of `Readable`
   /// type.
@@ -31,7 +31,7 @@ class ReadableStream<T> extends Stream<T> implements HasReadable {
   /// JavaScript data in to desired Dart representation. If no convert
   /// function is provided then data is send to the listener unchanged.
   ReadableStream(this.nativeInstance, {T Function(dynamic data) convert})
-      : _convert = convert {
+      : _convert = convert ?? ((chunk) => chunk) {
     _controller = StreamController(
         onPause: _onPause, onResume: _onResume, onCancel: _onCancel);
     nativeInstance.on('error', allowInterop(_errorHandler));
@@ -60,7 +60,7 @@ class ReadableStream<T> extends Stream<T> implements HasReadable {
       {Function onError, void Function() onDone, bool cancelOnError}) {
     nativeInstance.on('data', allowInterop((chunk) {
       assert(chunk != null);
-      var data = (_convert == null) ? chunk : _convert(chunk);
+      var data = _convert(chunk);
       _controller.add(data);
     }));
     nativeInstance.on('end', allowInterop(() {
@@ -90,7 +90,7 @@ class WritableStream<S> implements StreamSink<S> {
   /// Dart objects in to values accepted by JavaScript streams. If no convert
   /// function is provided then data is sent to target unchanged.
   WritableStream(this.nativeInstance, {dynamic Function(S data) convert})
-      : _convert = convert {
+      : _convert = convert ?? ((chunk) => chunk) {
     nativeInstance.on('error', allowInterop(_errorHandler));
   }
 
@@ -116,7 +116,7 @@ class WritableStream<S> implements StreamSink<S> {
       }
     }
 
-    var chunk = (_convert == null) ? data : _convert(data);
+    var chunk = _convert(data);
     var isFlushed = nativeInstance.write(chunk, allowInterop(_flush));
     if (!isFlushed) {
       // Keep track of the latest unflushed chunk of data.

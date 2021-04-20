@@ -25,7 +25,7 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
 
   @override
   int readByteSync() {
-    return null;
+    throw UnimplementedError('readByteSync not supported');
   }
 
   @override
@@ -33,10 +33,11 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
       {Encoding encoding = io.systemEncoding, bool retainNewlines = false}) {
     // TODO: implement io.systemEncoding (!)
     // TODO: implement readLineSync
-    return null;
+    throw UnimplementedError('readLineSync not supported');
   }
 
   @override
   // TODO: implement supportsAnsiEscapes
-  bool get supportsAnsiEscapes => null;
+  bool get supportsAnsiEscapes =>
+      throw UnimplementedError('supportsAnsiEscapes not supported');
 }

@@ -144,7 +144,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  DateTime get date {
+  DateTime/*?*/ get date {
     String value = _getHeader(io.HttpHeaders.dateHeader);
     if (value == null || value.isEmpty) return null;
     try {
@@ -160,7 +160,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  DateTime get expires {
+  DateTime/*?*/ get expires {
     String value = _getHeader(io.HttpHeaders.expiresHeader);
     if (value == null || value.isEmpty) return null;
     try {
@@ -214,7 +214,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  DateTime get ifModifiedSince {
+  DateTime/*?*/ get ifModifiedSince {
     String value = _getHeader(io.HttpHeaders.ifModifiedSinceHeader);
     if (value == null || value.isEmpty) return null;
     try {
@@ -293,7 +293,7 @@ abstract class HttpHeaders implements io.HttpHeaders {
   }
 
   @override
-  void forEach(void Function(String name, List<String> values) f) {
+  void forEach(void Function(String name, List<String>/*!*/ values) f) {
     var names = _getHeaderNames();
     names.forEach((String name) {
       f(name, this[name]);

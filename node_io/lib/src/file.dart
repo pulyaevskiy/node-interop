@@ -146,7 +146,7 @@ class File extends FileSystemEntity implements file.File {
   @override
   Future<File> copy(String newPath) {
     final completer = Completer<File>();
-    void callback(err) {
+    void callback(Object /*?*/ err) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -169,7 +169,7 @@ class File extends FileSystemEntity implements file.File {
   Future<File> create({bool recursive = false}) {
     // write an empty file
     final completer = Completer<File>();
-    void callback(err, [fd]) {
+    void callback(Object /*?*/ err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -317,7 +317,7 @@ class File extends FileSystemEntity implements file.File {
   @override
   Future<File> rename(String newPath) {
     final completer = Completer<File>();
-    void cb(err) {
+    void cb(Object /*?*/ err) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -432,7 +432,7 @@ class File extends FileSystemEntity implements file.File {
 
 class _RandomAccessFile implements io.RandomAccessFile {
   /// File Descriptor
-  final int fd;
+  final int /*!*/ fd;
 
   /// File path.
   @override
@@ -445,7 +445,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   static Future<io.RandomAccessFile> open(String path, io.FileMode mode) {
     final completer = Completer<_RandomAccessFile>();
-    void cb(err, [fd]) {
+    void cb(Object /*?*/ err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -561,7 +561,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
     return _dispatch(() {
       var buffer = Buffer.alloc(bytes);
       final completer = Completer<Uint8List>();
-      void cb(err, bytesRead, buffer) {
+      void cb(Object /*?*/ err, bytesRead, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
@@ -613,11 +613,11 @@ class _RandomAccessFile implements io.RandomAccessFile {
   @override
   Uint8List readSync(int bytes) {
     _checkAvailable();
-    Object buffer = Buffer.alloc(bytes);
+    var buffer = Buffer.alloc(bytes);
     final bytesRead = fs.readSync(fd, buffer, 0, bytes, _position);
     assert(bytesRead == bytes);
     _position += bytes;
-    return Uint8List.fromList(buffer);
+    return Uint8List.fromList(buffer.values().toList());
   }
 
   @override
@@ -668,7 +668,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
   Future<io.RandomAccessFile> writeByte(int value) {
     return _dispatch(() {
       final completer = Completer<io.RandomAccessFile>();
-      void cb(err, bytesWritten, buffer) {
+      void cb(Object /*?*/ err, bytesWritten, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
@@ -693,7 +693,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
       [int start = 0, int end]) {
     return _dispatch(() {
       final completer = Completer<io.RandomAccessFile>();
-      void cb(err, bytesWritten, buffer) {
+      void cb(Object /*?*/ err, bytesWritten, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {

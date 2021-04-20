@@ -60,7 +60,7 @@ class InternetAddress implements io.InternetAddress {
     final completer = Completer<List<io.InternetAddress>>();
     final options = DNSLookupOptions(all: true, verbatim: true);
 
-    void handleLookup(error, result) {
+    void handleLookup(Object /*?*/ error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {

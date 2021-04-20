@@ -72,11 +72,9 @@ set exitCode(int value) {
 ///
 /// On Windows the exit code can be set to any 32-bit value. However some of
 /// these values are reserved for reporting system errors like crashes.
-void exit([int code]) {
-  if (code is! int) {
-    throw ArgumentError('Integer value for exit code expected');
-  }
+Never exit(int code) {
   process.exit(code);
+  throw StateError('Expected process to exit');
 }
 
 /// Returns the PID of the current process.

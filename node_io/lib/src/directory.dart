@@ -161,7 +161,7 @@ class Directory extends FileSystemEntity implements file.Directory {
     }
     final controller = StreamController<FileSystemEntity>();
 
-    void callback(err, [files]) {
+    void callback(Object /*?*/ err, [files]) {
       if (err != null) {
         controller.addError(err);
         controller.close();
@@ -190,7 +190,7 @@ class Directory extends FileSystemEntity implements file.Directory {
   @override
   Future<file.Directory> rename(String newPath) {
     final completer = Completer<Directory>();
-    void callback(err) {
+    void callback(Object /*?*/ err) {
       if (err == null) {
         completer.complete(Directory(newPath));
       } else {
@@ -216,7 +216,7 @@ class Directory extends FileSystemEntity implements file.Directory {
       throw UnsupportedError('Recursive create is not supported in Node.');
     }
     final completer = Completer<Directory>();
-    void callback(err) {
+    void callback(Object /*?*/ err) {
       if (err == null) {
         completer.complete(Directory(path));
       } else {
@@ -253,7 +253,7 @@ class Directory extends FileSystemEntity implements file.Directory {
     }
 
     final completer = Completer<Directory>();
-    void callback(err, result) {
+    void callback(Object /*?*/ err, result) {
       if (err == null) {
         completer.complete(Directory(result));
       } else {

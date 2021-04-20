@@ -19,12 +19,12 @@ abstract class NetworkInterface implements io.NetworkInterface {
   // TODO: Implement all named arguments for this method.
   static Future<List<io.NetworkInterface>> list() {
     // ignore: omit_local_variable_types
-    final Map<String, Object> data = dartify(os.networkInterfaces());
+    final Map<String, Iterable<Map>> data = dartify(os.networkInterfaces());
 
     var index = 0;
     final result = data.entries
-        .map((entry) => _NetworkInterface.fromJS(
-            entry.key, index++, List<Map>.from(entry.value)))
+        .map((entry) =>
+            _NetworkInterface.fromJS(entry.key, index++, [...entry.value]))
         .toList(growable: false);
 
     return Future.value(result);
@@ -43,8 +43,7 @@ class _NetworkInterface implements io.NetworkInterface {
 
   factory _NetworkInterface.fromJS(String name, int index, List<Map> data) {
     final addresses = data
-        .map((Map addr) => addr['address'] as String)
-        .map((ip) => InternetAddress(ip))
+        .map((addr) => InternetAddress(addr['address'] as String /*!*/))
         .toList(growable: false);
     return _NetworkInterface(addresses, index, name);
   }

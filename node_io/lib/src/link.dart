@@ -110,7 +110,7 @@ class Link extends FileSystemEntity implements file.Link {
   @override
   Future<Link> rename(String newPath) {
     final completer = Completer<Link>();
-    void cb(err) {
+    void cb(Object /*?*/ err) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -132,7 +132,7 @@ class Link extends FileSystemEntity implements file.Link {
   @override
   Future<String> target() {
     final completer = Completer<String>();
-    void cb(err, String target) {
+    void cb(Object /*?*/ err, String target) {
       if (err != null) {
         completer.completeError(err);
       } else {
