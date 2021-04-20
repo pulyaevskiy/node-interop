@@ -1,3 +1,5 @@
+// @dart=2.9
+
 @TestOn('node')
 library platform_test;
 

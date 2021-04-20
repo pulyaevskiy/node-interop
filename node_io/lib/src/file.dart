@@ -146,7 +146,7 @@ class File extends FileSystemEntity implements file.File {
   @override
   Future<File> copy(String newPath) {
     final completer = Completer<File>();
-    void callback(Object /*?*/ err) {
+    void callback(Object? err) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -169,7 +169,7 @@ class File extends FileSystemEntity implements file.File {
   Future<File> create({bool recursive = false}) {
     // write an empty file
     final completer = Completer<File>();
-    void callback(Object /*?*/ err, [fd]) {
+    void callback(Object? err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -259,7 +259,7 @@ class File extends FileSystemEntity implements file.File {
       _RandomAccessFile.open(path, mode);
 
   @override
-  Stream<Uint8List> openRead([int start, int end]) {
+  Stream<Uint8List> openRead([int? start, int? end]) {
     var options = ReadStreamOptions();
     if (start != null) options.start = start;
     if (end != null) options.end = end;
@@ -317,7 +317,7 @@ class File extends FileSystemEntity implements file.File {
   @override
   Future<File> rename(String newPath) {
     final completer = Completer<File>();
-    void cb(Object /*?*/ err) {
+    void cb(Object? err) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -356,7 +356,7 @@ class File extends FileSystemEntity implements file.File {
     _utimesSync(mtime: Date(time.millisecondsSinceEpoch));
   }
 
-  Future<void> _utimes({Date atime, Date mtime}) async {
+  Future<void> _utimes({Date? atime, Date? mtime}) async {
     final currentStat = await stat();
     atime ??= Date(currentStat.accessed.millisecondsSinceEpoch);
     mtime ??= Date(currentStat.modified.millisecondsSinceEpoch);
@@ -375,7 +375,7 @@ class File extends FileSystemEntity implements file.File {
     return completer.future;
   }
 
-  void _utimesSync({Date atime, Date mtime}) {
+  void _utimesSync({Date? atime, Date? mtime}) {
     final currentStat = statSync();
     atime ??= Date(currentStat.accessed.millisecondsSinceEpoch);
     mtime ??= Date(currentStat.modified.millisecondsSinceEpoch);
@@ -432,7 +432,7 @@ class File extends FileSystemEntity implements file.File {
 
 class _RandomAccessFile implements io.RandomAccessFile {
   /// File Descriptor
-  final int /*!*/ fd;
+  final int fd;
 
   /// File path.
   @override
@@ -445,7 +445,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   static Future<io.RandomAccessFile> open(String path, io.FileMode mode) {
     final completer = Completer<_RandomAccessFile>();
-    void cb(Object /*?*/ err, [fd]) {
+    void cb(Object? err, [fd]) {
       if (err != null) {
         completer.completeError(err);
       } else {
@@ -561,7 +561,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
     return _dispatch(() {
       var buffer = Buffer.alloc(bytes);
       final completer = Completer<Uint8List>();
-      void cb(Object /*?*/ err, bytesRead, buffer) {
+      void cb(Object? err, bytesRead, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
@@ -589,18 +589,18 @@ class _RandomAccessFile implements io.RandomAccessFile {
   }
 
   @override
-  Future<int> readInto(List<int> buffer, [int start = 0, int end]) {
+  Future<int> readInto(List<int> buffer, [int start = 0, int? end]) {
     end ??= buffer.length;
     var bytes = end - start;
     if (bytes == 0) return Future.value(0);
     return read(bytes).then((readBytes) {
-      buffer.setRange(start, end, readBytes);
+      buffer.setRange(start, end!, readBytes);
       return readBytes.length;
     });
   }
 
   @override
-  int readIntoSync(List<int> buffer, [int start = 0, int end]) {
+  int readIntoSync(List<int> buffer, [int start = 0, int? end]) {
     _checkAvailable();
     end ??= buffer.length;
     var bytes = end - start;
@@ -668,7 +668,7 @@ class _RandomAccessFile implements io.RandomAccessFile {
   Future<io.RandomAccessFile> writeByte(int value) {
     return _dispatch(() {
       final completer = Completer<io.RandomAccessFile>();
-      void cb(Object /*?*/ err, bytesWritten, buffer) {
+      void cb(Object? err, bytesWritten, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
@@ -690,10 +690,10 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
   @override
   Future<io.RandomAccessFile> writeFrom(List<int> buffer,
-      [int start = 0, int end]) {
+      [int start = 0, int? end]) {
     return _dispatch(() {
       final completer = Completer<io.RandomAccessFile>();
-      void cb(Object /*?*/ err, bytesWritten, buffer) {
+      void cb(Object? err, bytesWritten, buffer) {
         if (err != null) {
           completer.completeError(err);
         } else {
@@ -703,14 +703,14 @@ class _RandomAccessFile implements io.RandomAccessFile {
 
       final jsCallback = js.allowInterop(cb);
       end ??= buffer.length;
-      final length = end - start;
+      final length = end! - start;
       fs.write(fd, Buffer.from(buffer), start, length, jsCallback);
       return completer.future;
     });
   }
 
   @override
-  void writeFromSync(List<int> buffer, [int start = 0, int end]) {
+  void writeFromSync(List<int> buffer, [int start = 0, int? end]) {
     _checkAvailable();
     end ??= buffer.length;
     final length = end - start;

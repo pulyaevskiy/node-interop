@@ -43,7 +43,7 @@ class _NetworkInterface implements io.NetworkInterface {
 
   factory _NetworkInterface.fromJS(String name, int index, List<Map> data) {
     final addresses = data
-        .map((addr) => InternetAddress(addr['address'] as String /*!*/))
+        .map((addr) => InternetAddress(addr['address'] as String))
         .toList(growable: false);
     return _NetworkInterface(addresses, index, name);
   }
