@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Enable null-safety (requires Dart >=2.12).
+
 ## 1.2.0
 
 - Added a `nodeFileSystem` top-level field that implements the `file` package's
