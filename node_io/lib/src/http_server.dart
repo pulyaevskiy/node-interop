@@ -419,11 +419,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
     List<int> Function()? orElse,
   }) {
     return _delegate.firstWhere(test,
-        orElse: orElse == null
-            ? null
-            : () {
-                return Uint8List.fromList(orElse());
-              });
+        orElse: orElse == null ? null : () => Uint8List.fromList(orElse()));
   }
 
   @override
@@ -465,11 +461,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
     List<int> Function()? orElse,
   }) {
     return _delegate.lastWhere(test,
-        orElse: orElse == null
-            ? null
-            : () {
-                return Uint8List.fromList(orElse());
-              });
+        orElse: orElse == null ? null : () => Uint8List.fromList(orElse()));
   }
 
   @override
@@ -498,11 +490,7 @@ class NodeHttpRequest implements io.HttpRequest, HasReadable {
   Future<Uint8List> singleWhere(bool Function(Uint8List element) test,
       {List<int> Function()? orElse}) {
     return _delegate.singleWhere(test,
-        orElse: orElse == null
-            ? null
-            : () {
-                return Uint8List.fromList(orElse());
-              });
+        orElse: orElse == null ? null : () => Uint8List.fromList(orElse()));
   }
 
   @override
