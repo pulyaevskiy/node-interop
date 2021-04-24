@@ -21,7 +21,7 @@ class ReadableStream<T> extends Stream<T> implements HasReadable {
   @override
   final Readable nativeInstance;
   final Function _convert;
-  StreamController<T> _controller;
+  late final StreamController<T> _controller;
 
   /// Creates new [ReadableStream] which wraps [nativeInstance] of `Readable`
   /// type.
@@ -30,14 +30,14 @@ class ReadableStream<T> extends Stream<T> implements HasReadable {
   /// send to the listener. This allows implementations to convert raw
   /// JavaScript data in to desired Dart representation. If no convert
   /// function is provided then data is send to the listener unchanged.
-  ReadableStream(this.nativeInstance, {T Function(dynamic data) convert})
-      : _convert = convert {
+  ReadableStream(this.nativeInstance, {T Function(dynamic data)? convert})
+      : _convert = convert ?? ((chunk) => chunk) {
     _controller = StreamController(
         onPause: _onPause, onResume: _onResume, onCancel: _onCancel);
     nativeInstance.on('error', allowInterop(_errorHandler));
   }
 
-  void _errorHandler([JsError error]) {
+  void _errorHandler(JsError error) {
     _controller.addError(error);
   }
 
@@ -56,11 +56,11 @@ class ReadableStream<T> extends Stream<T> implements HasReadable {
   }
 
   @override
-  StreamSubscription<T> listen(void Function(T event) onData,
-      {Function onError, void Function() onDone, bool cancelOnError}) {
+  StreamSubscription<T> listen(void Function(T event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     nativeInstance.on('data', allowInterop((chunk) {
       assert(chunk != null);
-      var data = (_convert == null) ? chunk : _convert(chunk);
+      var data = _convert(chunk);
       _controller.add(data);
     }));
     nativeInstance.on('end', allowInterop(() {
@@ -80,7 +80,7 @@ class WritableStream<S> implements StreamSink<S> {
   final Writable nativeInstance;
   final Function _convert;
 
-  Completer _drainCompleter;
+  Completer? _drainCompleter;
 
   /// Creates [WritableStream] which wraps [nativeInstance] of `Writable`
   /// type.
@@ -89,16 +89,16 @@ class WritableStream<S> implements StreamSink<S> {
   /// it's added to the [nativeInstance]. This allows implementations to convert
   /// Dart objects in to values accepted by JavaScript streams. If no convert
   /// function is provided then data is sent to target unchanged.
-  WritableStream(this.nativeInstance, {dynamic Function(S data) convert})
-      : _convert = convert {
+  WritableStream(this.nativeInstance, {dynamic Function(S data)? convert})
+      : _convert = convert ?? ((chunk) => chunk) {
     nativeInstance.on('error', allowInterop(_errorHandler));
   }
 
   void _errorHandler(JsError error) {
-    if (_drainCompleter != null && !_drainCompleter.isCompleted) {
-      _drainCompleter.completeError(error);
-    } else if (_closeCompleter != null && !_closeCompleter.isCompleted) {
-      _closeCompleter.completeError(error);
+    if (_drainCompleter != null && !_drainCompleter!.isCompleted) {
+      _drainCompleter!.completeError(error);
+    } else if (_closeCompleter != null && !_closeCompleter!.isCompleted) {
+      _closeCompleter!.completeError(error);
     } else {
       throw error;
     }
@@ -107,7 +107,7 @@ class WritableStream<S> implements StreamSink<S> {
   /// Writes [data] to nativeStream.
   void _write(S data) {
     var completer = Completer();
-    void _flush([JsError error]) {
+    void _flush([JsError? error]) {
       if (completer.isCompleted) return;
       if (error != null) {
         completer.completeError(error);
@@ -116,7 +116,7 @@ class WritableStream<S> implements StreamSink<S> {
       }
     }
 
-    var chunk = (_convert == null) ? data : _convert(data);
+    var chunk = _convert(data);
     var isFlushed = nativeInstance.write(chunk, allowInterop(_flush));
     if (!isFlushed) {
       // Keep track of the latest unflushed chunk of data.
@@ -130,8 +130,8 @@ class WritableStream<S> implements StreamSink<S> {
   /// If there is no buffered data to drain then returned Future completes in
   /// next event-loop iteration.
   Future get drain {
-    if (_drainCompleter != null && !_drainCompleter.isCompleted) {
-      return _drainCompleter.future;
+    if (_drainCompleter != null && !_drainCompleter!.isCompleted) {
+      return _drainCompleter!.future;
     }
     return Future.value();
   }
@@ -142,7 +142,7 @@ class WritableStream<S> implements StreamSink<S> {
   }
 
   @override
-  void addError(Object error, [StackTrace stackTrace]) {
+  void addError(Object error, [StackTrace? stackTrace]) {
     nativeInstance.emit('error', error);
   }
 
@@ -153,17 +153,17 @@ class WritableStream<S> implements StreamSink<S> {
 
   @override
   Future close() {
-    if (_closeCompleter != null) return _closeCompleter.future;
+    if (_closeCompleter != null) return _closeCompleter!.future;
     _closeCompleter = Completer();
     void end() {
-      if (!_closeCompleter.isCompleted) _closeCompleter.complete();
+      if (!_closeCompleter!.isCompleted) _closeCompleter!.complete();
     }
 
     nativeInstance.end(allowInterop(end));
-    return _closeCompleter.future;
+    return _closeCompleter!.future;
   }
 
-  Completer _closeCompleter;
+  Completer? _closeCompleter;
 
   @override
   Future get done => close();
@@ -189,7 +189,7 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   Future flush() => drain;
 
   @override
-  void write(Object obj) {
+  void write(Object? obj) {
     _write(encoding.encode(obj.toString()));
   }
 
@@ -205,7 +205,7 @@ class NodeIOSink extends WritableStream<List<int>> implements IOSink {
   }
 
   @override
-  void writeln([Object obj = '']) {
+  void writeln([Object? obj = '']) {
     _write(encoding.encode('$obj\n'));
   }
 }

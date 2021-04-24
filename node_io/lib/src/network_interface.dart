@@ -24,7 +24,7 @@ abstract class NetworkInterface implements io.NetworkInterface {
     var index = 0;
     final result = data.entries
         .map((entry) => _NetworkInterface.fromJS(
-            entry.key, index++, List<Map>.from(entry.value)))
+            entry.key, index++, List<Map>.from(entry.value as Iterable)))
         .toList(growable: false);
 
     return Future.value(result);
@@ -43,8 +43,7 @@ class _NetworkInterface implements io.NetworkInterface {
 
   factory _NetworkInterface.fromJS(String name, int index, List<Map> data) {
     final addresses = data
-        .map((Map addr) => addr['address'] as String)
-        .map((ip) => InternetAddress(ip))
+        .map((addr) => InternetAddress(addr['address'] as String))
         .toList(growable: false);
     return _NetworkInterface(addresses, index, name);
   }

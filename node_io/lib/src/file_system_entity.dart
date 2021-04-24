@@ -68,7 +68,7 @@ abstract class FileSystemEntity implements file.FileSystemEntity {
   @override
   Future<String> resolveSymbolicLinks() {
     var completer = Completer<String>();
-    void callback(err, String resolvedPath) {
+    void callback(Object? err, String resolvedPath) {
       if (err == null) {
         completer.complete(resolvedPath);
       } else {
@@ -130,10 +130,10 @@ class FileStat implements io.FileStat {
   FileStat._internal(this.changed, this.modified, this.accessed, this.type,
       this.mode, this.size);
 
-  const FileStat._internalNotFound()
-      : changed = null,
-        modified = null,
-        accessed = null,
+  FileStat._internalNotFound()
+      : changed = DateTime.fromMillisecondsSinceEpoch(0),
+        modified = DateTime.fromMillisecondsSinceEpoch(0),
+        accessed = DateTime.fromMillisecondsSinceEpoch(0),
         type = io.FileSystemEntityType.notFound,
         mode = 0,
         size = -1;
@@ -152,7 +152,7 @@ class FileStat implements io.FileStat {
       DateTime.parse(stats.mtime.toISOString()),
       DateTime.parse(stats.atime.toISOString()),
       type,
-      stats.mode,
+      stats.mode.floor(),
       stats.size,
     );
   }

@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Enable null-safety (requires Dart >=2.12).
+- Update `exit` to match the signature used by `dart:io`.
+
 ## 1.2.0
 
 - Added a `nodeFileSystem` top-level field that implements the `file` package's

@@ -21,7 +21,7 @@ export 'dart:io' show InternetAddressType;
 class InternetAddress implements io.InternetAddress {
   static const int _IPV6_ADDR_LENGTH = 16;
 
-  final String _host;
+  final String? _host;
   final Uint8List _inAddr;
 
   @override
@@ -60,7 +60,7 @@ class InternetAddress implements io.InternetAddress {
     final completer = Completer<List<io.InternetAddress>>();
     final options = DNSLookupOptions(all: true, verbatim: true);
 
-    void handleLookup(error, result) {
+    void handleLookup(Object? error, result) {
       if (error != null) {
         completer.completeError(error);
       } else {

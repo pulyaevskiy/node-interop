@@ -11,7 +11,7 @@ class Stdout extends NodeIOSink implements io.Stdout {
   Stdout(TTYWriteStream nativeStream) : super(nativeStream);
 
   @override
-  TTYWriteStream get nativeInstance => super.nativeInstance;
+  TTYWriteStream get nativeInstance => super.nativeInstance as TTYWriteStream;
 
   @override
   bool get hasTerminal => nativeInstance.isTTY;
