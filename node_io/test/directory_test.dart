@@ -59,17 +59,35 @@ void main() {
     test('list', () async {
       var list = await Directory.current.list().toList();
       expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
+      expect(_listContainsPath(list, 'lib/node_io.dart'), isFalse);
 
       list = await dir('lib').list().toList();
       expect(_listContainsPath(list, 'node_io.dart'), isTrue);
+      expect(_listContainsPath(list, 'src/directory.dart'), isFalse);
     });
 
-    test('listSync', () async {
+    test('list recursive', () async {
+      var list = await Directory.current.list(recursive: true).toList();
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
+      expect(_listContainsPath(list, 'lib/node_io.dart'), isTrue);
+      expect(_listContainsPath(list, 'lib/src/directory.dart'), isTrue);
+    });
+
+    test('listSync', () {
       var list = Directory.current.listSync();
       expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
+      expect(_listContainsPath(list, 'lib/node_io.dart'), isFalse);
 
       list = dir('lib').listSync();
       expect(_listContainsPath(list, 'node_io.dart'), isTrue);
+      expect(_listContainsPath(list, 'src/directory.dart'), isFalse);
+    });
+
+    test('listSync recursive', () {
+      var list = Directory.current.listSync(recursive: true);
+      expect(_listContainsPath(list, 'pubspec.yaml'), isTrue);
+      expect(_listContainsPath(list, 'lib/node_io.dart'), isTrue);
+      expect(_listContainsPath(list, 'lib/src/directory.dart'), isTrue);
     });
 
     test('createTemp', () async {
@@ -90,14 +108,40 @@ void main() {
 
     test('create_delete', () async {
       var directory = dir('delete_dir');
-      try {
-        await directory.delete();
-      } catch (_) {}
-      ;
       await directory.create();
       expect(await directory.exists(), isTrue);
       await directory.delete();
       expect(await directory.exists(), isFalse);
+    });
+
+    test('create_delete recursive', () async {
+      var outer = dir('delete_dir');
+      var inner = dir('delete_dir/inner');
+      await inner.create(recursive: true);
+      expect(await inner.exists(), isTrue);
+      expect(await outer.exists(), isTrue);
+      await outer.delete(recursive: true);
+      expect(await inner.exists(), isFalse);
+      expect(await outer.exists(), isFalse);
+    });
+
+    test('createSync_deleteSync', () {
+      var directory = dir('delete_dir');
+      directory.createSync();
+      expect(directory.existsSync(), isTrue);
+      directory.deleteSync();
+      expect(directory.existsSync(), isFalse);
+    });
+
+    test('createSync_deleteSync recursive', () {
+      var outer = dir('delete_dir');
+      var inner = dir('delete_dir/inner');
+      inner.createSync(recursive: true);
+      expect(inner.existsSync(), isTrue);
+      expect(outer.existsSync(), isTrue);
+      outer.deleteSync(recursive: true);
+      expect(inner.existsSync(), isFalse);
+      expect(outer.existsSync(), isFalse);
     });
 
     test('rename', () async {

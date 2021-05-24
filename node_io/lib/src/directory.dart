@@ -126,10 +126,6 @@ class Directory extends FileSystemEntity implements file.Directory {
 
   @override
   Future<file.FileSystemEntity> delete({bool recursive = false}) {
-    if (recursive) {
-      return Future.error(
-          UnsupportedError('Recursive delete is not supported by Node API'));
-    }
     final completer = Completer<Directory>();
 
     void callback([error]) {
@@ -141,24 +137,19 @@ class Directory extends FileSystemEntity implements file.Directory {
     }
 
     final jsCallback = js.allowInterop(callback);
-    fs.rmdir(path, jsCallback);
+    fs.rmdir(path, RmdirOptions(recursive: recursive), jsCallback);
     return completer.future;
   }
 
   @override
   void deleteSync({bool recursive = false}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive delete is not supported in Node.');
-    }
-    fs.rmdirSync(path);
+    fs.rmdirSync(path, RmdirOptions(recursive: recursive));
   }
 
   @override
   Stream<FileSystemEntity> list(
       {bool recursive = false, bool followLinks = true}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive list is not supported in Node.');
-    }
+    if (recursive) return _recursiveList(followLinks);
     final controller = StreamController<FileSystemEntity>();
 
     void callback(Object? err, [files]) {
@@ -169,14 +160,7 @@ class Directory extends FileSystemEntity implements file.Directory {
         for (var filePath in files) {
           // Need to append the original path to build a proper path
           filePath = join(path, filePath);
-          final stat = FileStat.statSync(filePath);
-          if (stat.type == io.FileSystemEntityType.file) {
-            controller.add(File(filePath));
-          } else if (stat.type == io.FileSystemEntityType.directory) {
-            controller.add(Directory(filePath));
-          } else {
-            controller.add(Link(filePath));
-          }
+          controller.add(_pathToFsEntity(filePath, followLinks));
         }
         controller.close();
       }
@@ -185,6 +169,28 @@ class Directory extends FileSystemEntity implements file.Directory {
     fs.readdir(path, js.allowInterop(callback));
 
     return controller.stream;
+  }
+
+  /// Returns a [FileSystemEntity] for [path].
+  ///
+  /// If [followLinks] is true, a [File] or [Directory] will be returned for
+  /// symbolic links. If it's false, a [Link] will be returned instead.
+  FileSystemEntity _pathToFsEntity(String path, bool followLinks) {
+    final stat = followLinks ? fs.statSync(path) : fs.lstatSync(path);
+    if (stat.isFile()) return File(path);
+    if (stat.isDirectory()) return Directory(path);
+    if (stat.isSymbolicLink()) return Link(path);
+    throw StateError('Invalid FileSystemEntity "path".');
+  }
+
+  /// Recursively list files in this directory.
+  Stream<FileSystemEntity> _recursiveList(bool followLinks) async* {
+    await for (var entity in list(followLinks: followLinks)) {
+      yield entity;
+      if (entity is Directory) {
+        yield* entity.list(recursive: true, followLinks: followLinks);
+      }
+    }
   }
 
   @override
@@ -211,14 +217,12 @@ class Directory extends FileSystemEntity implements file.Directory {
   }
 
   @override
-  Future<Directory> create({bool recursive = false}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive create is not supported in Node.');
-    }
+  Future<Directory> create({bool recursive = false}) async {
+    if (await exists()) return this;
     final completer = Completer<Directory>();
-    void callback(Object? err) {
+    void callback(Object? err, [_]) {
       if (err == null) {
-        completer.complete(Directory(path));
+        completer.complete(this);
       } else {
         completer.completeError(err);
       }
@@ -226,16 +230,14 @@ class Directory extends FileSystemEntity implements file.Directory {
 
     var jsCallback = js.allowInterop(callback);
 
-    fs.mkdir(path, jsCallback);
+    fs.mkdir(path, MkdirOptions(recursive: recursive), jsCallback);
     return completer.future;
   }
 
   @override
   void createSync({bool recursive = false}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive create is not supported in Node.');
-    }
-    fs.mkdirSync(path);
+    if (existsSync()) return;
+    fs.mkdirSync(path, MkdirOptions(recursive: recursive));
   }
 
   @override
@@ -287,23 +289,17 @@ class Directory extends FileSystemEntity implements file.Directory {
   @override
   List<file.FileSystemEntity> listSync(
       {bool recursive = false, bool followLinks = true}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive list is not supported in Node.js.');
+    Iterable<file.FileSystemEntity> list(String path) sync* {
+      final files = fs.readdirSync(path);
+      for (var file in files) {
+        final filePath = join(path, file);
+        final entity = _pathToFsEntity(filePath, followLinks);
+        yield entity;
+        if (recursive && entity is Directory) yield* list(filePath);
+      }
     }
 
-    final files = fs.readdirSync(path);
-    return files.map((filePath) {
-      // Need to append the original path to build a proper path
-      filePath = join(path, filePath);
-      final stat = FileStat.statSync(filePath);
-      if (stat.type == io.FileSystemEntityType.file) {
-        return File(filePath);
-      } else if (stat.type == io.FileSystemEntityType.directory) {
-        return Directory(filePath);
-      } else {
-        return Link(filePath);
-      }
-    }).toList();
+    return list(path).toList();
   }
 
   @override

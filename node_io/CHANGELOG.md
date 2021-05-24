@@ -1,3 +1,11 @@
+## 2.1.0
+
+- Support the `recursive` option for `File` and `Directory` methods.
+
+- Properly support `followLinks` in `Directory.list` and `Directory.listSync`.
+  The previous behavior always treated `followLinks` as false (even though the
+  actual Dart default is true).
+
 ## 2.0.0
 
 - Enable null-safety (requires Dart >=2.12).

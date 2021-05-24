@@ -14,6 +14,7 @@ import 'package:node_interop/js.dart';
 import 'package:node_interop/path.dart' as node_path;
 import 'package:node_interop/util.dart';
 
+import 'directory.dart';
 import 'file_system_entity.dart';
 import 'streams.dart';
 
@@ -166,7 +167,10 @@ class File extends FileSystemEntity implements file.File {
   }
 
   @override
-  Future<File> create({bool recursive = false}) {
+  Future<File> create({bool recursive = false}) async {
+    if (recursive) {
+      await parent.create(recursive: true);
+    }
     // write an empty file
     final completer = Completer<File>();
     void callback(Object? err, [fd]) {
@@ -190,15 +194,17 @@ class File extends FileSystemEntity implements file.File {
 
   @override
   void createSync({bool recursive = false}) {
+    if (recursive) parent.createSync(recursive: true);
     final fd = fs.openSync(_absolutePath, 'w');
     fs.closeSync(fd);
   }
 
   @override
-  Future<file.FileSystemEntity> delete({bool recursive = false}) {
+  Future<file.FileSystemEntity> delete({bool recursive = false}) async {
     if (recursive) {
-      return Future.error(
-          UnsupportedError('Recursive delete is not supported by Node API'));
+      if ((await stat()).type == file.FileSystemEntityType.directory) {
+        return Directory(path).delete(recursive: true);
+      }
     }
     final completer = Completer<File>();
     void callback(err) {
@@ -217,7 +223,10 @@ class File extends FileSystemEntity implements file.File {
   @override
   void deleteSync({bool recursive = false}) {
     if (recursive) {
-      throw UnsupportedError('Recursive delete is not supported by Node API');
+      if (statSync().type == file.FileSystemEntityType.directory) {
+        Directory(path).deleteSync(recursive: true);
+        return;
+      }
     }
     fs.unlinkSync(_absolutePath);
   }
