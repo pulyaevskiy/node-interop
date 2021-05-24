@@ -52,9 +52,9 @@ class Link extends FileSystemEntity implements file.Link {
   String get _absolutePath => node_path.path.resolve(path);
 
   @override
-  Future<Link> create(String target, {bool recursive = false}) {
+  Future<Link> create(String target, {bool recursive = false}) async {
     if (recursive) {
-      throw UnsupportedError('Recursive flag not supported by Node.js');
+      await parent.create(recursive: true);
     }
 
     final completer = Completer<Link>();
@@ -73,9 +73,7 @@ class Link extends FileSystemEntity implements file.Link {
 
   @override
   void createSync(String target, {bool recursive = false}) {
-    if (recursive) {
-      throw UnsupportedError('Recursive flag not supported by Node.js');
-    }
+    if (recursive) parent.createSync(recursive: true);
     fs.symlinkSync(target, path);
   }
 

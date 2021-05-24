@@ -138,6 +138,21 @@ void main() {
       await file.delete();
     });
 
+    test('create recursive', () async {
+      var file = File('directory/create.txt');
+      try {
+        await file.delete();
+      } catch (_) {}
+      expect(await file.exists(), isFalse);
+      await file.create(recursive: true);
+      expect(await file.exists(), isTrue);
+
+      // Recursive should allow path to be deleted even if it's a directory.
+      await File('directory').delete(recursive: true);
+      expect(await file.parent.exists(), isFalse);
+      expect(await file.exists(), isFalse);
+    });
+
     test('createSync', () {
       final file = File(join(Directory.systemTemp.path, 'create_sync.txt'));
       if (file.existsSync()) {
@@ -149,6 +164,24 @@ void main() {
       expect(file.existsSync(), isTrue);
 
       file.deleteSync(); // cleanup
+    });
+
+    test('createSync recursive', () {
+      final file =
+          File(join(Directory.systemTemp.path, 'directory/create_sync.txt'));
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+      expect(file.existsSync(), isFalse);
+
+      file.createSync(recursive: true);
+      expect(file.existsSync(), isTrue);
+      expect(file.parent.existsSync(), isTrue);
+
+      // Recursive should allow path to be deleted even if it's a directory.
+      File(file.parent.path).deleteSync(recursive: true);
+      expect(file.parent.existsSync(), isFalse);
+      expect(file.existsSync(), isFalse);
     });
 
     test('read_write_bytes', () async {
