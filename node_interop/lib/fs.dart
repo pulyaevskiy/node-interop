@@ -22,7 +22,7 @@ abstract class FS {
   external FSConstants get constants;
   external void access(path, [modeOrCallback, callback]);
   external void accessSync(path, [int mode]);
-  external void appendFile(file, data, [options, callback]);
+  external void appendFile(file, data, [optionsOrCallback, callback]);
   external void appendFileSync(file, data, [options]);
   external void chmod(path, int mode, void Function(dynamic error) callback);
   external void chmodSync(path, int mode);
@@ -46,9 +46,9 @@ abstract class FS {
   external void fchownSync(int fd, int uid, gid);
   external void fdatasync(int fd, void Function(dynamic error) callback);
   external void fdatasyncSync(int fd);
-  external void fstat(
-      int fd, void Function(dynamic error, Stats stats) callback);
-  external Stats fstatSync(int fd);
+  external void fstat(int fd, optionsOrCallback,
+      [void Function(dynamic error, Stats stats) callback]);
+  external Stats fstatSync(int fd, [StatOptions options]);
   external void fsync(int fd, void Function(dynamic error) callback);
   external void fsyncSync(int fd);
   external void ftruncate(int fd, [lenOrCallback, callback]);
@@ -64,11 +64,12 @@ abstract class FS {
   external void link(
       existingPath, newPath, void Function(dynamic error) callback);
   external void linkSync(existingPath, newPath);
-  external void lstat(path, void Function(dynamic error, Stats stats) callback);
-  external Stats lstatSync(path);
+  external void lstat(path, optionsOrCallback,
+      [void Function(dynamic error, Stats stats) callback]);
+  external Stats lstatSync(path, [StatOptions options]);
   external void mkdir(path,
-      [modeOrCallback, void Function(dynamic error) callback]);
-  external void mkdirSync(path, [int mode]);
+      [optionsModeOrCallback, void Function(dynamic error) callback]);
+  external void mkdirSync(path, [optionsOrMode]);
   external void mkdtemp(String prefix,
       [optionsOrCallback,
       void Function(dynamic error, String folder) callback]);
@@ -97,8 +98,9 @@ abstract class FS {
   // TODO: realpathSync.native(path[, options])
   external void rename(oldPath, newPath, void Function(dynamic error) callback);
   external void renameSync(oldPath, newPath);
-  external void rmdir(path, void Function(dynamic error) callback);
-  external void rmdirSync(path);
+  external void rmdir(path, optionsOrCallback,
+      [void Function(dynamic error) callback]);
+  external void rmdirSync(path, [RmdirOptions options]);
   external void stat(path, void Function(dynamic error, Stats stats) callback);
   external Stats statSync(path);
   external void symlink(target, path,
@@ -250,6 +252,78 @@ abstract class WriteStreamOptions {
     bool autoClose,
     int start,
   });
+}
+
+/// Options for various `fs` APIs.
+///
+/// Some options may not be relevant for all functions that accept this object.
+@JS()
+@anonymous
+abstract class FileOptions {
+  external String? get encoding;
+  external int? get mode;
+  external bool? withFileTypes;
+
+  /// See https://nodejs.org/api/fs.html#fs_file_system_flags.
+  external String? get flag;
+
+  external factory FileOptions(
+      {String encoding, int mode, bool withFileTypes, String flag});
+}
+
+/// Options for [FS.fstat] and [FS.lstat].
+@JS()
+@anonymous
+abstract class StatOptions {
+  external bool? get bigint;
+
+  external factory StatOptions({bool bigint});
+}
+
+/// Options for [FS.mkdir].
+@JS()
+@anonymous
+abstract class MkdirOptions {
+  external bool? get recursive;
+  external int? get mode;
+
+  external factory MkdirOptions({bool recursive, int mode});
+}
+
+/// Options for [FS.rmdir].
+@JS()
+@anonymous
+abstract class RmdirOptions {
+  external int? get maxRetries;
+  external bool? get recursive;
+  external int? get retryDelay;
+
+  external factory RmdirOptions(
+      {int maxRetries, bool recursive, int retryDelay});
+}
+
+/// Options for [FS.watch].
+@JS()
+@anonymous
+abstract class WatchOptions {
+  external bool? persistent;
+  external bool? recursive;
+  external String? encoding;
+
+  external factory WatchOptions(
+      {bool persistent, bool recursive, String encoding});
+}
+
+/// Options for [FS.watchFile].
+@JS()
+@anonymous
+abstract class WatchFileOptions {
+  external bool? bigint;
+  external bool? persistent;
+  external int? interval;
+
+  external factory WatchFileOptions(
+      {bool bigint, bool persistent, int interval});
 }
 
 @JS()

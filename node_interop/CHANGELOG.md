@@ -1,3 +1,22 @@
+## 2.0.2
+
+- Various `fs` APIs now accept options.
+
+  - `fs.appendFile`, `fs.mkdtemp`, `fs.readdir`, `fs.readlink`, and
+    `fs.realpath`, and `fs.writeFile` accept a `FileOptions` object.
+
+  - `fs.fstat` and `fs.lstat` accept a `StatOptions` object.
+
+  - `fs.mkdir` accepts a `MkdirOptions` object.
+
+  - `fs.rmdir` accepts a `RmdirOptions` object.
+
+  - `fs.watch` accepts a `WatchOptions` object.
+
+  - `fs.watchFile` accepts a `WatchFileOptions` object.
+
+  - Synchronous equivalents of the above also accept the same options.
+
 ## 2.0.1
 
 - Fix improper types for `util.callbackToCompleter()`, `util.invokeAsync0()`,
