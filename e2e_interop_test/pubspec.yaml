@@ -1,18 +1,18 @@
 name: e2e_interop_test
 description: End-to-end test for node interop and builders
-version: 0.0.1
+version: 1.0.0
 publish_to: none
 
 environment:
-  sdk: '>=2.4.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dev_dependencies:
-  test: ^1.0.0
-  build_runner: ^1.0.0
+  test: ^1.17.5
+  build_runner: ^2.0.4
   build_node_compilers:
     path: ../build_node_compilers
   # TODO: Unpin js and node_interop after migrating build_node_compilers to
   # nnbd.
-  js: '<=0.6.2' # ^0.6.3
-  node_interop: '<=1.2.1'
-    # path: ../node_interop
+  js: ^0.6.3
+  node_interop:
+    path: ../node_interop
