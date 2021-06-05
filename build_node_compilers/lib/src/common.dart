@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:build/build.dart';
+import 'package:build_modules/build_modules.dart';
 import 'package:path/path.dart' as p;
 import 'package:scratch_space/scratch_space.dart';
-import 'package:build_modules/build_modules.dart';
 
 final defaultAnalysisOptionsId =
     AssetId('build_modules', 'lib/src/analysis_options.default.yaml');
@@ -37,10 +37,11 @@ Future<File> createPackagesFile(Iterable<AssetId> allAssets) async {
 /// Throws an [ArgumentError] if not.
 void validateOptions(Map<String, dynamic> config, List<String> supportedOptions,
     String builderKey,
-    {List<String> deprecatedOptions}) {
+    {List<String>? deprecatedOptions}) {
   deprecatedOptions ??= [];
-  var unsupported = config.keys.where(
-      (o) => !supportedOptions.contains(o) && !deprecatedOptions.contains(o));
+  var unsupported = config.keys.where((o) =>
+      !supportedOptions.contains(o) &&
+      !(deprecatedOptions?.contains(o) ?? false));
   if (unsupported.isNotEmpty) {
     throw ArgumentError.value(unsupported.join(', '), builderKey,
         'only $supportedOptions are supported options, but got');
