@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:bazel_worker/bazel_worker.dart';
 import 'package:build/build.dart';
 import 'package:build_modules/build_modules.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 import 'package:scratch_space/scratch_space.dart';
 
@@ -27,7 +26,7 @@ class DevCompilerBuilder implements Builder {
   final DartPlatform platform;
 
   /// The sdk kernel file for the current platform.
-  final String sdkKernelPath;
+  final String? sdkKernelPath;
 
   /// The root directory of the platform's dart SDK.
   ///
@@ -44,11 +43,11 @@ class DevCompilerBuilder implements Builder {
   final String librariesPath;
 
   DevCompilerBuilder(
-      {bool useIncrementalCompiler,
-      @required this.platform,
+      {bool? useIncrementalCompiler,
+      required this.platform,
       this.sdkKernelPath,
-      String librariesPath,
-      String platformSdk})
+      String? librariesPath,
+      String? platformSdk})
       : useIncrementalCompiler = useIncrementalCompiler ?? true,
         platformSdk = platformSdk ?? sdkDir,
         librariesPath = librariesPath ??
@@ -99,7 +98,7 @@ Future<void> _createDevCompilerModule(
     BuildStep buildStep,
     bool useIncrementalCompiler,
     String dartSdk,
-    String sdkKernelPath,
+    String? sdkKernelPath,
     String librariesPath,
     {bool debugMode = true}) async {
   var transitiveDeps = await buildStep.trackStage('CollectTransitiveDeps',

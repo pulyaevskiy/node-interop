@@ -47,15 +47,13 @@ class NodeEntrypointBuilder implements Builder {
   final WebCompiler webCompiler;
   final List<String> dart2JsArgs;
 
-  // TODO: Remove --no-sound-null-safety after migrating to nnbd.
-  const NodeEntrypointBuilder(this.webCompiler,
-      {this.dart2JsArgs = const ['--no-sound-null-safety']});
+  const NodeEntrypointBuilder(this.webCompiler, {this.dart2JsArgs = const []});
 
   factory NodeEntrypointBuilder.fromOptions(BuilderOptions options) {
     validateOptions(
         options.config, _supportedOptions, 'build_node_compilers|entrypoint',
         deprecatedOptions: _deprecatedOptions);
-    var compilerOption = options.config[_compiler] as String ?? 'dartdevc';
+    var compilerOption = options.config[_compiler] as String? ?? 'dartdevc';
     WebCompiler compiler;
     switch (compilerOption) {
       case 'dartdevc':
@@ -73,9 +71,9 @@ class NodeEntrypointBuilder implements Builder {
       throw ArgumentError.value(options.config[_dart2jsArgs], _dart2jsArgs,
           'Expected a list for $_dart2jsArgs.');
     }
-    var dart2JsArgs = (options.config[_dart2jsArgs] as List)
+    var dart2JsArgs = (options.config[_dart2jsArgs] as List?)
             ?.map((arg) => '$arg')
-            ?.toList() ??
+            .toList() ??
         const <String>[];
 
     return NodeEntrypointBuilder(compiler, dart2JsArgs: dart2JsArgs);
@@ -126,6 +124,6 @@ Future<bool> _isAppEntryPoint(AssetId dartId, AssetReader reader) async {
   return parsed.unit.declarations.any((node) {
     return node is FunctionDeclaration &&
         node.name.name == 'main' &&
-        node.functionExpression.parameters.parameters.length <= 2;
+        node.functionExpression.parameters!.parameters.length <= 2;
   });
 }

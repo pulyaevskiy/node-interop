@@ -37,7 +37,7 @@ Builder ddcKernelBuilder(BuilderOptions options) => KernelBuilder(
 PostProcessBuilder sdkJsCleanupBuilder(BuilderOptions options) =>
     FileDeletingBuilder(
         ['lib/src/dev_compiler/dart_sdk.js', 'lib/src/dev_compiler/require.js'],
-        isEnabled: options.config['enabled'] as bool ?? false);
+        isEnabled: options.config['enabled'] as bool? ?? false);
 
 // Dart2js related builders
 Builder dart2jsMetaModuleBuilder(BuilderOptions options) =>
@@ -50,7 +50,7 @@ Builder dart2jsModuleBuilder([_]) => ModuleBuilder(dart2jsPlatform);
 
 // General purpose builders
 PostProcessBuilder dartSourceCleanup(BuilderOptions options) =>
-    (options.config['enabled'] as bool ?? false)
+    (options.config['enabled'] as bool? ?? false)
         ? const FileDeletingBuilder(['.dart', '.js.map'])
         : const FileDeletingBuilder(['.dart', '.js.map'], isEnabled: false);
 
@@ -73,8 +73,8 @@ bool _readUseIncrementalCompilerOption(BuilderOptions options) {
   }
   validateOptions(options.config, [_useIncrementalCompilerOption],
       'build_node_compilers:ddc');
-  return options.config[_useIncrementalCompilerOption] as bool ?? true;
+  return options.config[_useIncrementalCompilerOption] as bool? ?? true;
 }
 
-Map<String, dynamic> _previousDdcConfig;
+Map<String, dynamic>? _previousDdcConfig;
 const _useIncrementalCompilerOption = 'use-incremental-compiler';

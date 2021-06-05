@@ -19,7 +19,7 @@ import 'platforms.dart';
 _p.Context get _context => _p.url;
 
 Future<void> bootstrapDdc(BuildStep buildStep,
-    {DartPlatform platform,
+    {DartPlatform? platform,
     Set<String> skipPlatformCheckPackages = const {}}) async {
   var dartEntrypointId = buildStep.inputId;
   var moduleId = buildStep.inputId
@@ -113,7 +113,7 @@ final _lazyBuildPool = Pool(16);
 /// unsupported modules.
 Future<List<AssetId>> _ensureTransitiveJsModules(
     Module module, BuildStep buildStep,
-    {Set<String> skipPlatformCheckPackages}) async {
+    {Set<String>? skipPlatformCheckPackages}) async {
   // Collect all the modules this module depends on, plus this module.
   var transitiveDeps = await module.computeTransitiveDependencies(buildStep);
 

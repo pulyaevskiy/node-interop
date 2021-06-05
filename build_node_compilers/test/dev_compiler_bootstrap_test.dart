@@ -11,7 +11,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
-  Map<String, dynamic> assets;
+  late Map<String, Object> assets;
 
   setUp(() async {
     assets = {
@@ -58,7 +58,7 @@ void main() {
 }
 
 // Runs all the DDC related builders except the entrypoint builder.
-Future<void> runPrerequisites(Map<String, dynamic> assets) async {
+Future<void> runPrerequisites(Map<String, Object> assets) async {
   await testBuilderAndCollectAssets(const ModuleLibraryBuilder(), assets);
   await testBuilderAndCollectAssets(MetaModuleBuilder(ddcPlatform), assets);
   await testBuilderAndCollectAssets(
