@@ -52,6 +52,7 @@ void main() {
       expect(dartify(js.numVal), 3.1415);
       expect(dartify(js.boolVal), isTrue);
       expect(dartify(js.nullVal), isNull);
+      expect(dartify(null), isNull);
     });
 
     test('it handles POJOs', () {
@@ -73,6 +74,16 @@ void main() {
     test('it handles objects with prototypes', () {
       final Fixtures js = require(fixture);
       expect(dartify(js.objectVal), {'color': 'red', 'origin': 'Japan'});
+    });
+  });
+
+  group('jsify', () {
+    test('it handles basic types', () {
+      final Fixtures js = require(fixture);
+      expect(jsify('node'), js.stringVal);
+      expect(jsify(3.1415), js.numVal);
+      expect(jsify(true), js.boolVal);
+      expect(jsify(null), js.nullVal);
     });
   });
 }
