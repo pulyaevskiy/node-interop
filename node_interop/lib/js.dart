@@ -16,7 +16,8 @@ abstract class Promise {
       Function(dynamic Function(dynamic value) resolve,
               dynamic Function(dynamic error) reject)
           executor);
-  external Promise then(dynamic Function(dynamic value) onFulfilled,
+
+  external Promise then(dynamic Function(dynamic value)? onFulfilled,
       [dynamic Function(dynamic error) onRejected]);
 }
 
