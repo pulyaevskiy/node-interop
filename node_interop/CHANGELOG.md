@@ -1,3 +1,7 @@
+## 2.1.0
+
+- Mark the first argument to `Promise.then()` as nullable.
+
 ## 2.0.2
 
 - Various `fs` APIs now accept options.
