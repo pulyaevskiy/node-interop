@@ -1,3 +1,7 @@
+## 2.1.1
+
+- Correctly mark the type of the `undefined` getter as `Null`.
+
 ## 2.1.0
 
 - Mark the first argument to `Promise.then()` as nullable.

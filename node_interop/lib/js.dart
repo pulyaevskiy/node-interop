@@ -8,7 +8,7 @@ library node_interop.js;
 import 'package:js/js.dart';
 
 @JS()
-external dynamic get undefined;
+external Null get undefined;
 
 @JS()
 abstract class Promise {
