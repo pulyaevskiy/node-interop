@@ -18,6 +18,9 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
   late bool echoMode;
 
   @override
+  late bool echoNewlineMode;
+
+  @override
   late bool lineMode;
 
   @override

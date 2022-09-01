@@ -167,7 +167,10 @@ class File extends FileSystemEntity implements file.File {
   }
 
   @override
-  Future<File> create({bool recursive = false}) async {
+  Future<File> create({bool recursive = false, bool exclusive = false}) async {
+    if (exclusive && await exists()) {
+      throw file.FileSystemException('File already exists.');
+    }
     if (recursive) {
       await parent.create(recursive: true);
     }
@@ -193,7 +196,10 @@ class File extends FileSystemEntity implements file.File {
   }
 
   @override
-  void createSync({bool recursive = false}) {
+  void createSync({bool recursive = false, bool exclusive = false}) {
+    if (exclusive && existsSync()) {
+      throw file.FileSystemException('File already exists.');
+    }
     if (recursive) parent.createSync(recursive: true);
     final fd = fs.openSync(_absolutePath, 'w');
     fs.closeSync(fd);

@@ -1,3 +1,9 @@
+## 2.2.0
+
+- Support the `exclusive` option for `File.create` and `File.createSync`.
+
+- Add the new `Stdin.echoNewlineMode` property introduced in Dart 2.18.
+
 ## 2.1.0
 
 - Support the `recursive` option for `File` and `Directory` methods.
