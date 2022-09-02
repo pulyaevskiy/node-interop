@@ -15,10 +15,14 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
   TTYReadStream get nativeInstance => super.nativeInstance as TTYReadStream;
 
   @override
-  late bool echoMode;
+  bool get echoMode => throw UnimplementedError('echoMode not supported');
 
   @override
-  late bool lineMode;
+  bool get echoNewlineMode =>
+      throw UnimplementedError('echoNewlineMode not supported');
+
+  @override
+  bool get lineMode => throw UnimplementedError('lineMode not supported');
 
   @override
   bool get hasTerminal => nativeInstance.isTTY;
