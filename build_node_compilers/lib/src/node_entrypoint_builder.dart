@@ -125,7 +125,7 @@ Future<bool> _isAppEntryPoint(AssetId dartId, AssetReader reader) async {
   // but has a part that does, or it exports a `main` from another library.
   return parsed.unit.declarations.any((node) {
     return node is FunctionDeclaration &&
-        node.name.name == 'main' &&
+        node.name.lexeme == 'main' &&
         node.functionExpression.parameters.parameters.length <= 2;
   });
 }

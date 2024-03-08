@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:build/build.dart';
@@ -18,17 +19,26 @@ final sdkDir = p.dirname(p.dirname(Platform.resolvedExecutable));
 String defaultAnalysisOptionsArg(ScratchSpace scratchSpace) =>
     '--options=${scratchSpace.fileFor(defaultAnalysisOptionsId).path}';
 
-// TODO: better solution for a .packages file, today we just create a new one
-// for every kernel build action.
+// TODO: better solution for a package_config.json, today we just create a new
+// one for every kernel build action.
 Future<File> createPackagesFile(Iterable<AssetId> allAssets) async {
   var allPackages = allAssets.map((id) => id.package).toSet();
   var packagesFileDir =
       await Directory.systemTemp.createTemp('kernel_builder_');
-  var packagesFile = File(p.join(packagesFileDir.path, '.packages'));
+  var packagesFile = File(p.join(packagesFileDir.path, 'package_config.json'));
   await packagesFile.create();
-  await packagesFile.writeAsString(allPackages
-      .map((pkg) => '$pkg:$multiRootScheme:///packages/$pkg')
-      .join('\r\n'));
+  var blob = {
+    'configVersion': 2,
+    'generator': 'build_node_compilers',
+    'packages': [
+      for (var name in allPackages)
+        {
+          'name': name,
+          'rootUri': '$multiRootScheme:///packages/$name/',
+        }
+    ],
+  };
+  await packagesFile.writeAsString(json.encode(blob));
   return packagesFile;
 }
 
