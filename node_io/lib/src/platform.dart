@@ -67,6 +67,11 @@ abstract class Platform {
   /// components in file paths.
   static String get pathSeparator => path.sep;
 
+  /// The current operating system's default line terminator.
+  ///
+  /// This is `\n` on all platforms except Windows, where it is `\r\n`.
+  static String get lineTerminator => isWindows ? '\r\n' : '\n';
+
   /// Get the name of the current locale.
   static String get localeName =>
       throw UnsupportedError('Not supported in Node.');

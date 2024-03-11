@@ -1,3 +1,12 @@
+## 2.3.0
+
+- Add the new `Platform.lineTerminator` property introduced in Dart 3.1.
+
+- Add the new `Stdout.lineTerminator` property introduced in Dart 3.4.
+
+- Add unimplemented setters for `Stdin.echoMode`, `Stdin.echoNewlineMode`,
+  and `Stdin.lineMode`.
+
 ## 2.2.0
 
 - Support the `exclusive` option for `File.create` and `File.createSync`.

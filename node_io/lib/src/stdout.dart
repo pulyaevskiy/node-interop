@@ -8,6 +8,9 @@ import 'package:node_interop/tty.dart';
 import 'streams.dart';
 
 class Stdout extends NodeIOSink implements io.Stdout {
+  /// The line terminator used when `writeln` is called.
+  String lineTerminator = '\n';
+
   Stdout(TTYWriteStream nativeStream) : super(nativeStream);
 
   @override
@@ -31,4 +34,9 @@ class Stdout extends NodeIOSink implements io.Stdout {
 
   @override
   int get terminalLines => nativeInstance.rows;
+
+  @override
+  void writeln([Object? obj = '']) {
+    write(encoding.encode('$obj$lineTerminator'));
+  }
 }
