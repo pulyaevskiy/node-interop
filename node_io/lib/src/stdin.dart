@@ -18,11 +18,26 @@ class Stdin extends ReadableStream<List<int>> implements io.Stdin {
   bool get echoMode => throw UnimplementedError('echoMode not supported');
 
   @override
+  set echoMode(bool echoMode) {
+    throw UnimplementedError('echoMode not supported');
+  }
+
+  @override
   bool get echoNewlineMode =>
       throw UnimplementedError('echoNewlineMode not supported');
 
   @override
+  set echoNewlineMode(bool echoNewlineMode) {
+    throw UnimplementedError('echoNewlineMode not supported');
+  }
+
+  @override
   bool get lineMode => throw UnimplementedError('lineMode not supported');
+
+  @override
+  set lineMode(bool lineMode) {
+    throw UnimplementedError('lineMode not supported');
+  }
 
   @override
   bool get hasTerminal => nativeInstance.isTTY;
