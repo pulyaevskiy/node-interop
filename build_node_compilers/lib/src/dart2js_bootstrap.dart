@@ -99,13 +99,13 @@ void addNodePreamble(File output) {
     ..writeAsStringSync(contents, mode: FileMode.append);
 }
 
-/// Creates a `.packages` file unique to this entrypoint at the root of the
-/// scratch space and returns it's filename.
+/// Creates a `package_config.json` file unique to this entrypoint at the root
+/// of the scratch space and returns it's filename.
 ///
 /// Since multiple invocations of Dart2Js will share a scratch space and we only
 /// know the set of packages involved the current entrypoint we can't construct
-/// a `.packages` file that will work for all invocations of Dart2Js so a unique
-/// file is created for every entrypoint that is run.
+/// a `package_config.json` file that will work for all invocations of Dart2Js
+/// so a unique file is created for every entrypoint that is run.
 ///
 /// The filename is based off the MD5 hash of the asset path so that files are
 /// unique regardless of situations like `web/foo/bar.dart` vs
@@ -114,13 +114,22 @@ Future<String> _createPackageFile(Iterable<AssetId> inputSources,
     BuildStep buildStep, ScratchSpace scratchSpace) async {
   var inputUri = buildStep.inputId.uri;
   var packageFileName =
-      '.package-${md5.convert(inputUri.toString().codeUnits)}';
+      'package_config_${md5.convert(inputUri.toString().codeUnits)}.json';
   var packagesFile =
       scratchSpace.fileFor(AssetId(buildStep.inputId.package, packageFileName));
   var packageNames = inputSources.map((s) => s.package).toSet();
-  var packagesFileContent =
-      packageNames.map((n) => '$n:packages/$n/').join('\n');
-  await packagesFile
-      .writeAsString('# Generated for $inputUri\n$packagesFileContent');
+  var blob = {
+    'configVersion': 2,
+    'generator': 'build_node_compilers',
+    'build_node_compilers_file': inputUri.toString(),
+    'packages': [
+      for (var name in packageNames)
+        {
+          'name': name,
+          'rootUri': 'packages/$name/',
+        }
+    ],
+  };
+  await packagesFile.writeAsString(json.encode(blob));
   return packageFileName;
 }
