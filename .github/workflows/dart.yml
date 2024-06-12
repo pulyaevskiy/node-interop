@@ -1,0 +1,31 @@
+name: Dart
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: dart-lang/setup-dart@v1
+      
+      - run: node --version
+
+      - name: Check build_node_compilers
+        run: ./tool/check.sh build_node_compilers
+
+      - name: Check node_interop
+        run: ./tool/check.sh node_interop node
+
+      - name: Check node_io
+        run: ./tool/check.sh node_io node
+
+      - name: Check node_http
+        run: ./tool/check.sh node_http node
+
+      - name: Check e2e_interop_test
+        run: ./tool/check.sh e2e_interop_test
