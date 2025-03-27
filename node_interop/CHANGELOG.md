@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Add support for `fs.realpath.native()` and `fs.realpathSync.native()`.
+
 ## 2.1.1
 
 - Correctly mark the type of the `undefined` getter as `Null`.
