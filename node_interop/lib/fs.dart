@@ -90,12 +90,8 @@ abstract class FS {
       void Function(dynamic error, dynamic linkString) callback]);
   external dynamic readlinkSync(path, [options]);
   external int readSync(int fd, buffer, int offset, int length, int position);
-  external void realpath(path,
-      [optionsOrCallback,
-      void Function(dynamic error, dynamic resolvedPath) callback]);
-  // TODO: realpath.native(path[, options], callback)
-  external String realpathSync(path, [options]);
-  // TODO: realpathSync.native(path[, options])
+  external Realpath get realpath;
+  external RealpathSync get realpathSync;
   external void rename(oldPath, newPath, void Function(dynamic error) callback);
   external void renameSync(oldPath, newPath);
   external void rmdir(path, optionsOrCallback,
@@ -188,6 +184,24 @@ abstract class FSConstants {
   external int get S_IROTH;
   external int get S_IWOTH;
   external int get S_IXOTH;
+}
+
+@JS()
+@anonymous
+abstract class Realpath {
+  external void call(path,
+      [optionsOrCallback,
+      void Function(dynamic error, dynamic resolvedPath) callback]);
+  external void native(path,
+      [optionsOrCallback,
+      void Function(dynamic error, dynamic resolvedPath) callback]);
+}
+
+@JS()
+@anonymous
+abstract class RealpathSync {
+  external String call(path, [options]);
+  external String native(path, [options]);
 }
 
 @JS()
