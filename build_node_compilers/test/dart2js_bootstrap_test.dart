@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
-  Map<String, dynamic> assets;
+  late Map<String, Object> assets;
   final platform = dart2jsPlatform;
 
   setUp(() async {

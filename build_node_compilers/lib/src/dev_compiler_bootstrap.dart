@@ -19,7 +19,7 @@ import 'platforms.dart';
 _p.Context get _context => _p.url;
 
 Future<void> bootstrapDdc(BuildStep buildStep,
-    {DartPlatform platform,
+    {DartPlatform? platform,
     Set<String> skipPlatformCheckPackages = const {}}) async {
   var dartEntrypointId = buildStep.inputId;
   var moduleId = buildStep.inputId
@@ -113,7 +113,8 @@ final _lazyBuildPool = Pool(16);
 /// unsupported modules.
 Future<List<AssetId>> _ensureTransitiveJsModules(
     Module module, BuildStep buildStep,
-    {Set<String> skipPlatformCheckPackages}) async {
+    {Set<String> skipPlatformCheckPackages = const {}}) async {
+  // TODO: Actually do something with `skipPlatformCheckPackages`.
   // Collect all the modules this module depends on, plus this module.
   var transitiveDeps = await module.computeTransitiveDependencies(buildStep);
 
@@ -195,7 +196,7 @@ const dart = dart_sdk.dart;
 
 // There is a JS binding for `require` function in `node_interop` package.
 // DDC treats this binding as global and maps all calls to this function
-// in Dart code to `dart.global.require`. We define this function here as a 
+// in Dart code to `dart.global.require`. We define this function here as a
 // proxy to require function of bootstrap module.
 dart.global.require = function (id) {
   return require(id);

@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
-  Map<String, dynamic> assets;
+  late Map<String, Object> assets;
 
   group('error free project', () {
     setUp(() async {
