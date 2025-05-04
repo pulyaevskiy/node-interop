@@ -68,12 +68,12 @@ T dartify<T>(dynamic jsObject) {
 ///
 /// See also:
 /// - [dartify]
-dynamic jsify(Object dartObject) {
+dynamic jsify(Object? dartObject) {
   if (_isBasicType(dartObject)) {
     return dartObject;
   }
 
-  return js_util.jsify(dartObject);
+  return js_util.jsify(dartObject!);
 }
 
 /// Returns `true` if the [value] is a very basic built-in type - e.g.
