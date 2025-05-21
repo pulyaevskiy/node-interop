@@ -1,29 +1,16 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-/// Node.js "events" module bindings.
-@JS()
-library node_interop.events;
+import 'node_interop.dart';
+import 'src/events/module.dart';
 
-import 'package:js/js.dart';
+export 'src/events/abort_signal.dart';
+export 'src/events/event_emitter.dart';
+export 'src/events/event_target.dart';
+export 'src/events/module.dart' hide OnOptions, OnceOptions;
+export 'src/events/node_event_target.dart';
 
-@JS()
-@anonymous
-abstract class EventEmitter {
-  external static int get defaultMaxListeners;
-  external static set defaultMaxListeners(int value);
-  external void addListener(eventName, Function listener);
-  external void emit(eventName, [arg1, arg2, arg3, arg4, arg5, arg6]);
-  external List eventNames();
-  external int getMaxListeners();
-  external int listenerCount(eventName);
-  external List<Function> listeners(eventName);
-  external EventEmitter on(eventName, Function listener);
-  external EventEmitter once(eventName, Function listener);
-  external EventEmitter prependListener(eventName, Function listener);
-  external EventEmitter prependOnceListener(eventName, Function listener);
-  external EventEmitter removeAllListeners(eventName);
-  external EventEmitter removeListener(eventName, Function listener);
-  external void setMaxListeners(int value);
-  external List<Function> rawListeners(eventName);
-}
+/// The Node.js [`events` module].
+///
+/// [`events` module]: https://nodejs.org/docs/latest/api/events.html#events
+final events = require<EventsModule>('node:events');
