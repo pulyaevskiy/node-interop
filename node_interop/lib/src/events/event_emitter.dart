@@ -4,6 +4,8 @@
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
+import 'package:async/async.dart';
+
 import '../../events.dart';
 
 /// See [the Node.js documentation].
@@ -162,13 +164,14 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   /// emitted by this emitter.
   ///
   /// This returns a stream that emits the first argument passed to the event
-  /// function. For events that take multiple arguments, see [eventAsStreamPair]
-  /// or [eventAsStreamList].
+  /// function. See also [eventAsStreamPair], [eventAsStreamList], and
+  /// [eventAsVoidStream].
   ///
   /// The event is registered once the stream has any listeners and unregistered
   /// once there are no more listeners.
   Stream<E> eventAsStream<E extends JSAny?>(JSAny eventName) {
-    late StreamController<List<JSAny>> controller;
+    // TODO: Add a proper wrapper class for these.
+    late StreamController<E> controller;
     var callback = (E arg) {
       controller.add(arg);
     }.toJS;
@@ -184,14 +187,14 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   /// emitted by this emitter.
   ///
   /// This returns a stream that emits the first two arguments passed to the
-  /// event function as a Dart tuple. See also [eventAsStreamPair] or
-  /// [eventAsStreamList].
+  /// event function as a Dart tuple. See also [eventAsStream],
+  /// [eventAsStreamList], and [eventAsVoidStream].
   ///
   /// The event is registered once the stream has any listeners and unregistered
   /// once there are no more listeners.
   Stream<(E1, E2)> eventAsStreamPair<E1 extends JSAny?, E2 extends JSAny?>(
       JSAny eventName) {
-    late StreamController<List<JSAny>> controller;
+    late StreamController<(E1, E2)> controller;
     var callback = (E1 arg1, E2 arg2) {
       controller.add((arg1, arg2));
     }.toJSVarArgs;
@@ -207,7 +210,7 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   /// emitted by this emitter.
   ///
   /// Each event's value is the list of arguments passed to the JS event. See
-  /// also [eventAsStream] and [eventAsStreamPair].
+  /// also [eventAsStream], [eventAsStreamPair], and [eventAsVoidStream].
   ///
   /// The event is registered once the stream has any listeners and unregistered
   /// once there are no more listeners.
@@ -222,6 +225,41 @@ extension type EventEmitter._(JSObject _) implements JSObject {
         onCancel: () => this.removeListener(eventName, callback),
         sync: true);
     return controller.stream;
+  }
+
+  /// Returns a Dart broadcast stream that emits an event for each [eventName]
+  /// emitted by this emitter.
+  ///
+  /// Each event's value is void, for events that emit no additional information
+  /// beyond the fact that something happened. See also [eventAsStream],
+  /// [eventAsStreamPair], and [eventAsStreamList].
+  ///
+  /// The event is registered once the stream has any listeners and unregistered
+  /// once there are no more listeners.
+  Stream<void> eventAsVoidStream<E extends JSAny?>(JSAny eventName) {
+    late StreamController<void> controller;
+    var callback = (E arg) {
+      controller.add();
+    }.toJS;
+
+    controller = StreamController.broadcast(
+        onListen: () => this.on(eventName, callback),
+        onCancel: () => this.removeListener(eventName, callback),
+        sync: true);
+    return controller.stream;
+  }
+
+  /// Returns a Dart [CancelcableOperation] that completes with the arguments
+  /// the next time [eventName] is emitted by this emitter.
+  ///
+  /// This converts cancellations on the operation into an [AbortSignal] that
+  /// removes the underlying event listener.
+  CancelableOperation<JSArray<T>> onceAsCancelableOperation<T extends JSAny?>(
+      JSAny eventName) {
+    var controller = AbortController();
+    return CancelableOperation.fromFuture(
+        onceAsPromise(eventName, signal: controller.signal).toDart,
+        onCancel: () => controller.abort());
   }
 }
 

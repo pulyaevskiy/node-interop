@@ -8,6 +8,8 @@ import 'package:js_core/unsafe.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart';
 
+import '../abort_signal_options.dart';
+
 // Normally this would be in lib/events.dart, but we have to have it here to
 // work around dart-lang/sdk#60772.
 @anonymous
@@ -55,7 +57,7 @@ extension type EventsModule._(JSObject _) implements JSObject {
   @JS('once')
   external JSPromise<JSArray<T>> _once<T extends JSAny?>(
       JSObject target, JSAny eventName,
-      [OnceOptions options]);
+      [AbortSignalOptions options]);
 
   /// @nodoc
   @internal
@@ -63,7 +65,7 @@ extension type EventsModule._(JSObject _) implements JSObject {
           {AbortSignal? signal}) =>
       signal == null
           ? _once(target, eventName)
-          : _once(target, eventName, OnceOptions(signal: signal));
+          : _once(target, eventName, AbortSignalOptions(signal: signal));
 
   /// @nodoc
   @internal
@@ -101,15 +103,6 @@ extension type EventsModule._(JSObject _) implements JSObject {
   /// @nodoc
   @internal
   external Disposable addAbortListener(AbortSignal signal, JSFunction listener);
-}
-
-/// @nodoc
-@internal
-@anonymous
-extension type OnceOptions._(JSObject _) implements JSObject {
-  external AbortSignal? signal;
-
-  external OnceOptions({AbortSignal? signal});
 }
 
 /// @nodoc

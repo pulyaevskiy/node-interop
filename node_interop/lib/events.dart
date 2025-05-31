@@ -7,7 +7,7 @@ import 'src/events/module.dart';
 export 'src/events/abort_signal.dart';
 export 'src/events/event_emitter.dart';
 export 'src/events/event_target.dart';
-export 'src/events/module.dart' hide OnOptions, OnceOptions;
+export 'src/events/module.dart' hide OnOptions;
 export 'src/events/node_event_target.dart';
 
 /// The Node.js [`events` module].
