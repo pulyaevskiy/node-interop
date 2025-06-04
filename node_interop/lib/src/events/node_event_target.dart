@@ -2,11 +2,9 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
 
+import 'package:js_core/js_core.dart';
 import 'package:web/web.dart';
-
-import '../../events.dart';
 
 /// See [the Node.js documentation].
 ///

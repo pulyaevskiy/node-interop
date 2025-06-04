@@ -3,14 +3,15 @@
 
 import 'dart:js_interop';
 
+import 'package:meta/meta.dart';
 import 'package:web/web.dart';
 
 /// An options object that only passes an [AbortSignal].
 ///
 /// There are a number of APIs that only take this single options.
-@abstract
+@internal
 extension type AbortSignalOptions._(JSObject _) implements JSObject {
   external AbortSignal? signal;
 
-  AbortSignalOptions({AbortSignal? signal});
+  external AbortSignalOptions({AbortSignal? signal});
 }

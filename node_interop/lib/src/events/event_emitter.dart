@@ -1,21 +1,29 @@
 // Copyright (c) 2025, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
 import 'package:async/async.dart';
+import 'package:js_core/js_core.dart';
+import 'package:web/web.dart';
 
-import '../../events.dart';
+import '../../node_interop.dart';
+import '../abort_signal_options.dart';
+
+@JS('events.once')
+external JSPromise<JSArray<T>> _once<T extends JSAny?>(
+    EventEmitter target, JSAny eventName,
+    [AbortSignalOptions options]);
 
 /// See [the Node.js documentation].
 ///
 /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/events.html#class-eventemitter
-@anonymous
-extension type EventEmitter._(JSObject _) implements JSObject {
-  /// Whether [value] is an [EventEmitter].
-  static bool isA(JAny? value) => value.instanceof(events.EventEmitter);
-
+///
+/// This is safe to use with [JSAnyUtilityExtension.isA].
+@JS('events.EventEmitter')
+extension type EventEmitter.__(JSObject _) implements JSObject {
   /// A Dart broadcast stream wrapping [the `'newListener'` event].
   ///
   /// [the `'newListener'` event]: https://nodejs.org/docs/latest/api/events.html#event-newlistener
@@ -30,9 +38,10 @@ extension type EventEmitter._(JSObject _) implements JSObject {
 
   /// Creates a new [EventEmitter].
   factory EventEmitter({bool captureRejections = false}) => captureRejections
-      ? events.EventEmitter.construct(
-          _EventEmitterConstructorOptions(captureRejections: true))
-      : events.EventEmitter.construct();
+      ? EventEmitter._(_EventEmitterConstructorOptions(captureRejections: true))
+      : EventEmitter._();
+
+  external EventEmitter._([_EventEmitterConstructorOptions options]);
 
   /// See [the Node.js documentation].
   ///
@@ -100,7 +109,7 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/events.html#eventsonceemitter-name-options
   JSAsyncIterator<JSArray<T>> onAsIterator<T extends JSAny?>(JSAny eventName,
           {AbortSignal? signal,
-          JSArray<String>? close,
+          List<String>? close,
           int? highWaterMark,
           int? lowWaterMark}) =>
       events.on(this, eventName,
@@ -123,7 +132,9 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/events.html#eventsonceemitter-name-options
   JSPromise<JSArray<T>> onceAsPromise<T extends JSAny?>(JSAny eventName,
           {AbortSignal? signal}) =>
-      events.once(this, eventName, signal: signal);
+      signal == null
+          ? _once(this, eventName)
+          : _once(this, eventName, AbortSignalOptions(signal: signal));
 
   /// See [the Node.js documentation].
   ///
@@ -177,8 +188,8 @@ extension type EventEmitter._(JSObject _) implements JSObject {
     }.toJS;
 
     controller = StreamController.broadcast(
-        onListen: () => this.on(eventName, callback),
-        onCancel: () => this.removeListener(eventName, callback),
+        onListen: () => on(eventName, callback),
+        onCancel: () => removeListener(eventName, callback),
         sync: true);
     return controller.stream;
   }
@@ -197,11 +208,11 @@ extension type EventEmitter._(JSObject _) implements JSObject {
     late StreamController<(E1, E2)> controller;
     var callback = (E1 arg1, E2 arg2) {
       controller.add((arg1, arg2));
-    }.toJSVarArgs;
+    }.toJS;
 
     controller = StreamController.broadcast(
-        onListen: () => this.on(eventName, callback),
-        onCancel: () => this.removeListener(eventName, callback),
+        onListen: () => on(eventName, callback),
+        onCancel: () => removeListener(eventName, callback),
         sync: true);
     return controller.stream;
   }
@@ -214,15 +225,15 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   ///
   /// The event is registered once the stream has any listeners and unregistered
   /// once there are no more listeners.
-  Stream<List<JSAny>> eventAsStreamList(JSAny eventName) {
-    late StreamController<List<JSAny>> controller;
+  Stream<List<JSAny?>> eventAsStreamList(JSAny eventName) {
+    late StreamController<List<JSAny?>> controller;
     var callback = (JSArray<JSAny?> args) {
       controller.add(args.toDart);
     }.toJSVarArgs;
 
     controller = StreamController.broadcast(
-        onListen: () => this.on(eventName, callback),
-        onCancel: () => this.removeListener(eventName, callback),
+        onListen: () => on(eventName, callback),
+        onCancel: () => removeListener(eventName, callback),
         sync: true);
     return controller.stream;
   }
@@ -239,12 +250,12 @@ extension type EventEmitter._(JSObject _) implements JSObject {
   Stream<void> eventAsVoidStream<E extends JSAny?>(JSAny eventName) {
     late StreamController<void> controller;
     var callback = (E arg) {
-      controller.add();
+      controller.add(arg);
     }.toJS;
 
     controller = StreamController.broadcast(
-        onListen: () => this.on(eventName, callback),
-        onCancel: () => this.removeListener(eventName, callback),
+        onListen: () => on(eventName, callback),
+        onCancel: () => removeListener(eventName, callback),
         sync: true);
     return controller.stream;
   }
@@ -258,7 +269,7 @@ extension type EventEmitter._(JSObject _) implements JSObject {
       JSAny eventName) {
     var controller = AbortController();
     return CancelableOperation.fromFuture(
-        onceAsPromise(eventName, signal: controller.signal).toDart,
+        onceAsPromise<T>(eventName, signal: controller.signal).toDart,
         onCancel: () => controller.abort());
   }
 }

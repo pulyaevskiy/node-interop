@@ -36,14 +36,17 @@ export 'src/stream/writable.dart';
 /// The module-scoped [`require()` function].
 ///
 /// [`require()` function]: https://nodejs.org/api/modules.html#requireid
+@JS()
 external T require<T extends JSAny?>(String id);
 
 /// The Node.js [`events` module].
 ///
 /// [`events` module]: https://nodejs.org/docs/latest/api/events.html#events
+@JS()
 external EventsModule get events;
 
 /// The Node.js [`stream` module].
 ///
 /// [`stream` module]: https://nodejs.org/docs/latest/api/events.html#stream
+@JS()
 external StreamModule get stream;
