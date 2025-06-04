@@ -16,7 +16,34 @@ library;
 
 import 'dart:js_interop';
 
+import 'src/events/module.dart';
+import 'src/stream/module.dart';
+
+export 'src/events/abort_signal.dart';
+export 'src/events/event_emitter.dart';
+export 'src/events/event_target.dart';
+export 'src/events/module.dart' hide OnOptions;
+export 'src/events/node_event_target.dart';
+export 'src/stream/duplex.dart' hide NewDuplexOptions;
+export 'src/stream/module.dart'
+    hide streamPromises, FinishedOptions, StreamPromisesModule;
+export 'src/stream/pass_through.dart';
+export 'src/stream/readable.dart';
+export 'src/stream/stream.dart';
+export 'src/stream/transform.dart';
+export 'src/stream/writable.dart';
+
 /// The module-scoped [`require()` function].
 ///
 /// [`require()` function]: https://nodejs.org/api/modules.html#requireid
 external T require<T extends JSAny?>(String id);
+
+/// The Node.js [`events` module].
+///
+/// [`events` module]: https://nodejs.org/docs/latest/api/events.html#events
+external EventsModule get events;
+
+/// The Node.js [`stream` module].
+///
+/// [`stream` module]: https://nodejs.org/docs/latest/api/events.html#stream
+external StreamModule get stream;
