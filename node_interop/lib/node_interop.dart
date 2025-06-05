@@ -19,6 +19,12 @@ import 'dart:js_interop';
 import 'src/events/module.dart';
 import 'src/stream/module.dart';
 
+export 'src/buffer/array_buffer.dart';
+export 'src/buffer/buffer.dart';
+export 'src/buffer/file.dart';
+export 'src/buffer/module.dart';
+export 'src/buffer/typed_array.dart';
+export 'src/buffer/uint8array.dart';
 export 'src/events/abort_signal.dart';
 export 'src/events/event_emitter.dart';
 export 'src/events/event_target.dart';
