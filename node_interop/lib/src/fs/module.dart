@@ -391,10 +391,9 @@ extension type FSModule._(JSObject _) implements JSObject {
   ///
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#fsmkdtempsyncprefix-options
   String makeTempDirectorySync(NodePath prefix, {String? encoding}) =>
-    encoding == null ?
-      _makeTempDirectorySync(prefix)
-    :
-      _makeTempDirectorySync(prefix, encoding);
+      encoding == null
+          ? _makeTempDirectorySync(prefix)
+          : _makeTempDirectorySync(prefix, encoding);
 
   @JS('mkdtempSync')
   external String _makeTempDirectorySync(NodePath prefix, [String? encoding]);
@@ -527,7 +526,8 @@ extension type FSModule._(JSObject _) implements JSObject {
   // The Node.js documentation only lists an integer as allowed for position,
   // but in practice a BigInt works as well (just like [read]).
   @JS('readvSync')
-  external ReadResult _readToAllSync(int fd, JSArray<JSObject> buffers, [JSAny? position]);
+  external ReadResult _readToAllSync(int fd, JSArray<JSObject> buffers,
+      [JSAny? position]);
 
   /// See [the Node.js documentation].
   ///

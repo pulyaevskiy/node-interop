@@ -7,8 +7,6 @@ import 'package:js_core/js_core.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart';
 
-// Normally this would be in lib/events.dart, but we have to have it here to
-// work around dart-lang/sdk#60772.
 @anonymous
 extension type EventsModule._(JSObject _) implements JSObject {
   /// See [the Node.js documentation].
