@@ -183,14 +183,15 @@ extension type NodeWritable<T extends JSAny>.__(NodeStream _)
 
   /// See [the Node.js documentation].
   ///
-  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#writablewrite
-  external void write(T chunk, [JSFunction callback]);
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#writablewritechunk-encoding-callback
+  external bool write(T chunk, [JSFunction callback]);
 
   /// See [the Node.js documentation].
   ///
-  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#writablewrite
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#writablewritechunk-encoding-callback
   @JS('write')
-  external void writeWithEncoding(T chunk, [JSFunction callback]);
+  external bool writeWithEncoding(String chunk, String encoding,
+      [JSFunction callback]);
 }
 
 /// Options for [NodeWritable.new].
