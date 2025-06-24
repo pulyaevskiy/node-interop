@@ -8,11 +8,42 @@ import 'dart:js_interop';
 /// [`fs.Stats` object]: https://nodejs.org/docs/latest/api/fs.html#class-fsstatfs
 @anonymous
 extension type FSBigIntFileSystemStats._(JSObject _) implements JSObject {
-  external JSBigInt get type;
-  external JSBigInt get bsize;
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsbavail
+  @JS('bavail')
+  external JSBigInt get blocksAvailable;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsbfree
+  @JS('bfree')
+  external JSBigInt get blocksFree;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsblocks
   external JSBigInt get blocks;
-  external JSBigInt get bfree;
-  external JSBigInt get bavail;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsbsize
+  @JS('bsize')
+  external JSBigInt get blockSize;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsffree
+  @JS('ffree')
+  external JSBigInt get filesFree;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfsfiles
   external JSBigInt get files;
-  external JSBigInt get ffree;
+
+  /// See [the Node.js documentation].
+  ///
+  /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#statfstype
+  external JSBigInt get type;
 }
