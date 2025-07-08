@@ -7,10 +7,9 @@ import 'dart:js_interop_unsafe';
 import 'package:async/async.dart';
 import 'package:js_core/js_core.dart';
 
-import '../buffer/buffer.dart';
 import '../events/event_emitter.dart';
-import '../stream/readable.dart';
-import '../stream/writable.dart';
+import '../tty/maybe_tty_readable.dart';
+import '../tty/maybe_tty_writable.dart';
 import 'ipc_channel.dart';
 
 @anonymous
@@ -325,7 +324,7 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   /// [JSString]s, [JSTypedArray]s, and [JSDataView]s can all be written to this
   /// writable.
   @JS('stderr')
-  external NodeWritable get standardError;
+  external MaybeTtyWritable get standardError;
 
   /// See [the Node.js documentation].
   ///
@@ -337,7 +336,7 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   ///
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/process.html#processstdin
   @JS('stdin')
-  external NodeReadable<Buffer> get standardInput;
+  external MaybeTtyReadable get standardInput;
 
   /// See [the Node.js documentation].
   ///
@@ -352,7 +351,7 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   /// [JSString]s, [JSTypedArray]s, and [JSDataView]s can all be written to this
   /// writable.
   @JS('stdout')
-  external NodeWritable get standardOutput;
+  external MaybeTtyWritable get standardOutput;
 
   /// See [the Node.js documentation].
   ///
