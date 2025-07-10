@@ -10,11 +10,9 @@
 /// ```dart
 /// import 'package:node_interop/fs.dart';
 ///
-/// List<String> contents = fs.readdirSync('/tmp');
+/// List<String> contents = fs.readDirSync('/tmp');
 /// ```
 library;
-
-import 'dart:js_interop';
 
 import 'src/events/module.dart';
 import 'src/process/module.dart';
@@ -26,6 +24,8 @@ export 'src/buffer/file.dart';
 export 'src/buffer/module.dart';
 export 'src/buffer/typed_array.dart';
 export 'src/buffer/uint8array.dart';
+export 'src/cjs/module.dart';
+export 'src/cjs/require.dart';
 export 'src/error/range_error.dart';
 export 'src/error/reference_error.dart';
 export 'src/error/syntax_error.dart';
@@ -47,26 +47,33 @@ export 'src/stream/stream.dart';
 export 'src/stream/transform.dart';
 export 'src/stream/writable.dart';
 
-/// The module-scoped [`require()` function].
-///
-/// [`require()` function]: https://nodejs.org/api/modules.html#requireid
-@JS()
-external T require<T extends JSAny?>(String id);
-
 /// The Node.js [`events` module].
 ///
 /// [`events` module]: https://nodejs.org/docs/latest/api/events.html#events
-@JS()
 external EventsModule get events;
 
 /// The Node.js [`process` module].
 ///
 /// [`process` module]: https://nodejs.org/docs/latest/api/process.html
-@JS()
 external ProcessModule get process;
 
 /// The Node.js [`stream` module].
 ///
 /// [`stream` module]: https://nodejs.org/docs/latest/api/stream.html
-@JS()
 external StreamModule get stream;
+
+/// See [the Node.js documentation].
+///
+/// [the Node.js documentation]: https://nodejs.org/api/modules.html#__dirname
+///
+/// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
+/// ES6 module.
+external String get dirName;
+
+/// See [the Node.js documentation].
+///
+/// [the Node.js documentation]: https://nodejs.org/api/modules.html#__filename
+///
+/// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
+/// ES6 module.
+external String get fileName;

@@ -1,7 +1,7 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-import 'node_interop.dart';
+import 'src/cjs/require.dart';
 import 'src/fs/module.dart';
 
 export 'src/fs/big_int_file_system_stats.dart';
