@@ -13,6 +13,7 @@ import 'module.dart';
 ///
 /// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
 /// ES6 module.
+@JS()
 external T require<T extends JSAny?>(String id);
 
 /// The namespace for values exposed on the `require` function in Node.js.

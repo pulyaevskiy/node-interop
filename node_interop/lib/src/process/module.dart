@@ -426,10 +426,11 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   @JS('emitWarning')
   external void _emitWarning(JSAny warning, [_WarningOptions? options]);
 
+  // TODO - dart-lang/sdk#61249: Make this return Never
   /// See [the Node.js documentation].
   ///
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/process.html#processexitcode
-  external Never exit([int? code]);
+  external void exit([int? code]);
 
   /// See [the Node.js documentation].
   ///

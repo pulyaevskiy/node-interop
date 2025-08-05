@@ -57,12 +57,12 @@ extension type FSWriteStream._(NodeWritable _) implements NodeWritable {
   ///
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#writestreamclosecallback
   JSPromise<Null> close() =>
-      JSPromise((void Function() resolve, void Function(JSError) reject) {
+      JSPromise((JSFunction resolve, JSFunction reject) {
         _close((JSError? error) {
           if (error == null) {
-            resolve();
+            resolve.callAsFunction();
           } else {
-            reject(error);
+            reject.callAsFunction(null, error);
           }
         }.toJS);
       }.toJS);

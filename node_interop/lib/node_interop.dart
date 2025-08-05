@@ -14,6 +14,8 @@
 /// ```
 library;
 
+import 'dart:js_interop';
+
 import 'src/events/module.dart';
 import 'src/process/module.dart';
 import 'src/stream/module.dart';
@@ -50,16 +52,19 @@ export 'src/stream/writable.dart';
 /// The Node.js [`events` module].
 ///
 /// [`events` module]: https://nodejs.org/docs/latest/api/events.html#events
+@JS()
 external EventsModule get events;
 
 /// The Node.js [`process` module].
 ///
 /// [`process` module]: https://nodejs.org/docs/latest/api/process.html
+@JS()
 external ProcessModule get process;
 
 /// The Node.js [`stream` module].
 ///
 /// [`stream` module]: https://nodejs.org/docs/latest/api/stream.html
+@JS()
 external StreamModule get stream;
 
 /// See [the Node.js documentation].
@@ -68,6 +73,7 @@ external StreamModule get stream;
 ///
 /// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
 /// ES6 module.
+@JS()
 external String get dirName;
 
 /// See [the Node.js documentation].
@@ -76,4 +82,5 @@ external String get dirName;
 ///
 /// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
 /// ES6 module.
+@JS()
 external String get fileName;

@@ -9,6 +9,7 @@ import 'package:js_core/js_core.dart';
 ///
 /// This throws a [NodeReferenceError] if the compiled JS file is loaded as an
 /// ES6 module.
+@JS()
 external NodeModule get module;
 
 /// A Node.js [`module` object].

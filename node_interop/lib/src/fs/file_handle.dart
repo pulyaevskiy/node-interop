@@ -133,7 +133,7 @@ extension type FSFileHandle._(JSObject _)
     if (offset != null) options.offset = offset;
     if (length != null) options.length = length;
     if (position != null) options.position = position;
-    return _read(buffer, options).then(((result) => result.bytesRead).toJS);
+    return _read(buffer, options).then(((ReadResult result) => result.bytesRead).toJS);
   }
 
   @JS('read')
@@ -180,7 +180,7 @@ extension type FSFileHandle._(JSObject _)
   /// [position] argument can be a [JSNumber] or a [JSBigInt].
   JSPromise<JSNumber> readToAll(JSArray<JSObject> buffers, {JSAny? position}) =>
       (position == null ? _readToAll(buffers) : _readToAll(buffers, position))
-          .then(((result) => result.bytesRead).toJS);
+          .then(((ReadResult result) => result.bytesRead).toJS);
 
   // The Node.js documentation only lists an integer as allowed for position,
   // but in practice a BigInt works as well (just like [read]).
@@ -231,7 +231,7 @@ extension type FSFileHandle._(JSObject _)
     if (offset != null) options.offset = offset;
     if (length != null) options.length = length;
     if (position != null) options.position = position.toJS;
-    return _write(buffer, options).then(((result) => result.bytesWritten).toJS);
+    return _write(buffer, options).then(((WriteResult result) => result.bytesWritten).toJS);
   }
 
   @JS('write')
@@ -244,7 +244,7 @@ extension type FSFileHandle._(JSObject _)
   JSPromise<JSNumber> writeString(String string,
           {int? position, String? encoding}) =>
       _writeString(string, position, encoding ?? 'utf8')
-          .then(((result) => result.bytesWritten).toJS);
+          .then(((WriteResult result) => result.bytesWritten).toJS);
 
   @JS('write')
   external JSPromise<WriteResult> _writeString(String string,
@@ -279,7 +279,7 @@ extension type FSFileHandle._(JSObject _)
       (position == null
               ? _writeFromAll(buffers)
               : _writeFromAll(buffers, position))
-          .then(((result) => result.bytesWritten).toJS);
+          .then(((WriteResult result) => result.bytesWritten).toJS);
 
   @JS('writev')
   external JSPromise<WriteResult> _writeFromAll(JSArray<JSObject> buffers,
