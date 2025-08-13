@@ -137,10 +137,10 @@ extension type FSPromises._(JSObject _) implements JSObject {
       ? _makeDir(path)
       : _makeDir(path, MakeDirOptions(mode: mode))) as JSPromise<Null>;
 
-  JSPromise<JSString> makeDirRecursive(NodePath path, {JSAny? mode}) {
+  JSPromise<JSString?> makeDirRecursive(NodePath path, {JSAny? mode}) {
     var options = MakeDirOptions(recursive: true);
     if (mode != null) options.mode = mode;
-    return _makeDir(path, options) as JSPromise<JSString>;
+    return _makeDir(path, options) as JSPromise<JSString?>;
   }
 
   @JS('mkdir')

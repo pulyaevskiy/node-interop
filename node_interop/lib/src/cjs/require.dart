@@ -47,7 +47,8 @@ extension type RequireNamespace._(JSObject _) implements JSObject {
   external _ResolveNamespace get _resolveNamespace;
 
   /// Invokes this as a `require()` function.
-  T call<T extends JSAny?>(String id) => (this as JSFunction).callAsFunction(id.toJS) as T;
+  T call<T extends JSAny?>(String id) =>
+      (this as JSFunction).callAsFunction(id.toJS) as T;
 }
 
 /// Options for [RequireNamespace.resolve].

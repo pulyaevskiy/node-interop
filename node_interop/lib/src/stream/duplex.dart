@@ -170,7 +170,8 @@ extension type NewDuplexOptions._(JSObject _) implements JSObject {
   external bool? readableHighWaterMark;
   external bool? writableHighWaterMark;
 
-  external NewDuplexOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external NewDuplexOptions({Null x});
 }
 
 /// Options for [NodeDuplex.fromWeb].

@@ -38,7 +38,7 @@ extension type NodeReadable<T extends JSAny>.__(NodeStream _)
     var onError = (JSError error) {
       controller.addError(error, StackTrace.fromString(error.stack));
     }.toJS;
-    var onEnd = (JSAny? _) {
+    var onEnd = ([JSAny? _]) {
       controller.close();
     }.toJS;
 

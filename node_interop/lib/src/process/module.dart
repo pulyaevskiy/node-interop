@@ -183,7 +183,7 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   /// See [the Node.js documentation].
   ///
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/process.html#processexitcode_1
-  external int exitCode;
+  external int? exitCode;
 
   /// See [the Node.js documentation].
   ///

@@ -133,7 +133,8 @@ extension type FSFileHandle._(JSObject _)
     if (offset != null) options.offset = offset;
     if (length != null) options.length = length;
     if (position != null) options.position = position;
-    return _read(buffer, options).then(((ReadResult result) => result.bytesRead).toJS);
+    return _read(buffer, options)
+        .then(((ReadResult result) => result.bytesRead).toJS);
   }
 
   @JS('read')
@@ -231,7 +232,8 @@ extension type FSFileHandle._(JSObject _)
     if (offset != null) options.offset = offset;
     if (length != null) options.length = length;
     if (position != null) options.position = position.toJS;
-    return _write(buffer, options).then(((WriteResult result) => result.bytesWritten).toJS);
+    return _write(buffer, options)
+        .then(((WriteResult result) => result.bytesWritten).toJS);
   }
 
   @JS('write')

@@ -378,10 +378,10 @@ extension type FSModule._(JSObject _) implements JSObject {
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#fsmkdirsyncpath-options
   ///
   /// The [mode] option may be a [JSString] or a [JSNumber].
-  String makeDirRecursiveSync(NodePath path, {JSAny? mode}) {
+  String? makeDirRecursiveSync(NodePath path, {JSAny? mode}) {
     var options = MakeDirOptions(recursive: true);
     if (mode != null) options.mode = mode;
-    return _makeDirSync(path, options)!;
+    return _makeDirSync(path, options);
   }
 
   @JS('mkdirSync')
@@ -790,7 +790,7 @@ extension type FSModule._(JSObject _) implements JSObject {
   /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/fs.html#fspromisesmkdirpath-options
   ///
   /// The [mode] option may be a [JSString] or a [JSNumber].
-  JSPromise<JSString> makeDirRecursive(NodePath path, {JSAny? mode}) =>
+  JSPromise<JSString?> makeDirRecursive(NodePath path, {JSAny? mode}) =>
       _promises.makeDirRecursive(path, mode: mode);
 
   /// See [the Node.js documentation].
@@ -999,7 +999,8 @@ extension type AppendFileOptions._(JSObject _) implements JSObject {
   external JSAny? flag;
   external bool? flush;
 
-  external AppendFileOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external AppendFileOptions({Null x});
 }
 
 /// Options for [FSModule.cp].
@@ -1016,7 +1017,8 @@ extension type CopyRecursiveOptions._(JSObject _) implements JSObject {
   external bool? preserveTimestamps;
   external bool? verbatimSymlinks;
 
-  external CopyRecursiveOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external CopyRecursiveOptions({Null x});
 }
 
 /// Options for [FSModule.glob].
@@ -1104,7 +1106,8 @@ extension type ReadWriteOptions._(JSObject _) implements JSObject {
   external int? length;
   external JSAny? position;
 
-  external ReadWriteOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external ReadWriteOptions({Null x});
 }
 
 /// The object returned by [FSFileHandle._read] and [FSFileHandle._readToAll].
@@ -1132,7 +1135,8 @@ extension type RemoveDirOptions._(JSObject _) implements JSObject {
   external bool? recursive;
   external int? retryDelay;
 
-  external RemoveDirOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external RemoveDirOptions({Null x});
 }
 
 /// Options for [FSModule.remove].
@@ -1146,7 +1150,8 @@ extension type RemoveOptions._(JSObject _) implements JSObject {
   external bool? recursive;
   external int? retryDelay;
 
-  external RemoveOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external RemoveOptions({Null x});
 }
 
 /// Options for [FSModule.watch].
@@ -1160,7 +1165,8 @@ extension type WatchOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external AbortSignal? signal;
 
-  external WatchOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external WatchOptions({Null x});
 }
 
 /// An event emitted by [FSModule.watch].
@@ -1182,7 +1188,8 @@ extension type WriteFileOptions._(JSObject _) implements JSObject {
   external bool? flush;
   external AbortSignal? signal;
 
-  external WriteFileOptions();
+  // TODO - dart-lang/sdk#61309: Remove this parameter.
+  external WriteFileOptions({Null x});
 }
 
 /// The object returned by [FSFileHandle._write].
