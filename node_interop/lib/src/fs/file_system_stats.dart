@@ -6,7 +6,6 @@ import 'dart:js_interop';
 /// The Node.js [`fs.StatsFs` object], with integer values.
 ///
 /// [`fs.Stats` object]: https://nodejs.org/docs/latest/api/fs.html#class-fsstatfs
-@anonymous
 extension type FSFileSystemStats._(JSObject _) implements JSObject {
   /// See [the Node.js documentation].
   ///

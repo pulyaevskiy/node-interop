@@ -7,7 +7,6 @@ import 'package:js_core/js_core.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart';
 
-@anonymous
 extension type EventsModule._(JSObject _) implements JSObject {
   /// See [the Node.js documentation].
   ///
@@ -60,7 +59,6 @@ extension type EventsModule._(JSObject _) implements JSObject {
 
 /// @nodoc
 @internal
-@anonymous
 extension type OnOptions._(JSObject _) implements JSObject {
   external AbortSignal? signal;
   external JSArray<JSString>? close;

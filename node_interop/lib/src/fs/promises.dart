@@ -22,7 +22,6 @@ import 'stats.dart';
 ///
 /// We forward these through the main [FSModule] because they're much more
 /// usable from a Dart context than the callbacks.
-@anonymous
 @internal
 extension type FSPromises._(JSObject _) implements JSObject {
   external JSPromise<Null> access(NodePath path, [int? mode]);
@@ -140,7 +139,7 @@ extension type FSPromises._(JSObject _) implements JSObject {
   JSPromise<JSString?> makeDirRecursive(NodePath path, {JSAny? mode}) {
     var options = MakeDirOptions(recursive: true);
     if (mode != null) options.mode = mode;
-    return _makeDir(path, options) as JSPromise<JSString?>;
+    return _makeDir(path, options);
   }
 
   @JS('mkdir')

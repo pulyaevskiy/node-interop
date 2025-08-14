@@ -12,7 +12,6 @@ import '../tty/maybe_tty_readable.dart';
 import '../tty/maybe_tty_writable.dart';
 import 'ipc_channel.dart';
 
-@anonymous
 extension type ProcessModule._(EventEmitter _) implements EventEmitter {
   /// A Dart broadcast stream wrapping [the `'beforeExit'` event].
   ///
@@ -538,7 +537,6 @@ extension type ProcessModule._(EventEmitter _) implements EventEmitter {
 enum UncaughtExceptionType { uncaughtException, unhandledRejection }
 
 /// The type of event emitted by [ProcessModule.onWarning].
-@anonymous
 extension type ProcessWarning._(JSObject _) implements JSObject {
   external String get name;
   external String get message;
@@ -546,14 +544,12 @@ extension type ProcessWarning._(JSObject _) implements JSObject {
 }
 
 /// The type returned by [ProcessModule.cpuUsage].
-@anonymous
 extension type CpuUsageResult._(JSObject _) implements JSObject {
   external int get user;
   external int get system;
 }
 
 /// The options passed to [ProcessModule.emitWarning].
-@anonymous
 extension type _WarningOptions._(JSObject _) implements JSObject {
   external String? type;
   external String? code;
@@ -561,17 +557,15 @@ extension type _WarningOptions._(JSObject _) implements JSObject {
   external JSFunction? constructor;
   external String? detail;
 
-  external _WarningOptions();
+  factory _WarningOptions() => _WarningOptions._(JSObject());
 }
 
 /// The `process.hrtime` object.
-@anonymous
 extension type _HighResolutionTimeSubmodule._(JSObject _) implements JSObject {
   external JSBigInt bigint();
 }
 
 /// The value returned by [ProcessModule.memoryUsage].
-@anonymous
 extension type ProcessMemoryUsage._(JSObject _) implements JSObject {
   @JS('rss')
   external int get residentSetSize;
@@ -582,14 +576,12 @@ extension type ProcessMemoryUsage._(JSObject _) implements JSObject {
 }
 
 /// The `process.memoryUsage` object.
-@anonymous
 extension type _MemoryUsageSubmodule._(JSObject _) implements JSObject {
   @JS('rss')
   external int residentSetSize();
 }
 
 /// The `process.release` object.
-@anonymous
 extension type ProcessReleaseInfo._(JSObject _) implements JSObject {
   external String get node;
   external String get sourceUrl;
@@ -599,7 +591,6 @@ extension type ProcessReleaseInfo._(JSObject _) implements JSObject {
 }
 
 /// The `process.resourceUsage` object.
-@anonymous
 extension type ProcessResourceUsage._(JSObject _) implements JSObject {
   @JS('userCPUTime')
   external int get userCpuTime;
@@ -623,7 +614,6 @@ extension type ProcessResourceUsage._(JSObject _) implements JSObject {
 }
 
 /// The options passed to [Process.send].
-@anonymous
 extension type _SendOptions._(JSObject _) implements JSObject {
   external bool keepOpen;
 
@@ -631,7 +621,6 @@ extension type _SendOptions._(JSObject _) implements JSObject {
 }
 
 /// The value returned by [process.threadCpuUsage].
-@anonymous
 extension type ThreadCpuUsageInfo._(JSObject _) implements JSObject {
   external int get user;
   external int get system;

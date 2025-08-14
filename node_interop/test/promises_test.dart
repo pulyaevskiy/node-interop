@@ -32,7 +32,6 @@ exports.receivePromise = function (promise) {
 ''';
 
 @JS()
-@anonymous
 abstract class JsPromises {
   external Promise createPromise(value);
   external Promise receivePromise(promise);

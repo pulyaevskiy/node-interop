@@ -13,7 +13,6 @@ import 'read_stream.dart';
 /// The Node.js [`tty` module].
 ///
 /// [`tty` module]: https://nodejs.org/docs/latest/api/tty.html
-@anonymous
 extension type TtyModule._(JSObject _) implements JSObject {
   /// @nodoc
   @internal

@@ -9,7 +9,6 @@ import '../../tty.dart';
 /// The Node.js [`tty.ReadStream` class].
 ///
 /// [`tty.ReadStream` class]: https://nodejs.org/api/tty.html#class-ttyreadstream
-@anonymous
 extension type TtyReadStream._(MaybeTtyReadable _) implements MaybeTtyReadable {
   /// Returns whether [value] is an instance of this type.
   static bool isA(JSAny? value) =>

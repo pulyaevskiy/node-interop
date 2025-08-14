@@ -159,7 +159,6 @@ extension type NodeDuplex<T extends JSAny>.__(NodeStream _)
 }
 
 /// Options for [NodeDuplex.new].
-@anonymous
 @internal
 extension type NewDuplexOptions._(JSObject _) implements JSObject {
   external bool? allowHalfOpen;
@@ -170,12 +169,10 @@ extension type NewDuplexOptions._(JSObject _) implements JSObject {
   external bool? readableHighWaterMark;
   external bool? writableHighWaterMark;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external NewDuplexOptions({Null x});
+  factory NewDuplexOptions() => NewDuplexOptions._(JSObject());
 }
 
 /// Options for [NodeDuplex.fromWeb].
-@anonymous
 extension type _FromWebOptions._(JSObject _) implements JSObject {
   external bool? allowHalfOpen;
   external bool? decodeStrings;
@@ -184,11 +181,10 @@ extension type _FromWebOptions._(JSObject _) implements JSObject {
   external bool? objectMode;
   external AbortSignal? signal;
 
-  external _FromWebOptions();
+  factory _FromWebOptions() => _FromWebOptions._(JSObject());
 }
 
 /// Options for [NodeDuplex.fromPair].
-@anonymous
 extension type _FromPairOptions._(JSObject _) implements JSObject {
   external NodeReadable readable;
   external NodeWritable writable;
@@ -198,7 +194,6 @@ extension type _FromPairOptions._(JSObject _) implements JSObject {
 }
 
 /// The pair object for [NodeDuplex.fromWeb].
-@anonymous
 extension type _FromWebPair._(JSObject _) implements JSObject {
   external ReadableStream readable;
   external WritableStream writable;
@@ -208,7 +203,6 @@ extension type _FromWebPair._(JSObject _) implements JSObject {
 }
 
 /// The return value of [NodeDuplex._toWeb].
-@anonymous
 extension type _ToWebResult._(JSObject _) implements JSObject {
   external ReadableStream get readable;
   external WritableStream get writable;

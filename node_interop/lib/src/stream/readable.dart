@@ -344,7 +344,6 @@ extension type NodeReadable<T extends JSAny>.__(NodeStream _)
 }
 
 /// Options for [NodeReadable.pipe].
-@anonymous
 extension type _PipeOptions._(JSObject _) implements JSObject {
   external bool? end;
 
@@ -352,7 +351,6 @@ extension type _PipeOptions._(JSObject _) implements JSObject {
 }
 
 /// Options for [NodeReadable.iterator].
-@anonymous
 extension type _IteratorOptions._(JSObject _) implements JSObject {
   external bool? destroyOnReturn;
 
@@ -360,7 +358,6 @@ extension type _IteratorOptions._(JSObject _) implements JSObject {
 }
 
 /// Options for [NodeReadable.new].
-@anonymous
 extension type _NewReadableOptions._(JSObject _) implements JSObject {
   external int? highWaterMark;
   external String? encoding;
@@ -372,11 +369,10 @@ extension type _NewReadableOptions._(JSObject _) implements JSObject {
   external bool? autoDestroy;
   external AbortSignal? signal;
 
-  external _NewReadableOptions();
+  factory _NewReadableOptions() => _NewReadableOptions._(JSObject());
 }
 
 /// Options for [NodeReadable.toWeb].
-@anonymous
 extension type _NewReadableStreamOptions._(JSObject _) implements JSObject {
   external QueuingStrategy? strategy;
 

@@ -22,10 +22,9 @@ extension type NodeTransform<T extends JSAny>.__(NodeDuplex _)
 }
 
 /// Options for [Transform.new].
-@anonymous
 extension type _NewTransformOptions._(JSObject _) implements JSObject {
   external JSFunction? transform;
   external JSFunction? flush;
 
-  external _NewTransformOptions();
+  factory _NewTransformOptions() => _NewTransformOptions._(JSObject());
 }

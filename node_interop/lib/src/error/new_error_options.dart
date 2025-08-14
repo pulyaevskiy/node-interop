@@ -6,7 +6,6 @@ import 'dart:js_interop';
 import 'package:meta/meta.dart';
 
 /// The options type for error constructors.
-@anonymous
 @internal
 extension type NewErrorOptions._(JSObject _) implements JSObject {
   external JSAny? cause;

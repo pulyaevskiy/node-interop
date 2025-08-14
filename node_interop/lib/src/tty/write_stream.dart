@@ -11,7 +11,6 @@ import '../../tty.dart';
 /// The Node.js [`tty.WriteStream` class].
 ///
 /// [`tty.WriteStream` class]: https://nodejs.org/api/tty.html#class-ttywritestream
-@anonymous
 extension type TtyWriteStream<T extends JSAny>._(MaybeTtyWritable<T> _)
     implements MaybeTtyWritable<T> {
   /// Returns whether [value] is an instance of this type.

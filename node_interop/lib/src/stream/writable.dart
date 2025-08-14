@@ -195,7 +195,6 @@ extension type NodeWritable<T extends JSAny>.__(NodeStream _)
 }
 
 /// Options for [NodeWritable.new].
-@anonymous
 extension type _NewWritableOptions._(JSObject _) implements JSObject {
   external int? highWaterMark;
   external bool? decodeStrings;
@@ -211,5 +210,5 @@ extension type _NewWritableOptions._(JSObject _) implements JSObject {
   external bool? autoDestroy;
   external AbortSignal? signal;
 
-  external _NewWritableOptions();
+  factory _NewWritableOptions() => _NewWritableOptions._(JSObject());
 }

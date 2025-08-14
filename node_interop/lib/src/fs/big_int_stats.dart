@@ -8,7 +8,6 @@ import 'package:js_core/js_core.dart';
 /// The Node.js [`fs.Stats` object], with [JSBigInt] values.
 ///
 /// [`fs.Stats` object]: https://nodejs.org/docs/latest/api/fs.html#class-fsstats
-@anonymous
 extension type FSBigIntStats._(JSObject _) implements JSObject {
   /// See [the Node.js documentation].
   ///

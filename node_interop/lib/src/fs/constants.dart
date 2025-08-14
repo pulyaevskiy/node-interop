@@ -7,7 +7,6 @@ import 'dart:js_interop';
 /// Node.js filesystem APIs.
 ///
 /// [`fs.constants` object]: https://nodejs.org/docs/latest/api/fs.html#fsconstants
-@anonymous
 extension type FSConstants._(JSObject _) implements JSObject {
   /// The Node.js [`F_OK` constant].
   ///

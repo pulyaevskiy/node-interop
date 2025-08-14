@@ -12,7 +12,6 @@ import '../stream/writable.dart';
 /// The Node.js [`fs.WriteStream`] type.
 ///
 /// [`fs.WriteStream`]: https://nodejs.org/docs/latest/api/fs.html#class-fswritestream
-@anonymous
 extension type FSWriteStream._(NodeWritable _) implements NodeWritable {
   /// Returns whether [value] is an instance of [FSWriteStream].
   static bool isA(JSAny? value) => value.instanceof(fs.writeStreamClass);

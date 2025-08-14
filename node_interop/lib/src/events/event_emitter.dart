@@ -274,7 +274,6 @@ extension type EventEmitter.__(JSObject _) implements JSObject {
   }
 }
 
-@anonymous
 extension type _EventEmitterConstructorOptions._(JSObject _)
     implements JSObject {
   external _EventEmitterConstructorOptions({bool captureRejections});

@@ -11,7 +11,6 @@ import '../../fs.dart';
 /// The Node.js [`fs.Dir`] type.
 ///
 /// [`fs.Dir`]: https://nodejs.org/docs/latest/api/fs.html#class-fsdir
-@anonymous
 extension type FSDir._(JSObject _)
     implements JSAsyncIterable, AsyncDisposable, Disposable {
   /// Returns whether [value] is an instance of this type.

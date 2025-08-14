@@ -30,7 +30,6 @@ exports.objectVal = new Apple();
 ''';
 
 @JS()
-@anonymous
 abstract class Fixtures {
   external dynamic get stringVal;
   external dynamic get numVal;

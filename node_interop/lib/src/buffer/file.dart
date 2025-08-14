@@ -42,11 +42,10 @@ extension type BufferFile.__(Blob _) implements Blob {
 enum BufferFileEndingType { transparent, native }
 
 /// Options for [BufferFile.new].
-@anonymous
 extension type _NewBufferFileOptions._(JSObject _) implements JSObject {
   external String endings;
   external String type;
   external int lastModified;
 
-  external _NewBufferFileOptions();
+  factory _NewBufferFileOptions() => _NewBufferFileOptions._(JSObject());
 }

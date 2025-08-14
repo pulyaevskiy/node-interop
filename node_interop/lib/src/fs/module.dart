@@ -35,7 +35,6 @@ typedef NodePath = JSAny;
 ///
 /// Unlike the Node.js API, this exposes the modern promise-based APIs directly
 /// on the `fs` module rather than on a separate `promises` object.
-@anonymous
 extension type FSModule._(JSObject _) implements JSObject {
   /// @nodoc
   @internal
@@ -991,7 +990,6 @@ enum NodeSymlinkType { dir, file, junction }
 /// Options for [FSModule.appendFile].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type AppendFileOptions._(JSObject _) implements JSObject {
   external String? encoding;
@@ -999,14 +997,12 @@ extension type AppendFileOptions._(JSObject _) implements JSObject {
   external JSAny? flag;
   external bool? flush;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external AppendFileOptions({Null x});
+  factory AppendFileOptions() => AppendFileOptions._(JSObject());
 }
 
 /// Options for [FSModule.cp].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type CopyRecursiveOptions._(JSObject _) implements JSObject {
   external bool? dereference;
@@ -1017,14 +1013,12 @@ extension type CopyRecursiveOptions._(JSObject _) implements JSObject {
   external bool? preserveTimestamps;
   external bool? verbatimSymlinks;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external CopyRecursiveOptions({Null x});
+  factory CopyRecursiveOptions() => CopyRecursiveOptions._(JSObject());
 }
 
 /// Options for [FSModule.glob].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type GlobOptions._(JSObject _) implements JSObject {
   external JSAny? cwd;
@@ -1037,7 +1031,6 @@ extension type GlobOptions._(JSObject _) implements JSObject {
 /// Options for [FSModule.stat].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type StatOptions._(JSObject _) implements JSObject {
   external bool? bigint;
@@ -1048,7 +1041,6 @@ extension type StatOptions._(JSObject _) implements JSObject {
 /// Options for [FSModule.mkdir].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type MakeDirOptions._(JSObject _) implements JSObject {
   external bool? recursive;
@@ -1060,7 +1052,6 @@ extension type MakeDirOptions._(JSObject _) implements JSObject {
 /// Options for [FSModule.openDir].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type OpenDirOptions._(JSObject _) implements JSObject {
   external String? encoding;
@@ -1073,7 +1064,6 @@ extension type OpenDirOptions._(JSObject _) implements JSObject {
 /// Options for [FSModule.readDir].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type ReadDirOptions._(JSObject _) implements JSObject {
   external String? encoding;
@@ -1086,7 +1076,6 @@ extension type ReadDirOptions._(JSObject _) implements JSObject {
 /// Options for [FSModule.readFile].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type ReadFileOptions._(JSObject _) implements JSObject {
   external String? encoding;
@@ -1099,28 +1088,24 @@ extension type ReadFileOptions._(JSObject _) implements JSObject {
 /// Options for [FSFileHandle.read] and [FSFileHandle.write].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type ReadWriteOptions._(JSObject _) implements JSObject {
   external int? offset;
   external int? length;
   external JSAny? position;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external ReadWriteOptions({Null x});
+  factory ReadWriteOptions() => ReadWriteOptions._(JSObject());
 }
 
 /// The object returned by [FSFileHandle._read] and [FSFileHandle._readToAll].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type ReadResult._(JSObject _) implements JSObject {
   external JSNumber bytesRead;
 }
 
 /// The object that provides access to `fs.realpathSync.native()`.
-@anonymous
 extension type _RealPathSyncNamespace._(JSObject _) implements JSObject {
   external JSAny native(NodePath path, [String? encoding]);
 }
@@ -1128,21 +1113,18 @@ extension type _RealPathSyncNamespace._(JSObject _) implements JSObject {
 /// Options for [FSModule.removeDir].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type RemoveDirOptions._(JSObject _) implements JSObject {
   external int? maxRetries;
   external bool? recursive;
   external int? retryDelay;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external RemoveDirOptions({Null x});
+  factory RemoveDirOptions() => RemoveDirOptions._(JSObject());
 }
 
 /// Options for [FSModule.remove].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type RemoveOptions._(JSObject _) implements JSObject {
   external bool? force;
@@ -1150,14 +1132,12 @@ extension type RemoveOptions._(JSObject _) implements JSObject {
   external bool? recursive;
   external int? retryDelay;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external RemoveOptions({Null x});
+  factory RemoveOptions() => RemoveOptions._(JSObject());
 }
 
 /// Options for [FSModule.watch].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type WatchOptions._(JSObject _) implements JSObject {
   external bool? persistent;
@@ -1165,12 +1145,10 @@ extension type WatchOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external AbortSignal? signal;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external WatchOptions({Null x});
+  factory WatchOptions() => WatchOptions._(JSObject());
 }
 
 /// An event emitted by [FSModule.watch].
-@anonymous
 extension type FSWatchEvent._(JSObject _) implements JSObject {
   external String get eventType;
   external String? get filename;
@@ -1179,7 +1157,6 @@ extension type FSWatchEvent._(JSObject _) implements JSObject {
 /// Options for [FSModule.writeFile].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type WriteFileOptions._(JSObject _) implements JSObject {
   external String? encoding;
@@ -1188,14 +1165,12 @@ extension type WriteFileOptions._(JSObject _) implements JSObject {
   external bool? flush;
   external AbortSignal? signal;
 
-  // TODO - dart-lang/sdk#61309: Remove this parameter.
-  external WriteFileOptions({Null x});
+  factory WriteFileOptions() => WriteFileOptions._(JSObject());
 }
 
 /// The object returned by [FSFileHandle._write].
 ///
 /// @nodoc
-@anonymous
 @internal
 extension type WriteResult._(JSObject _) implements JSObject {
   external JSNumber bytesWritten;

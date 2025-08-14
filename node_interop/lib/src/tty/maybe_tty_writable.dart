@@ -11,7 +11,6 @@ import 'write_stream.dart';
 /// This exposes an [isTty] getter that's `true` if this is a [TtyWriteStream]
 /// and `false` otherwise. For convenience, in Dart we also expose [asTty] which
 /// returns this as a `TtyWriteStream`?.
-@anonymous
 extension type MaybeTtyWritable<T extends JSAny>._(NodeWritable<T> _)
     implements NodeWritable<T> {
   /// See [the Node.js documentation].

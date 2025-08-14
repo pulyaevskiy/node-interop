@@ -15,7 +15,6 @@ import 'module.dart';
 /// The Node.js [`FileHandle` class].
 ///
 /// [`FileHandle` class]: https://nodejs.org/docs/latest/api/fs.html#class-filehandle
-@anonymous
 extension type FSFileHandle._(JSObject _)
     implements AsyncDisposable, EventEmitter {
   /// Returns whether [value] is a [FSFileHandle].
@@ -289,16 +288,14 @@ extension type FSFileHandle._(JSObject _)
 }
 
 /// Options for [FSFileHandle.appendFile].
-@anonymous
 extension type _AppendFileOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external AbortSignal? signal;
 
-  external _AppendFileOptions();
+  factory _AppendFileOptions() => _AppendFileOptions._(JSObject());
 }
 
 /// Options for [FSFileHandle.createReadStream].
-@anonymous
 extension type _CreateReadStreamOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external bool? autoClose;
@@ -308,11 +305,10 @@ extension type _CreateReadStreamOptions._(JSObject _) implements JSObject {
   external int? highWaterMark;
   external AbortSignal? signal;
 
-  external _CreateReadStreamOptions();
+  factory _CreateReadStreamOptions() => _CreateReadStreamOptions._(JSObject());
 }
 
 /// Options for [FSFileHandle.createReadStream].
-@anonymous
 extension type _CreateWriteStreamOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external bool? autoClose;
@@ -321,11 +317,10 @@ extension type _CreateWriteStreamOptions._(JSObject _) implements JSObject {
   external int? highWaterMark;
   external bool? flush;
 
-  external _CreateWriteStreamOptions();
+  factory _CreateWriteStreamOptions() => _CreateWriteStreamOptions._(JSObject());
 }
 
 /// Options for [FSFileHandle.readableWebStream].
-@anonymous
 extension type _ReadableWebStreamOptions._(JSObject _) implements JSObject {
   external bool? autoClose;
 
@@ -333,7 +328,6 @@ extension type _ReadableWebStreamOptions._(JSObject _) implements JSObject {
 }
 
 /// Options for [FSFileHandle.readFile] and [FSFileHandle.writeFile].
-@anonymous
 extension type _ReadWriteFileOptions._(JSObject _) implements JSObject {
   external String? encoding;
   external AbortSignal? signal;

@@ -13,7 +13,6 @@ import 'stream.dart';
 @internal
 external StreamPromisesModule get streamPromises;
 
-@anonymous
 extension type StreamModule._(JSObject _) implements JSObject {
   /// See [the Node.js documentation].
   ///
@@ -73,7 +72,6 @@ extension type StreamModule._(JSObject _) implements JSObject {
   external void setDefaaultHighWaterMark(bool objectMode, int value);
 }
 
-@anonymous
 @internal
 extension type StreamPromisesModule._(JSObject _) implements JSObject {
   external JSPromise<Null> pipeline(JSArray<JSAny> streams,
@@ -87,12 +85,11 @@ extension type StreamPromisesModule._(JSObject _) implements JSObject {
 /// See [the Node.js documentation].
 ///
 /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#streampipelinestreams-options
-@anonymous
 extension type _PipelineOptions._(JSObject _) implements JSObject {
   external AbortSignal? signal;
   external bool? end;
 
-  external _PipelineOptions();
+  factory _PipelineOptions() => _PipelineOptions._(JSObject());
 }
 
 /// Options for [StreamModule.finished].
@@ -100,7 +97,6 @@ extension type _PipelineOptions._(JSObject _) implements JSObject {
 /// See [the Node.js documentation].
 ///
 /// [the Node.js documentation]: https://nodejs.org/docs/latest/api/stream.html#streamfinishedstream-options
-@anonymous
 @internal
 extension type FinishedOptions._(JSObject _) implements JSObject {
   external bool? error;

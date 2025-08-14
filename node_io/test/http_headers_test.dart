@@ -40,7 +40,6 @@ exports.minimal = {
 ''';
 
 @JS()
-@anonymous
 abstract class HeadersFixture {
   external IncomingMessage get request;
   external IncomingMessage get minimal;

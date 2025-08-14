@@ -8,7 +8,6 @@ import 'package:js_core/js_core.dart';
 /// See [the Node.js documentation].
 ///
 /// [the Node.js documentation]: https://nodejs.org/api/errors.html#class-systemerror
-@anonymous
 extension type NodeSystemError.__(JSError _) implements JSError {
   /// See [the Node.js documentation].
   ///

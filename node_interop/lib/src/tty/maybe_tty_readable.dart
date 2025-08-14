@@ -12,7 +12,6 @@ import 'read_stream.dart';
 /// This exposes an [isTty] getter that's `true` if this is a [TtyReadStream]
 /// and `false` otherwise. For convenience, in Dart we also expose [asTty] which
 /// returns this as a `TtyReadStream`?.
-@anonymous
 extension type MaybeTtyReadable._(NodeReadable<Buffer> _)
     implements NodeReadable<Buffer> {
   /// See [the Node.js documentation].
